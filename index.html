@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=15">
+  <link rel="stylesheet" href="css/styles.css?v=19">
   <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
@@ -362,29 +362,25 @@
         <p class="lab__intro">Estudios de interacción, tipografía y sistemas generativos, escritos en código y renderizados en tiempo real. Sin plantillas ni librerías gráficas.</p>
       </header>
       <div class="lab__grid">
-        <figure class="exp exp--sphere" data-exp="sphere" data-cursor="Girá">
-          <canvas></canvas>
-          <figcaption><span class="mono">01</span><b>Esfera de datos</b><span class="mono">1.800 puntos en 3D · proyección en canvas · arrastrá para rotar</span></figcaption>
+        <figure class="exp exp--goo" data-exp="goo" data-cursor="Tocá">
+          <div class="goo"><div class="goo__field"></div></div>
+          <figcaption><span class="mono">01</span><b>Materia líquida</b><span class="mono">Metaballs · las formas se funden con el cursor · clic para sumar gotas</span></figcaption>
         </figure>
         <figure class="exp exp--poster" data-exp="poster" data-cursor="Generar">
-          <canvas></canvas>
-          <figcaption><span class="mono">02</span><b>Póster generativo</b><span class="mono">Grilla suiza · composición nueva en cada clic</span></figcaption>
-        </figure>
-        <figure class="exp exp--halftone" data-exp="halftone" data-cursor="Revelar">
-          <canvas></canvas>
-          <figcaption><span class="mono">03</span><b>Semitono</b><span class="mono">Foto convertida en trama · el cursor la revela</span></figcaption>
-        </figure>
-        <figure class="exp exp--type" data-exp="type">
-          <div class="exp__type" contenteditable="true" spellcheck="false" aria-label="Escribí algo">Movimiento</div>
-          <figcaption><span class="mono">04</span><b>Tipografía variable</b><span class="mono">Ejes de ancho y peso según el cursor · editable</span></figcaption>
+          <div class="poster"></div>
+          <figcaption><span class="mono">02</span><b>Póster generativo</b><span class="mono">Sistema de grilla · clic para una composición nueva</span></figcaption>
         </figure>
         <figure class="exp exp--kuzushi" data-exp="kuzushi" data-cursor="Empujá">
           <canvas></canvas>
-          <figcaption><span class="mono">05</span><b>Campo de fuerzas</b><span class="mono">Física de resortes sobre una grilla de puntos</span></figcaption>
+          <figcaption><span class="mono">03</span><b>Campo de fuerzas</b><span class="mono">Física de resortes sobre una grilla de puntos</span></figcaption>
         </figure>
         <figure class="exp exp--tide" data-exp="tide" data-cursor="Desviar">
           <canvas></canvas>
-          <figcaption><span class="mono">06</span><b>Flujo</b><span class="mono">Partículas sobre un campo vectorial</span></figcaption>
+          <figcaption><span class="mono">04</span><b>Flujo</b><span class="mono">Partículas sobre un campo vectorial</span></figcaption>
+        </figure>
+        <figure class="exp exp--type" data-exp="type">
+          <div class="exp__type" contenteditable="true" spellcheck="false" aria-label="Escribí algo">Movimiento</div>
+          <figcaption><span class="mono">05</span><b>Tipografía variable</b><span class="mono">Ejes de ancho y peso según el cursor · editable</span></figcaption>
         </figure>
       </div>
     </section>
@@ -504,6 +500,6 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-  <script src="js/main.js?v=15"></script>
+  <script src="js/main.js?v=19"></script>
 </body>
 </html>

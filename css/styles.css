@@ -623,12 +623,30 @@ html:not(.js) .emblem { display: none; }
 .lab__intro { color: var(--muted); max-width: 30ch; }
 .lab__grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: minmax(240px, 30vh); gap: 1rem; }
 .exp { position: relative; margin: 0; border-radius: 18px; overflow: hidden; background: #111113; color: var(--paper); isolation: isolate; touch-action: pan-y; }
-.exp--sphere { grid-column: span 2; grid-row: span 2; background: #0a0b14; }
+.exp--goo { grid-column: span 2; grid-row: span 2; background: #000; cursor: pointer; }
 .exp--poster { grid-row: span 2; background: #ECE9E2; cursor: pointer; }
-.exp--type { grid-column: span 2; }
+.exp--type { grid-column: 1 / -1; }
 .exp--kuzushi { grid-column: span 2; }
-.exp--halftone { background: #ECE9E2; box-shadow: inset 0 0 0 1px var(--line); }
-.exp--halftone figcaption, .exp--poster figcaption { background: rgba(14,14,14,.82); margin: -.5rem; padding: .7rem .8rem; border-radius: 10px; backdrop-filter: blur(6px); }
+.exp--poster figcaption { background: rgba(14,14,14,.86); margin: -.5rem; padding: .7rem .8rem; border-radius: 10px; backdrop-filter: blur(6px); }
+
+/* materia líquida: blur + contraste = metaballs */
+.goo { position: absolute; inset: 0; background: #000; filter: contrast(28); }
+.goo__field { position: absolute; inset: -40px; filter: blur(22px); transform: translate(40px, 40px); }
+.goo__blob { position: absolute; left: 0; top: 0; border-radius: 50%; background: #2742FF; will-change: transform; }
+.goo__blob:last-child { background: #2742FF; }
+
+/* póster generativo */
+.poster { position: absolute; inset: 0; overflow: hidden; }
+.poster i { position: absolute; display: block; }
+.poster__grid { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(6, 1fr); pointer-events: none; }
+.poster__grid span { border-left: 1px solid currentColor; opacity: .12; }
+.poster__grid span:first-child { border-left: 0; }
+.poster__word { position: absolute; line-height: .8; white-space: nowrap; overflow: hidden; padding-top: .04em; }
+.poster__word span { display: inline-block; font-weight: 800; letter-spacing: -.04em; }
+.poster__word.is-v { transform-origin: left bottom; transform: rotate(-90deg) translateY(100%); bottom: 30% !important; }
+.poster__meta { position: absolute; left: 6%; right: 6%; top: 4.5%; display: flex; justify-content: space-between; font-family: var(--mono); font-size: .62rem; letter-spacing: .06em; text-transform: uppercase; }
+.poster__meta--2 { top: 9%; opacity: .6; }
+/* entrada de cada elemento */
 .exp canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .exp figcaption {
   position: absolute; left: 1.1rem; right: 1.1rem; bottom: 1rem; z-index: 2; pointer-events: none;
@@ -679,8 +697,9 @@ html:not(.js) .emblem { display: none; }
   .lab__head { grid-template-columns: 1fr; }
   .lab__grid { grid-template-columns: 1fr; grid-auto-rows: auto; }
   .exp { height: 74vw; }
-  .exp--sphere, .exp--poster, .exp--type, .exp--kuzushi { grid-column: auto; grid-row: auto; }
-  .exp--sphere, .exp--poster { height: 110vw; }
+  .exp--goo, .exp--poster, .exp--type, .exp--kuzushi { grid-column: auto; grid-row: auto; }
+  .exp--goo { height: 100vw; }
+  .exp--poster { height: 130vw; }
   .contact__meta { flex-direction: column; align-items: flex-start; }
   .contact__facts { text-align: left; }
 }
