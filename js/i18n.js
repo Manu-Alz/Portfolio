@@ -91,6 +91,9 @@
     [".svc__desc p", 3, "Content strategy and production sustained over time: idea, script, shooting, editing and publishing. A year of publishing without breaks taught me which formats work and how an audience is built."],
     [".svc__desc p", 4, 'Strength, power and mobility programming tailored to each sport, with weekly follow-up and adjustments based on progress. Coaching clients since 2024, also delivering plans in digital format, like <a class="svc__link" href="https://manu-alz.github.io/Plan-73/" target="_blank" rel="noopener" data-cursor="See example ↗">Plan −73 ↗</a>.'],
     // números
+    [".stats__k", 0, "(In numbers)"], [".stats__t", 0, "Fact sheet"], [".stats__u", 0, '<i class="stats__live"></i>Updated 11 / 2026'],
+    [".months li", 0, "J"],
+    [".made li span", 0, "Strategy"], [".made li span", 1, "Design"], [".made li span", 2, "Code"], [".made li span", 3, "Copy"],
     [".stat__l", 0, "Category"], [".stat__l", 1, "Content"], [".stat__l", 2, "Live"], [".stat__l", 3, "Handmade"],
     [".stat__n sup", 1, "months"], [".stat__n sup", 2, "sites"],
     [".stat__d", 0, "Judo category I’m preparing to compete in."],

@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=37">
+  <link rel="stylesheet" href="css/styles.css?v=38">
   <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
@@ -25,9 +25,8 @@
   <div class="progress" aria-hidden="true"></div>
   <div class="sect mono" aria-hidden="true"><span class="sect__n">(00)</span><span class="sect__t">Inicio</span></div>
   <div class="curtain" aria-hidden="true"><span class="curtain__label"></span></div>
-  <div class="cursor-ring" aria-hidden="true"></div>
-  <div class="cursor-dot" aria-hidden="true"></div>
-  <div class="cursor" aria-hidden="true"><span class="cursor__label"></span></div>
+  <div class="tcur" aria-hidden="true"><i class="tcur__c tcur__c--tl"></i><i class="tcur__c tcur__c--tr"></i><i class="tcur__c tcur__c--bl"></i><i class="tcur__c tcur__c--br"></i><span class="tcur__tag mono"></span></div>
+  <div class="tcur__dot" aria-hidden="true"></div>
 
   <!-- Precarga -->
   <div class="loader" aria-hidden="true">
@@ -250,25 +249,50 @@
 
     <!-- ============ NÚMEROS ============ -->
     <section class="stats" aria-label="En números">
-      <div class="stat">
-        <span class="stat__l mono">Categoría</span>
-        <span class="stat__n"><i>−</i><span class="odo" data-odo="73">73</span><sup>kg</sup></span>
-        <span class="stat__d">Categoría de judo en la que me preparo para competir.</span>
-      </div>
-      <div class="stat">
-        <span class="stat__l mono">Contenido</span>
-        <span class="stat__n"><span class="odo" data-odo="12">12</span><sup>meses</sup></span>
-        <span class="stat__d">De contenido publicado sin cortes: idea, rodaje y edición.</span>
-      </div>
-      <div class="stat">
-        <span class="stat__l mono">En vivo</span>
-        <span class="stat__n"><span class="odo" data-odo="05">05</span><sup>webs</sup></span>
-        <span class="stat__d">Proyectos en línea: marcas, aplicaciones y sistemas en uso real.</span>
-      </div>
-      <div class="stat">
-        <span class="stat__l mono">Hecho a mano</span>
-        <span class="stat__n"><span class="odo" data-odo="100">100</span><sup>%</sup></span>
-        <span class="stat__d">Estrategia, diseño, código y textos propios. Sin plantillas.</span>
+      <header class="stats__head mono">
+        <span class="stats__k">(En números)</span>
+        <span class="stats__t">Ficha técnica</span>
+        <span class="stats__u"><i class="stats__live"></i>Actualizado 11 / 2026</span>
+      </header>
+      <div class="stats__grid">
+        <article class="stat stat--kg">
+          <div class="stat__top mono"><span class="stat__l">Categoría</span><span class="stat__i">01</span></div>
+          <span class="stat__n"><i>−</i><span class="odo" data-odo="73">73</span><sup>kg</sup></span>
+          <div class="stat__viz scale" aria-hidden="true">
+            <ol class="scale__row mono"><li>−60</li><li>−66</li><li class="is-on">−73</li><li>−81</li><li>−90</li><li>−100</li><li>+100</li></ol>
+            <div class="scale__ticks"><span class="scale__mark"></span></div>
+          </div>
+          <p class="stat__d">Categoría de judo en la que me preparo para competir.</p>
+        </article>
+        <article class="stat stat--months">
+          <div class="stat__top mono"><span class="stat__l">Contenido</span><span class="stat__i">02</span></div>
+          <span class="stat__n"><span class="odo" data-odo="12">12</span><sup>meses</sup></span>
+          <ol class="stat__viz months mono" aria-hidden="true"><li>E</li><li>F</li><li>M</li><li>A</li><li>M</li><li>J</li><li>J</li><li>A</li><li>S</li><li>O</li><li>N</li><li>D</li></ol>
+          <p class="stat__d">De contenido publicado sin cortes: idea, rodaje y edición.</p>
+        </article>
+        <article class="stat stat--sites">
+          <div class="stat__top mono"><span class="stat__l">En vivo</span><span class="stat__i">03</span></div>
+          <span class="stat__n"><span class="odo" data-odo="05">05</span><sup>webs</sup></span>
+          <ul class="stat__viz sites mono" aria-hidden="true">
+            <li><span>Eventos PDE</span><b>Online</b></li>
+            <li><span>Judokan Uruguay</span><b>Online</b></li>
+            <li><span>Judo Uruguay</span><b>Online</b></li>
+            <li><span>Plan −73</span><b>Online</b></li>
+            <li><span>Portfolio</span><b>Online</b></li>
+          </ul>
+          <p class="stat__d">Proyectos en línea: marcas, aplicaciones y sistemas en uso real.</p>
+        </article>
+        <article class="stat stat--made">
+          <div class="stat__top mono"><span class="stat__l">Hecho a mano</span><span class="stat__i">04</span></div>
+          <span class="stat__n"><span class="odo" data-odo="100">100</span><sup>%</sup></span>
+          <ul class="stat__viz made mono" aria-hidden="true">
+            <li><span>Estrategia</span><i></i></li>
+            <li><span>Diseño</span><i></i></li>
+            <li><span>Código</span><i></i></li>
+            <li><span>Textos</span><i></i></li>
+          </ul>
+          <p class="stat__d">Estrategia, diseño, código y textos propios. Sin plantillas.</p>
+        </article>
       </div>
     </section>
 
@@ -496,7 +520,7 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-  <script src="js/i18n.js?v=37"></script>
-  <script src="js/main.js?v=37"></script>
+  <script src="js/i18n.js?v=38"></script>
+  <script src="js/main.js?v=38"></script>
 </body>
 </html>

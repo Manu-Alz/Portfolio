@@ -224,33 +224,59 @@ const T = window.T || ((es) => es);
 
   /* ---------- Cursor ---------- */
   if (fine) {
-    // círculo = el mouse (sin lag); pelotita = lo persigue con un poco de lag
+    // Cursor de seguimiento (como el recuadro de la foto):
+    // el punto es el mouse, sin lag; el visor lo sigue y se "engancha" a lo que se puede tocar.
     root.classList.add("has-cursor", "cur-out");
-    const ring = $(".cursor-ring"), dot = $(".cursor-dot"), cur = $(".cursor"), label = $(".cursor__label");
-    const setX = gsap.quickSetter([ring, cur], "x", "px"), setY = gsap.quickSetter([ring, cur], "y", "px");
-    const dXTo = gsap.quickTo(dot, "x", { duration: 0.45, ease: "power3" });
-    const dYTo = gsap.quickTo(dot, "y", { duration: 0.45, ease: "power3" });
-    let first = true;
+    const box = $(".tcur"), dot = $(".tcur__dot"), tag = $(".tcur__tag");
+    const S = 30, PAD = 7;
+    const setDX = gsap.quickSetter(dot, "x", "px"), setDY = gsap.quickSetter(dot, "y", "px");
+    const to = {
+      x: gsap.quickTo(box, "x", { duration: 0.38, ease: "power3" }),
+      y: gsap.quickTo(box, "y", { duration: 0.38, ease: "power3" }),
+      w: gsap.quickTo(box, "width", { duration: 0.42, ease: "power3" }),
+      h: gsap.quickTo(box, "height", { duration: 0.42, ease: "power3" }),
+    };
+    let mx = -100, my = -100, first = true, locked = null, label = "", raf = 0;
+    const pad4 = (n) => String(Math.max(0, Math.round(n))).padStart(4, "0");
+    const place = () => {
+      raf = 0;
+      if (locked && locked.isConnected) {
+        const r = locked.getBoundingClientRect();
+        to.x(r.left - PAD); to.y(r.top - PAD); to.w(r.width + PAD * 2); to.h(r.height + PAD * 2);
+      } else {
+        const s = label ? 54 : S;
+        to.x(mx - s / 2); to.y(my - s / 2); to.w(s); to.h(s);
+        if (!label) tag.textContent = `X ${pad4(mx)} · Y ${pad4(my)}`;
+      }
+    };
+    const queue = () => { if (!raf) raf = requestAnimationFrame(place); };
     addEventListener("pointermove", (e) => {
-      setX(e.clientX); setY(e.clientY);
-      if (first) { gsap.set(dot, { x: e.clientX, y: e.clientY }); first = false; }
-      dXTo(e.clientX); dYTo(e.clientY);
+      mx = e.clientX; my = e.clientY;
+      setDX(mx); setDY(my);
+      if (first) { gsap.set(box, { x: mx - S / 2, y: my - S / 2, width: S, height: S }); first = false; }
       root.classList.remove("cur-out");
-    });
+      queue();
+    }, { passive: true });
+    addEventListener("scroll", queue, { passive: true });
+    if (window.__lenis) window.__lenis.on("scroll", queue);
     document.documentElement.addEventListener("pointerleave", () => root.classList.add("cur-out"));
     addEventListener("pointerdown", () => root.classList.add("cur-down"));
     addEventListener("pointerup", () => root.classList.remove("cur-down"));
     // delegación: funciona también con elementos que se crean después (menú, pósters)
     let hovered = null;
     document.addEventListener("pointerover", (e) => {
-      const el = e.target.closest("[data-cursor], a, button, [contenteditable]");
+      const el = e.target.closest("[data-cursor], a, button, [contenteditable], [role=button]");
       if (el === hovered) return;
-      hovered = el;
-      root.classList.remove("cur-label", "cur-link");
-      if (!el) return;
-      const txt = el.getAttribute("data-cursor");
-      if (txt) { label.textContent = txt; root.classList.add("cur-label"); }
-      else root.classList.add("cur-link");
+      hovered = el; locked = null; label = "";
+      root.classList.remove("cur-lock", "cur-label");
+      if (el) {
+        const r = el.getBoundingClientRect();
+        const big = r.width > innerWidth * 0.6 || r.height > innerHeight * 0.45;
+        label = el.getAttribute("data-cursor") || "";
+        if (!big) { locked = el; root.classList.add("cur-lock"); if (!label) label = "Lock"; }
+        if (label) { tag.textContent = label; root.classList.add("cur-label"); }
+      }
+      queue();
     });
   }
 
@@ -404,7 +430,21 @@ const T = window.T || ((es) => es);
       });
     });
   });
-  gsap.from(".stat__d, .stat__l", { opacity: 0, y: 16, duration: 1, stagger: 0.05, ease: "expo.out", scrollTrigger: { trigger: ".stats", start: "top 85%" } });
+  gsap.from(".stat__d, .stat__top", { opacity: 0, y: 16, duration: 1, stagger: 0.05, ease: "expo.out", scrollTrigger: { trigger: ".stats", start: "top 85%" } });
+  gsap.from(".stats__head > *", { opacity: 0, y: 10, duration: 0.9, stagger: 0.08, ease: "expo.out", scrollTrigger: { trigger: ".stats", start: "top 88%" } });
+  // 01 · la marca recorre la balanza y frena en −73
+  gsap.from(".scale__mark", { left: "0%", duration: 2.4, ease: "expo.out", scrollTrigger: { trigger: ".stat--kg", start: "top 80%" } });
+  gsap.from(".scale__row li", { opacity: 0, y: 8, duration: 0.8, stagger: 0.06, ease: "expo.out", scrollTrigger: { trigger: ".stat--kg", start: "top 80%" } });
+  // 02 · los meses se llenan uno por uno
+  const monthTl = gsap.timeline({ scrollTrigger: { trigger: ".stat--months", start: "top 80%" } });
+  $$(".months li").forEach((m, i) => {
+    gsap.set(m, { "--f": 0 });
+    monthTl.to(m, { "--f": 1, duration: 0.45, ease: "power3.out", onStart: () => m.classList.add("is-full") }, i * 0.09);
+  });
+  // 03 · las webs se van conectando
+  gsap.from(".sites li", { opacity: 0, x: -14, duration: 0.8, stagger: 0.1, ease: "expo.out", scrollTrigger: { trigger: ".stat--sites", start: "top 80%" } });
+  // 04 · barras al 100 %
+  gsap.fromTo(".made i", { "--f": 0 }, { "--f": 1, duration: 1.6, stagger: 0.15, ease: "expo.inOut", scrollTrigger: { trigger: ".stat--made", start: "top 80%" } });
 
   /* ---------- Atleta: la foto se expande ---------- */
   // negro + logo → la foto entra en tiras que se arman (a tamaño real, sin zoom) → anotación y título
