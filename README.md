@@ -24,10 +24,10 @@ Un proyecto aparece en varios lugares. Al sumar uno, revisar todos:
 
 1. **Captura** en `assets/work/` (JPG, ~1600 px de ancho, recortada arriba).
 2. **Trabajo** (`index.html`, `#trabajo`): copiar un `<article class="card">`, cambiar número (`card__num`), título, año, link, captura, texto, `card__results`, `card__facts` (Rol / Desafío) y `tags`. Las tarjetas se apilan solas.
-3. **Contador** del título "Trabajo" (`<sup class="mono">05</sup>` en `index.html` y en la línea `kh("Work")` de `js/i18n.js`) → nueva cantidad.
+3. **Índice y contador**: sumar el proyecto al índice `.work__index` (con un `id` en su `<article>`, por ejemplo `id="p-nuevo"`) y subir el contador del título "Trabajo" (`<sup class="mono">05</sup>` en `index.html` y en la línea `kh("Work")` de `js/i18n.js`) → nueva cantidad.
 4. **Trayectoria**: si es un hito, sumarlo o mencionarlo en el `article.step` del año.
 5. **Servicios / capacidades**: si suma un servicio nuevo (por ejemplo, apps o CRM), agregarlo a la lista de capacidades.
-6. **Inglés** (`js/i18n.js`): traducir cada texto nuevo. Ojo: varias entradas van por posición (`".card__info > p", 2`, `".card__results", 1`, …), así que al insertar una tarjeta hay que correr los índices de las que siguen.
+6. **Inglés** (`js/i18n.js`): sumar el proyecto al objeto `CARDS`, con la parte de su link como clave (por ejemplo `"/Pulso/"`). Las traducciones se ubican por ese link, no por la posición, así que el orden de las tarjetas no importa.
 7. **CV** (`cv.html`): sumarlo si corresponde, también en su traducción.
 8. **Build**: correr `tools/build.ps1` (ver abajo). Actualiza la versión de caché sola y regenera `/en/`.
 

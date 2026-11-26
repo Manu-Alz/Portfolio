@@ -960,3 +960,20 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .kw { display: contents; }
 .noscript { position: relative; z-index: 500; margin: 0; padding: .8rem var(--pad); background: var(--ink); color: var(--paper); font-size: .72rem; letter-spacing: .04em; }
 .noscript a { color: var(--blue-soft); text-decoration: underline; }
+
+/* índice de proyectos (solo celular): salta directo a cada tarjeta */
+.work__index { display: none; }
+@media (max-width: 900px) {
+  .work__index { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: 1.4rem; font-size: .66rem; letter-spacing: .05em; text-transform: uppercase; }
+  .work__index a { display: inline-flex; gap: .45rem; align-items: center; padding: .5rem .75rem; border: 1px solid var(--line); border-radius: 99px; color: var(--fg); }
+  .work__index b { font-weight: 500; color: var(--blue); }
+  /* tarjetas más compactas en celular: menos alto por proyecto */
+  .card__info > p { font-size: .98rem; line-height: 1.38; margin-bottom: 1rem; }
+  .card .tags { display: none; }
+  .card__results li { padding: .75rem .55rem .85rem; gap: .4rem; }
+  .card__results b { font-size: 1.7rem; }
+  .card__facts div { padding: .65rem 0; }
+  .card__facts dd { font-size: .88rem; }
+  .card__body { gap: 1rem; padding-top: 1rem; }
+  .card__cta { padding-top: .85rem; font-size: 1.2rem; }
+}

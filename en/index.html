@@ -58,7 +58,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&amp;family=Instrument+Serif:ital@0;1&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/styles.css?v=1bdc12ba">
+  <link rel="stylesheet" href="../css/styles.css?v=3000a47d">
   <script>document.documentElement.classList.add('js');setTimeout(function(){if(!window.gsap){document.documentElement.classList.remove('js');}},4000);</script>
 </head>
 <body style="">
@@ -164,11 +164,12 @@
         <p class="label mono">(02) — Selected work</p>
         <h2 class="big-title kinetic"><span class="sr-only">Work</span><span class="kw" aria-hidden="true"><span class="k">W</span><span class="k">o</span><span class="k">r</span><span class="k">k</span></span><sup class="mono" aria-hidden="true">05</sup></h2>
         <p class="work__intro">Own and client projects, from idea to launch. Each one treated as a product: with a goal, an audience and something to improve next.</p>
+        <nav class="work__index mono" aria-label="Projects"><a href="#p-eventos"><b>01</b>Eventos PDE</a><a href="#p-judokan"><b>02</b>Judokan Uruguay</a><a href="#p-judo-uruguay"><b>03</b>Judo Uruguay</a><a href="#p-nexo"><b>04</b>Nexo CRM</a><a href="#p-pulso"><b>05</b>Pulso</a></nav>
       </header>
 
       <div class="work__stack">
 
-        <article class="card" style="--i:0">
+        <article class="card" id="p-eventos" style="--i:0">
           <a class="card__link" href="https://eventospde.com/" target="_blank" rel="noopener" data-cursor="Visit ↗">
             <div class="card__meta">
               <span class="card__num mono">01</span>
@@ -184,7 +185,7 @@
                   <span class="reel__play mono"><i>▶</i><span>Watch with sound</span></span>
                   <span class="reel__bar"><i></i></span>
                 </span>
-                <span class="card__pip" data-cursor="See the site ↗"><img src="../assets/work/eventos.jpg" alt="Project screenshot" width="1600" height="1000" loading="lazy" decoding="async"><span class="mono">eventospde.com ↗</span></span>
+                <span class="card__pip" data-cursor="See the site ↗"><img src="../assets/work/eventos.jpg" alt="Screenshot of eventospde.com" width="1600" height="1000" loading="lazy" decoding="async"><span class="mono">eventospde.com ↗</span></span>
               </div>
               <div class="card__info">
                 <p>Brand and platform to discover what’s on in Punta del Este. I conceived the product, designed the identity and built the site: events, map and trip planner in three languages, with indexable pages generated automatically.</p>
@@ -197,7 +198,7 @@
           </a>
         </article>
 
-        <article class="card" style="--i:1">
+        <article class="card" id="p-judokan" style="--i:1">
           <a class="card__link" href="https://manu-alz.github.io/Judokan/" target="_blank" rel="noopener" data-cursor="Visit ↗">
             <div class="card__meta">
               <span class="card__num mono">02</span>
@@ -205,7 +206,7 @@
               <span class="card__year mono">2026 — club</span>
             </div>
             <div class="card__body">
-              <div class="card__media"><img src="../assets/work/judokan.jpg" alt="Project screenshot" width="1600" height="1000" loading="lazy" decoding="async"></div>
+              <div class="card__media"><img src="../assets/work/judokan.jpg" alt="Screenshot of the Judokan Uruguay website" width="1600" height="1000" loading="lazy" decoding="async"></div>
               <div class="card__info">
                 <p>Institutional website for a martial arts association founded in 1983. News, gallery, schedules and contact, with a system that lets the club publish on its own, without relying on a developer.</p>
                 <dl class="card__facts mono"><div><dt>Role</dt><dd>Design and development</dd></div><div><dt>Challenge</dt><dd>Turn forty years of history into a modern site that’s easy to maintain</dd></div></dl>
@@ -216,7 +217,7 @@
           </a>
         </article>
 
-        <article class="card" style="--i:2">
+        <article class="card" id="p-judo-uruguay" style="--i:2">
           <a class="card__link" href="https://manu-alz.github.io/Judo-Uruguay/" target="_blank" rel="noopener" data-cursor="Open app ↗">
             <div class="card__meta">
               <span class="card__num mono">03</span>
@@ -224,7 +225,7 @@
               <span class="card__year mono">2026 — app</span>
             </div>
             <div class="card__body">
-              <div class="card__media"><img src="../assets/work/judo-uruguay.jpg" alt="Project screenshot" width="1600" height="1000" loading="lazy" decoding="async"></div>
+              <div class="card__media"><img src="../assets/work/judo-uruguay.jpg" alt="Screenshot of the Judo Uruguay app" width="1600" height="1000" loading="lazy" decoding="async"></div>
               <div class="card__info">
                 <p>Installable app custom-built for a dojo, which adopted it as its progression system: the 100 Kodokan techniques with video, belt progress, attendance tracking, live dojo status and Japanese vocabulary with audio.</p>
                 <ul class="card__results"><li><b>1</b><span class="mono">dojo uses it as its official system</span></li><li><b>100</b><span class="mono">techniques with video</span></li><li><b>PWA</b><span class="mono">installs like an app</span></li></ul>
@@ -236,15 +237,15 @@
           </a>
         </article>
 
-        <article class="card" style="--i:3">
-          <a class="card__link" href="https://manu-alz.github.io/Nexo/#/dashboard" target="_blank" rel="noopener" data-cursor="Visit ↗">
+        <article class="card" id="p-nexo" style="--i:3">
+          <a class="card__link" href="https://manu-alz.github.io/Nexo/#/dashboard" target="_blank" rel="noopener" data-cursor="Open the CRM ↗">
             <div class="card__meta">
               <span class="card__num mono">04</span>
               <h3 class="card__title">Nexo CRM</h3>
               <span class="card__year mono">2026 — product</span>
             </div>
             <div class="card__body">
-              <div class="card__media"><img src="../assets/work/nexo.jpg" alt="Project screenshot" width="1600" height="1000" loading="lazy" decoding="async"></div>
+              <div class="card__media"><img src="../assets/work/nexo.jpg" alt="Nexo CRM dashboard with sales, funnel and tasks" width="1600" height="1000" loading="lazy" decoding="async"></div>
               <div class="card__info">
                 <p>A CRM for small sales teams: contacts, opportunities by stage, tasks with due dates and each client’s activity, with a dashboard that sums up sales, funnel and win rate. It runs entirely in the browser, no server.</p>
                 <ul class="card__results"><li><b>5</b><span class="mono">modules: dashboard, contacts, sales, tasks, activity</span></li><li><b>0</b><span class="mono">servers: data lives in the browser</span></li><li><b>⌘K</b><span class="mono">search and quick actions</span></li></ul>
@@ -256,15 +257,15 @@
           </a>
         </article>
 
-        <article class="card" style="--i:4">
-          <a class="card__link" href="https://manu-alz.github.io/Pulso/" target="_blank" rel="noopener" data-cursor="Visit ↗">
+        <article class="card" id="p-pulso" style="--i:4">
+          <a class="card__link" href="https://manu-alz.github.io/Pulso/" target="_blank" rel="noopener" data-cursor="Listen ↗">
             <div class="card__meta">
               <span class="card__num mono">05</span>
               <h3 class="card__title">Pulso</h3>
               <span class="card__year mono">2026 — product</span>
             </div>
             <div class="card__body">
-              <div class="card__media"><img src="../assets/work/pulso.jpg" alt="Project screenshot" width="1600" height="1000" loading="lazy" decoding="async"></div>
+              <div class="card__media"><img src="../assets/work/pulso.jpg" alt="Pulso home screen with trends and genres" width="1600" height="1000" loading="lazy" decoding="async"></div>
               <div class="card__info">
                 <p>A browser music player built on Audius’ catalogue of independent artists: trends, search, genres, favourites and a play queue. It also plays your own files and installs like an app.</p>
                 <ul class="card__results"><li><b>16</b><span class="mono">genres to explore</span></li><li><b>API</b><span class="mono">real Audius catalogue</span></li><li><b>PWA</b><span class="mono">installs like an app</span></li></ul>
@@ -510,8 +511,8 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" integrity="sha384-g4NTh/Iv5PPU4xPyhEWqPcwtNXOvdaDI8LLnyYfyNZOjKJeYQyjzQ9X5275eBjpt" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" integrity="sha384-Z3REaz79l2IaAZqJsSABtTbhjgOUYyV3p90XNnAPCSHg3EMTz1fouunq9WZRtj3d" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" integrity="sha384-B2WBjDzEjJpYvhmi2UyEn7rektqkf5suS6sNoyyrf0EBAwBHdkiXxIlU0V5Ru2ed" crossorigin="anonymous"></script>
-  <script src="../js/i18n.js?v=1bdc12ba"></script>
-  <script src="../js/main.js?v=1bdc12ba"></script>
+  <script src="../js/i18n.js?v=3000a47d"></script>
+  <script src="../js/main.js?v=3000a47d"></script>
 
 
 </body></html>

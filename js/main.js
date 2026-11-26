@@ -150,7 +150,7 @@ const T = window.T || ((es) => es);
             .to(cur, { clipPath: "inset(0 0 100% 0)", duration: 0.7, ease: "expo.inOut" }, "+=0.15");
           return;
         }
-        lenis.scrollTo(target, { duration: 1.6, easing: (x) => 1 - Math.pow(1 - x, 4) });
+        lenis.scrollTo(target, { offset: a.closest(".work__index") ? -76 : 0, duration: 1.6, easing: (x) => 1 - Math.pow(1 - x, 4) });
       })
     );
   }

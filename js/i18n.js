@@ -84,30 +84,8 @@
     ["#trabajo .label", 0, "(02) — Selected work"],
     [".work__head .big-title", 0, kh("Work") + '<sup class="mono" aria-hidden="true">05</sup>'], [".hero__name .sr-only", 0, "Manuel Alzugaray — Brand, web and video design &amp; development in Punta del Este, Uruguay"],
     [".work__intro", 0, "Own and client projects, from idea to launch. Each one treated as a product: with a goal, an audience and something to improve next."],
-    [".card__year", 0, "2026 — live"], [".card__year", 1, "2026 — club"], [".card__year", 2, "2026 — app"], [".card__year", 3, "2026 — product"], [".card__year", 4, "2026 — product"],
-    [".card__info > p", 0, "Brand and platform to discover what’s on in Punta del Este. I conceived the product, designed the identity and built the site: events, map and trip planner in three languages, with indexable pages generated automatically."],
-    [".card__info > p", 1, "Institutional website for a martial arts association founded in 1983. News, gallery, schedules and contact, with a system that lets the club publish on its own, without relying on a developer."],
-    [".card__info > p", 2, "Installable app custom-built for a dojo, which adopted it as its progression system: the 100 Kodokan techniques with video, belt progress, attendance tracking, live dojo status and Japanese vocabulary with audio."],
-    [".card__results", 0, '<li><b>+70</b><span class="mono">events listed</span></li><li><b>3</b><span class="mono">languages · ES EN PT</span></li><li><b>↗</b><span class="mono">organic traffic growing</span></li>'],
-    [".card__results", 1, '<li><b>1</b><span class="mono">dojo uses it as its official system</span></li><li><b>100</b><span class="mono">techniques with video</span></li><li><b>PWA</b><span class="mono">installs like an app</span></li>'],
     [".reel__play span", 0, "Watch with sound"], [".reel__top > span", 0, "<i class=\"reel__rec\"></i>REC · Eventos PDE reel"],
     [".reel-modal__close", 0, "Close ✕"],
-    [".card__facts", 0, "<div><dt>Role</dt><dd>Founder · brand, design and development</dd></div><div><dt>Challenge</dt><dd>Bring the whole city’s offer into one place, for visitors in three languages</dd></div>"],
-    [".card__facts", 1, "<div><dt>Role</dt><dd>Design and development</dd></div><div><dt>Challenge</dt><dd>Turn forty years of history into a modern site that’s easy to maintain</dd></div>"],
-    [".card__facts", 2, "<div><dt>Role</dt><dd>Product, design and development</dd></div><div><dt>Challenge</dt><dd>Let a whole group study and track progress from their phones, even on the mat</dd></div>"],
-    [".card .tags", 0, "<li>Brand</li><li>Product</li><li>Web</li><li>SEO</li><li>3 languages</li>"],
-    [".card .tags", 1, "<li>Web</li><li>Identity</li><li>Content</li>"],
-    [".card .tags", 2, "<li>Product</li><li>PWA</li><li>Accounts</li><li>Mobile UX</li>"],
-    [".card__cta", 0, "Visit eventospde.com"], [".card__cta", 1, "View the club’s site"], [".card__cta", 2, "Open the app"],
-    [".card__info > p", 3, "A CRM for small sales teams: contacts, opportunities by stage, tasks with due dates and each client’s activity, with a dashboard that sums up sales, funnel and win rate. It runs entirely in the browser, no server."],
-    [".card__info > p", 4, "A browser music player built on Audius’ catalogue of independent artists: trends, search, genres, favourites and a play queue. It also plays your own files and installs like an app."],
-    [".card__results", 2, '<li><b>5</b><span class="mono">modules: dashboard, contacts, sales, tasks, activity</span></li><li><b>0</b><span class="mono">servers: data lives in the browser</span></li><li><b>⌘K</b><span class="mono">search and quick actions</span></li>'],
-    [".card__results", 3, '<li><b>16</b><span class="mono">genres to explore</span></li><li><b>API</b><span class="mono">real Audius catalogue</span></li><li><b>PWA</b><span class="mono">installs like an app</span></li>'],
-    [".card__facts", 3, "<div><dt>Role</dt><dd>Product, design and development</dd></div><div><dt>Challenge</dt><dd>Let a team see on one screen what to sell, who to call and what’s due today</dd></div>"],
-    [".card__facts", 4, "<div><dt>Role</dt><dd>Product, design and development</dd></div><div><dt>Challenge</dt><dd>A complete streaming experience with a real catalogue and no backend of its own</dd></div>"],
-    [".card .tags", 3, "<li>Product</li><li>Dashboard</li><li>Data</li><li>UX</li>"],
-    [".card .tags", 4, "<li>Product</li><li>Audio</li><li>API</li><li>PWA</li>"],
-    [".card__cta", 3, "Open the CRM"], [".card__cta", 4, "Listen on Pulso"],
     // servicios
     ["#hago .label", 0, "(03) — What I do"],
     [".svc__intro", 0, "End to end or by stages, for brands, companies and athletes. One point of contact from strategy to launch."],
@@ -173,16 +151,71 @@
     [".nav__logo", "data-cursor", "Home"],
     [".badge", "data-cursor", "Journey ↓"], [".badge", "aria-label", "Working since 2023: see journey"],
     [".hero__scroll", "data-cursor", "See work ↓"],
-    [".card__pip", "data-cursor", "See the site ↗"],
-    [".card__link", "data-cursor", "Visit ↗"],
+    [".card__pip", "data-cursor", "See the site ↗"], [".card__pip img", "alt", "Screenshot of eventospde.com"],
     [".reel", "data-cursor", "Watch with sound ▶"], [".reel", "aria-label", "Watch the Eventos PDE reel with sound"],
     [".reel-modal", "aria-label", "Eventos PDE reel"],
     [".path__cv", "data-cursor", "View CV ↗"],
     [".copy", "data-cursor", "Copy"],
     [".path", "aria-label", "Journey"],
+    [".work__index", "aria-label", "Projects"],
     [".shot", "aria-label", "Manuel (blue trousers) with training partners in front of the ring"],
-    [".card__media img", "alt", "Project screenshot"],
   ];
+
+  // Tarjetas de Trabajo: cada proyecto se identifica por su link (no por su posición),
+  // así sumar, sacar o reordenar tarjetas no desfasa las traducciones.
+  const CARDS = {
+    "eventospde.com": {
+      year: "2026 — live",
+      p: "Brand and platform to discover what’s on in Punta del Este. I conceived the product, designed the identity and built the site: events, map and trip planner in three languages, with indexable pages generated automatically.",
+      results: '<li><b>+70</b><span class="mono">events listed</span></li><li><b>3</b><span class="mono">languages · ES EN PT</span></li><li><b>↗</b><span class="mono">organic traffic growing</span></li>',
+      role: "Founder · brand, design and development", challenge: "Bring the whole city’s offer into one place, for visitors in three languages",
+      tags: ["Brand", "Product", "Web", "SEO", "3 languages"], cta: "Visit eventospde.com", cursor: "Visit ↗",
+      alt: "Screenshot of eventospde.com",
+    },
+    "/Judokan/": {
+      year: "2026 — club",
+      p: "Institutional website for a martial arts association founded in 1983. News, gallery, schedules and contact, with a system that lets the club publish on its own, without relying on a developer.",
+      role: "Design and development", challenge: "Turn forty years of history into a modern site that’s easy to maintain",
+      tags: ["Web", "Identity", "Content"], cta: "View the club’s site", cursor: "Visit ↗",
+      alt: "Screenshot of the Judokan Uruguay website",
+    },
+    "/Judo-Uruguay/": {
+      year: "2026 — app",
+      p: "Installable app custom-built for a dojo, which adopted it as its progression system: the 100 Kodokan techniques with video, belt progress, attendance tracking, live dojo status and Japanese vocabulary with audio.",
+      results: '<li><b>1</b><span class="mono">dojo uses it as its official system</span></li><li><b>100</b><span class="mono">techniques with video</span></li><li><b>PWA</b><span class="mono">installs like an app</span></li>',
+      role: "Product, design and development", challenge: "Let a whole group study and track progress from their phones, even on the mat",
+      tags: ["Product", "PWA", "Accounts", "Mobile UX"], cta: "Open the app", cursor: "Open app ↗",
+      alt: "Screenshot of the Judo Uruguay app",
+    },
+    "/Nexo/": {
+      year: "2026 — product",
+      p: "A CRM for small sales teams: contacts, opportunities by stage, tasks with due dates and each client’s activity, with a dashboard that sums up sales, funnel and win rate. It runs entirely in the browser, no server.",
+      results: '<li><b>5</b><span class="mono">modules: dashboard, contacts, sales, tasks, activity</span></li><li><b>0</b><span class="mono">servers: data lives in the browser</span></li><li><b>⌘K</b><span class="mono">search and quick actions</span></li>',
+      role: "Product, design and development", challenge: "Let a team see on one screen what to sell, who to call and what’s due today",
+      tags: ["Product", "Dashboard", "Data", "UX"], cta: "Open the CRM", cursor: "Open the CRM ↗",
+      alt: "Nexo CRM dashboard with sales, funnel and tasks",
+    },
+    "/Pulso/": {
+      year: "2026 — product",
+      p: "A browser music player built on Audius’ catalogue of independent artists: trends, search, genres, favourites and a play queue. It also plays your own files and installs like an app.",
+      results: '<li><b>16</b><span class="mono">genres to explore</span></li><li><b>API</b><span class="mono">real Audius catalogue</span></li><li><b>PWA</b><span class="mono">installs like an app</span></li>',
+      role: "Product, design and development", challenge: "A complete streaming experience with a real catalogue and no backend of its own",
+      tags: ["Product", "Audio", "API", "PWA"], cta: "Listen on Pulso", cursor: "Listen ↗",
+      alt: "Pulso home screen with trends and genres",
+    },
+  };
+  Object.entries(CARDS).forEach(([href, c]) => {
+    const s = `.card__link[href*="${href}"]`;
+    EN.push(
+      [`${s} .card__year`, 0, c.year],
+      [`${s} .card__info > p`, 0, c.p],
+      [`${s} .card__facts`, 0, `<div><dt>Role</dt><dd>${c.role}</dd></div><div><dt>Challenge</dt><dd>${c.challenge}</dd></div>`],
+      [`${s} .tags`, 0, c.tags.map((t) => `<li>${t}</li>`).join("")],
+      [`${s} .card__cta`, 0, c.cta],
+    );
+    if (c.results) EN.push([`${s} .card__results`, 0, c.results]);
+    ATTR.push([s, "data-cursor", c.cursor], [`${s} .card__media > img`, "alt", c.alt]);
+  });
 
   function apply() {
     EN.forEach(([sel, i, html, fn]) => {
@@ -192,8 +225,6 @@
       else el.innerHTML = html;
     });
     ATTR.forEach(([sel, attr, val]) => document.querySelectorAll(sel).forEach((el) => el.setAttribute(attr, val)));
-    const ja = document.querySelector('.card__link[href*="Judo-Uruguay"]');
-    if (ja) ja.setAttribute("data-cursor", "Open app ↗");
   }
 
   // este script va al final del body, justo antes de main.js: el DOM ya existe, se aplica en el acto
