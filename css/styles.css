@@ -445,15 +445,31 @@ a:hover .roll > span, .roll:hover > span { transform: translateY(-1.2em); }
 .shot__crop--bl { left: -14px; bottom: -14px; border-left-width: 1px; border-bottom-width: 1px; }
 .shot__crop--br { right: -14px; bottom: -14px; border-right-width: 1px; border-bottom-width: 1px; }
 /* anotación: quién soy en la foto */
-.shot__mark { position: absolute; left: 64.2%; top: 23.5%; width: 12%; aspect-ratio: 1; transform: translate(-50%, -50%); }
-.shot__mark::before { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 2px solid var(--blue-soft); box-shadow: 0 0 0 4px rgba(39,66,255,.25), 0 0 24px rgba(143,160,255,.5); animation: markPulse 2.4s var(--ease) infinite; }
-@keyframes markPulse { 50% { transform: scale(1.08); } }
-.shot__tag {
-  position: absolute; left: 96%; bottom: 72%; white-space: nowrap;
-  display: flex; align-items: center; gap: .5rem; color: #fff;
+/* caja de tracking, como un sistema de cámaras que detecta y sigue */
+.shot__mark { position: absolute; left: 64.2%; top: 24%; width: 10.5%; aspect-ratio: .86; transform: translate(-50%, -50%); }
+.shot__box { position: absolute; inset: 0; border: 1px solid rgba(143,160,255,.75); animation: track 3.2s steps(1) infinite; }
+.shot__box::before {
+  content: ""; position: absolute; inset: -3px;
+  --c: #8FA0FF; --l: 9px;
+  background:
+    linear-gradient(var(--c), var(--c)) left top / var(--l) 2px, linear-gradient(var(--c), var(--c)) left top / 2px var(--l),
+    linear-gradient(var(--c), var(--c)) right top / var(--l) 2px, linear-gradient(var(--c), var(--c)) right top / 2px var(--l),
+    linear-gradient(var(--c), var(--c)) left bottom / var(--l) 2px, linear-gradient(var(--c), var(--c)) left bottom / 2px var(--l),
+    linear-gradient(var(--c), var(--c)) right bottom / var(--l) 2px, linear-gradient(var(--c), var(--c)) right bottom / 2px var(--l);
+  background-repeat: no-repeat;
 }
-.shot__tag::before { content: ""; width: 26px; height: 1px; background: var(--blue-soft); transform: rotate(-28deg); transform-origin: left; margin-top: 12px; }
-.shot__tag b { background: var(--blue); padding: .3rem .55rem; border-radius: 99px; font-weight: 500; }
+.shot__box::after { content: ""; position: absolute; left: 50%; top: 50%; width: 7px; height: 7px; transform: translate(-50%, -50%); background: linear-gradient(#8FA0FF, #8FA0FF) center / 100% 1px no-repeat, linear-gradient(#8FA0FF, #8FA0FF) center / 1px 100% no-repeat; opacity: .8; }
+@keyframes track {
+  0% { transform: translate(0, 0) scale(1); } 18% { transform: translate(1.5px, -1px) scale(1.02); }
+  37% { transform: translate(-1px, .5px) scale(.99); } 55% { transform: translate(.5px, 1.5px) scale(1.01); }
+  74% { transform: translate(-1.5px, -.5px) scale(1); } 90% { transform: translate(1px, 0) scale(1.015); }
+}
+.shot__tag {
+  position: absolute; left: -3px; bottom: calc(100% + 5px); white-space: nowrap;
+  display: flex; color: #fff; font-size: .6rem; letter-spacing: .06em;
+}
+.shot__tag b { background: #2742FF; padding: .2rem .4rem; font-weight: 500; }
+.shot__tag span { background: rgba(14,14,14,.75); padding: .2rem .4rem; color: #8FA0FF; }
 .shot__cap { position: absolute; left: 0; right: 0; bottom: calc(100% + 1.1rem); display: flex; justify-content: space-between; gap: 1rem; color: rgba(236,233,226,.55); }
 html:not(.js) .expand { height: auto; }
 html:not(.js) .expand__sticky { min-height: 100vh; }
@@ -767,6 +783,4 @@ html:not(.js) .emblem { display: none; }
 @media (max-width: 900px) {
   .shot { width: 86vw; top: 42%; }
   .expand__title { bottom: 8vh; font-size: clamp(2.2rem, 10vw, 3.4rem); }
-  .shot__tag { left: auto; right: 115%; }
-  .shot__tag::before { display: none; }
 }

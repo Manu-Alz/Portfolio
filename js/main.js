@@ -329,12 +329,15 @@ const CONTACTO = {
     .fromTo(".shot__frame", { scale: 0.86, filter: "grayscale(1) brightness(.6)" },
       { scale: 1, filter: "grayscale(0) brightness(1)", ease: "power2.out", duration: 0.4 }, 0.18)
     .fromTo(".shot__crop", { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: 0.12, stagger: 0.02 }, 0.42)
-    .fromTo(".shot__mark", { scale: 0, rotate: -120, opacity: 0 }, { scale: 1, rotate: 0, opacity: 1, ease: "back.out(2)", duration: 0.12 }, 0.52)
-    .fromTo(".shot__tag", { opacity: 0, x: -12 }, { opacity: 1, x: 0, duration: 0.1 }, 0.58)
+    .fromTo(".shot__mark", { scale: 2.2, opacity: 0 }, { scale: 1, opacity: 1, ease: "expo.out", duration: 0.12 }, 0.52)
+    .fromTo(".shot__tag", { opacity: 0, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, clipPath: "inset(0 0% 0 0)", duration: 0.1 }, 0.58)
     .fromTo(".shot__cap", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.1 }, 0.56)
     .to(".expand__title .reveal-line > span", { yPercent: 0, stagger: 0.06, duration: 0.16, ease: "power2.out" }, 0.62)
     .to({}, { duration: 0.15 });
   gsap.set(".expand__title .reveal-line > span", { y: 0, yPercent: 110 });
+  // la confianza del "detector" varía como en un sistema real
+  const conf = $("[data-conf]");
+  if (conf) setInterval(() => (conf.textContent = (0.94 + Math.random() * 0.05).toFixed(2)), 700);
 
   /* ---------- Olas (canvas): el surf de fondo ---------- */
   const cv = $(".waves");
