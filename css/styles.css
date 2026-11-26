@@ -596,9 +596,13 @@ html:not(.js) .vf { display: none; }
   color: transparent; -webkit-text-stroke: 1.5px rgba(255,255,255,.9);
   transition: color .6s var(--ease-out), font-variation-settings .8s var(--ease-out);
 }
-.step__year i { font-style: normal; font-size: .5em; vertical-align: top; }
-.step__year--word { font-size: clamp(3.2rem, 6.4vw, 6.6rem); }
+.step__year i { font-style: normal; font-size: .42em; vertical-align: top; }
+/* palabra en lugar de año (Veranos / Summers): más chica y siempre algo condensada, para que no invada la columna de al lado */
+.step__year--word { font-size: clamp(2.8rem, 4.6vw, 4.8rem); white-space: nowrap; max-width: 100%; }
 .step:hover .step__year, .step.is-on .step__year { color: #fff; font-variation-settings: "wdth" 100, "wght" 800; }
+.step:hover .step__year--word, .step.is-on .step__year--word { font-variation-settings: "wdth" 82, "wght" 800; }
+/* año con flecha (2024→): un poco condensado también activo, para que la flecha no pise la columna siguiente */
+.step:hover .step__year:has(i), .step.is-on .step__year:has(i) { font-variation-settings: "wdth" 74, "wght" 800; }
 .step__tag { color: rgba(255,255,255,.65); display: block; margin-bottom: .9rem; }
 .step h3 { font-size: clamp(1.4rem, 2vw, 2rem); line-height: 1.02; letter-spacing: -.03em; font-weight: 600; margin-bottom: .9rem; }
 .step p { color: rgba(255,255,255,.78); max-width: 34ch; }
