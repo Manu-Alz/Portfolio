@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=39">
+  <link rel="stylesheet" href="css/styles.css?v=40">
   <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
@@ -150,8 +150,16 @@
               <span class="card__year mono">2026 — en vivo</span>
             </div>
             <div class="card__body">
-              <div class="card__media"><img src="assets/work/eventos.jpg" alt="Captura de eventospde.com" loading="lazy">
-                <span class="reel" role="button" tabindex="0" data-reel="assets/work/eventos-reel.mp4" data-cursor="Ver reel ▶" aria-label="Ver el reel de Eventos PDE"><video muted loop playsinline preload="none" data-src="assets/work/eventos-reel.mp4"></video><span class="reel__label mono"><i>▶</i> Reel · 0:13</span></span></div>
+              <div class="card__media card__media--reel">
+                <span class="reel" role="button" tabindex="0" data-reel="assets/work/eventos-reel.mp4" data-cursor="Ver con sonido ▶" aria-label="Ver el reel de Eventos PDE con sonido">
+                  <video muted loop playsinline preload="none" poster="assets/work/eventos.jpg" data-src="assets/work/eventos-reel.mp4"></video>
+                  <i class="reel__c reel__c--tl"></i><i class="reel__c reel__c--tr"></i><i class="reel__c reel__c--bl"></i><i class="reel__c reel__c--br"></i>
+                  <span class="reel__top mono"><span><i class="reel__rec"></i>REC · Reel Eventos PDE</span><span data-reel-tc>00:00 / 00:13</span></span>
+                  <span class="reel__play mono"><i>▶</i><span>Ver con sonido</span></span>
+                  <span class="reel__bar"><i></i></span>
+                </span>
+                <span class="card__pip"><img src="assets/work/eventos.jpg" alt="Captura de eventospde.com" loading="lazy"><span class="mono">Web ↗</span></span>
+              </div>
               <div class="card__info">
                 <p>Marca y plataforma para descubrir qué hacer en Punta del Este. Concebí el producto, diseñé la identidad y desarrollé el sitio: agenda, mapa y planificador de viaje en tres idiomas, con páginas indexables que se generan automáticamente.</p>
                 <ul class="card__results"><li><b>+70</b><span class="mono">eventos en agenda</span></li><li><b>3</b><span class="mono">idiomas: ES · EN · PT</span></li><li><b>↗</b><span class="mono">tráfico orgánico en crecimiento</span></li></ul>
@@ -501,7 +509,7 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-  <script src="js/i18n.js?v=39"></script>
-  <script src="js/main.js?v=39"></script>
+  <script src="js/i18n.js?v=40"></script>
+  <script src="js/main.js?v=40"></script>
 </body>
 </html>

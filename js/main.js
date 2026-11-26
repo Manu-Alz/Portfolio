@@ -149,6 +149,14 @@ const T = window.T || ((es) => es);
           if (!reduce) v.play().catch(() => {});
         } else v.pause();
       }, { rootMargin: "200px" }).observe(r);
+      // barra de progreso y timecode sincronizados con la vista previa
+      const bar = $(".reel__bar i", r), tcEl = $("[data-reel-tc]", r);
+      const mmss = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
+      v.addEventListener("timeupdate", () => {
+        if (!v.duration) return;
+        if (bar) bar.style.transform = `scaleX(${v.currentTime / v.duration})`;
+        if (tcEl) tcEl.textContent = `${mmss(v.currentTime)} / ${mmss(v.duration)}`;
+      });
       r.addEventListener("click", (e) => openReel(r, e));
       r.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") openReel(r, e); });
     });
