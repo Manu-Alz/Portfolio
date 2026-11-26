@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=21">
+  <link rel="stylesheet" href="css/styles.css?v=26">
   <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
@@ -50,8 +50,27 @@
       <a href="#lab" class="link" data-cursor>Gráfica</a>
       <a href="#atleta" class="link" data-cursor>Atleta</a>
       <a href="#contacto" class="link link--pill" data-cursor>Hablemos</a>
+      <button class="nav__menu" type="button" aria-expanded="false" aria-controls="mnav"><span class="nav__menu-t">Menú</span><span class="nav__burger" aria-hidden="true"><i></i><i></i></span></button>
     </nav>
   </header>
+
+  <!-- Menú móvil -->
+  <div class="mnav" id="mnav" aria-hidden="true">
+    <nav class="mnav__links">
+      <a href="#sobre"><span class="mono">01</span>Sobre mí</a>
+      <a href="#trabajo"><span class="mono">02</span>Trabajo</a>
+      <a href="#hago"><span class="mono">03</span>Servicios</a>
+      <a href="#trayectoria"><span class="mono">04</span>Trayectoria</a>
+      <a href="#lab"><span class="mono">05</span>Gráfica</a>
+      <a href="#atleta"><span class="mono">06</span>Método</a>
+      <a href="#contacto"><span class="mono">07</span>Contacto</a>
+    </nav>
+    <div class="mnav__foot mono">
+      <a href="https://wa.me/59894717738" target="_blank" rel="noopener">WhatsApp ↗</a>
+      <a href="mailto:manualzugaray@icloud.com">Mail ↗</a>
+      <a href="cv.html" target="_blank">CV ↗</a>
+    </div>
+  </div>
 
   <main>
 
@@ -362,9 +381,9 @@
         <p class="lab__intro">Estudios de interacción, tipografía y sistemas generativos, escritos en código y renderizados en tiempo real. Sin plantillas ni librerías gráficas.</p>
       </header>
       <div class="lab__grid">
-        <figure class="exp exp--goo" data-exp="goo" data-cursor="Tocá">
-          <div class="goo"><div class="goo__field"></div></div>
-          <figcaption><span class="mono">01</span><b>Materia líquida</b><span class="mono">Metaballs · las formas se funden con el cursor · clic para sumar gotas</span></figcaption>
+        <figure class="exp exp--relief" data-exp="relief" data-cursor="Explorá">
+          <canvas></canvas>
+          <figcaption><span class="mono">01</span><b>Relieve</b><span class="mono">Terreno generativo de líneas · el cursor levanta el paisaje</span></figcaption>
         </figure>
         <figure class="exp exp--poster" data-exp="poster" data-cursor="Generar">
           <div class="poster"></div>
@@ -462,9 +481,14 @@
       <h2 class="contact__title kinetic"><span class="k">H</span><span class="k">a</span><span class="k">b</span><span class="k">l</span><span class="k">e</span><span class="k">m</span><span class="k">o</span><span class="k">s</span></h2>
       <div class="contact__row">
         <p class="contact__text">¿Tenés una marca, una web o un video en mente? <em>Contame.</em> Respondo rápido.</p>
-        <a class="magnet" id="contact-btn" href="https://github.com/Manu-Alz" target="_blank" rel="noopener" data-cursor>
-          <span class="magnet__inner">Escribime</span>
-        </a>
+        <div class="contact__btns">
+          <a class="magnet magnet--ghost" href="https://wa.me/59894717738" target="_blank" rel="noopener" data-cursor="WhatsApp ↗">
+            <span class="magnet__inner">WhatsApp</span>
+          </a>
+          <a class="magnet" id="contact-btn" href="https://github.com/Manu-Alz" target="_blank" rel="noopener" data-cursor>
+            <span class="magnet__inner">Escribime</span>
+          </a>
+        </div>
       </div>
       <div class="contact__meta">
         <button class="copy" type="button" data-copy data-cursor="Copiar">
@@ -500,6 +524,6 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-  <script src="js/main.js?v=21"></script>
+  <script src="js/main.js?v=26"></script>
 </body>
 </html>

@@ -36,6 +36,34 @@ const CONTACTO = {
     });
   });
 
+  /* ---------- Menú móvil (funciona con o sin GSAP) ---------- */
+  const menuBtn = $(".nav__menu"), mnav = $(".mnav");
+  const setMenu = (open) => {
+    root.classList.toggle("menu-open", open);
+    menuBtn.setAttribute("aria-expanded", String(open));
+    mnav.setAttribute("aria-hidden", String(!open));
+    $(".nav__menu-t").textContent = open ? "Cerrar" : "Menú";
+    const l = window.__lenis;
+    if (l) open ? l.stop() : l.start();
+    document.body.style.overflow = open && !l ? "hidden" : "";
+  };
+  menuBtn.addEventListener("click", () => setMenu(!root.classList.contains("menu-open")));
+  addEventListener("keydown", (e) => { if (e.key === "Escape") setMenu(false); });
+  $$(".mnav a").forEach((a) => a.addEventListener("click", (e) => {
+    const href = a.getAttribute("href");
+    setMenu(false);
+    if (!href.startsWith("#")) return;
+    const target = $(href);
+    if (!target) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    // el menú se cierra tapando el salto: llegás directo a la sección
+    const l = window.__lenis;
+    if (l) l.scrollTo(target, { immediate: true, force: true });
+    else target.scrollIntoView();
+  }));
+  matchMedia("(min-width: 901px)").addEventListener("change", (m) => m.matches && setMenu(false));
+
   /* ---------- Laboratorio (funciona con o sin GSAP) ---------- */
   initLab();
 
@@ -48,6 +76,7 @@ const CONTACTO = {
   }
 
   gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.config({ ignoreMobileResize: true });
   if ("scrollRestoration" in history) history.scrollRestoration = "manual";
   scrollTo(0, 0);
 
@@ -55,12 +84,14 @@ const CONTACTO = {
   let lenis = null;
   if (window.Lenis) {
     lenis = new Lenis({ lerp: 0.09, smoothWheel: true });
+    window.__lenis = lenis;
     lenis.on("scroll", ScrollTrigger.update);
     gsap.ticker.add((t) => lenis.raf(t * 1000));
     gsap.ticker.lagSmoothing(0);
     lenis.stop();
     $$('a[href^="#"]').forEach((a) =>
       a.addEventListener("click", (e) => {
+        if (a.closest(".mnav")) return; // el menú móvil maneja sus links
         const target = $(a.getAttribute("href"));
         if (!target) return;
         e.preventDefault();
@@ -111,7 +142,9 @@ const CONTACTO = {
   addEventListener("pointermove", (e) => { mouse.x = e.clientX; mouse.y = e.clientY; mouse.active = true; });
   const kinetics = $$(".kinetic").map((el) => ({
     el, visible: false,
-    letters: $$(".k", el).map((k) => ({ k, wdth: 100, wght: 800 })),
+    // en táctil los títulos que llenan el ancho van condensados: quedan más altos y llenan la pantalla
+    base: !fine && el.matches(".hero__name, .contact__title") ? 62 : 100,
+    letters: $$(".k", el).map((k) => ({ k, wdth: !fine && el.matches(".hero__name, .contact__title") ? 62 : 100, wght: 800 })),
   }));
   const io = new IntersectionObserver((ents) => ents.forEach((en) => {
     const item = kinetics.find((x) => x.el === en.target);
@@ -121,21 +154,23 @@ const CONTACTO = {
 
   gsap.ticker.add(() => {
     const v = Math.min(Math.abs(velocity()) / 40, 1); // velocidad de scroll 0..1
-    kinetics.forEach(({ visible, letters }) => {
+    kinetics.forEach(({ visible, letters, base }) => {
       if (!visible) return;
       letters.forEach((L) => {
-        const r = L.k.getBoundingClientRect();
-        const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-        let tW = 100, tG = 800;
+        let tW = base, tG = 800;
         if (fine && mouse.active) {
+          // medir solo con mouse: en celular no hace falta y ahorra trabajo por cuadro
+          const r = L.k.getBoundingClientRect();
+          const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
           const d = Math.hypot(mouse.x - cx, (mouse.y - cy) * 0.6);
           const f = Math.max(0, 1 - d / (innerWidth * 0.32));
           tW = 100 + f * 25;   // cerca del cursor: más ancha
           tG = 760 + f * 140;
         }
         tW -= v * 30;          // al scrollear rápido se comprime
-        L.wdth += (tW - L.wdth) * 0.09;
-        L.wght += (tG - L.wght) * 0.09;
+        const nw = L.wdth + (tW - L.wdth) * 0.09, ng = L.wght + (tG - L.wght) * 0.09;
+        if (Math.abs(nw - L.wdth) < 0.02 && Math.abs(ng - L.wght) < 0.1) return; // quieto: no tocar el DOM
+        L.wdth = nw; L.wght = ng;
         L.k.style.fontVariationSettings = `"wdth" ${L.wdth.toFixed(1)}, "wght" ${L.wght.toFixed(0)}`;
       });
     });
@@ -168,13 +203,17 @@ const CONTACTO = {
     document.documentElement.addEventListener("pointerleave", () => root.classList.add("cur-out"));
     addEventListener("pointerdown", () => root.classList.add("cur-down"));
     addEventListener("pointerup", () => root.classList.remove("cur-down"));
-    $$("[data-cursor], a, button").forEach((el) => {
-      el.addEventListener("pointerenter", () => {
-        const txt = el.getAttribute("data-cursor");
-        if (txt) { label.textContent = txt; root.classList.add("cur-label"); }
-        else root.classList.add("cur-link");
-      });
-      el.addEventListener("pointerleave", () => root.classList.remove("cur-label", "cur-link"));
+    // delegación: funciona también con elementos que se crean después (menú, pósters)
+    let hovered = null;
+    document.addEventListener("pointerover", (e) => {
+      const el = e.target.closest("[data-cursor], a, button, [contenteditable]");
+      if (el === hovered) return;
+      hovered = el;
+      root.classList.remove("cur-label", "cur-link");
+      if (!el) return;
+      const txt = el.getAttribute("data-cursor");
+      if (txt) { label.textContent = txt; root.classList.add("cur-label"); }
+      else root.classList.add("cur-link");
     });
   }
 
@@ -283,11 +322,17 @@ const CONTACTO = {
       opacity: 0, y: 30, duration: 1, stagger: 0.06, ease: "expo.out",
       scrollTrigger: { trigger: card, start: "top 75%" },
     });
-    const next = cards[i + 1];
-    if (!next || innerWidth < 900) return;
-    gsap.to(card, {
-      scale: 0.9 + i * 0.012, opacity: 0.35, ease: "none",
-      scrollTrigger: { trigger: next, start: "top bottom", end: "top 15%", scrub: true },
+  });
+  // el apilado solo en pantallas anchas; matchMedia lo arma/desarma si cambia el tamaño
+  const mm = gsap.matchMedia();
+  mm.add("(min-width: 900px)", () => {
+    cards.forEach((card, i) => {
+      const next = cards[i + 1];
+      if (!next) return;
+      gsap.to(card, {
+        scale: 0.9 + i * 0.012, opacity: 0.35, ease: "none",
+        scrollTrigger: { trigger: next, start: "top bottom", end: "top 15%", scrub: true },
+      });
     });
   });
 
@@ -345,7 +390,7 @@ const CONTACTO = {
     const ctx = cv.getContext("2d");
     let W = 0, H = 0, on = false, t = 0;
     const size = () => { const d = Math.min(devicePixelRatio, 2); W = cv.clientWidth; H = cv.clientHeight; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0); };
-    size(); addEventListener("resize", size);
+    size(); new ResizeObserver(size).observe(cv);
     new IntersectionObserver(([e]) => (on = e.isIntersecting)).observe(cv);
     gsap.ticker.add(() => {
       if (!on) return;
@@ -357,7 +402,7 @@ const CONTACTO = {
         const y0 = (H / (lines + 1)) * (i + 1);
         ctx.beginPath();
         for (let x = 0; x <= W; x += 8) {
-          const near = Math.max(0, 1 - Math.hypot(x - mxl, y0 - myl) / 260);
+          const near = mouse.active ? Math.max(0, 1 - Math.hypot(x - mxl, y0 - myl) / 260) : 0;
           const y = y0
             + Math.sin(x * 0.006 + t * 2 + i * 0.5) * 10
             + Math.sin(x * 0.013 - t * 1.4 + i) * 6
@@ -379,6 +424,8 @@ const CONTACTO = {
   const showSect = ([id, n, t]) => {
     if (curSect === id) return;
     curSect = id;
+    // en la portada no se muestra (taparía las etiquetas de abajo)
+    gsap.to(".sect", { autoAlpha: id === "inicio" ? 0 : 1, duration: 0.4 });
     gsap.timeline()
       .to([sN, sT], { yPercent: -110, duration: 0.3, ease: "power2.in" })
       .add(() => { sN.textContent = `(${n})`; sT.textContent = t; })
@@ -391,7 +438,7 @@ const CONTACTO = {
   });
 
   /* ---------- Trayectoria: scroll horizontal ---------- */
-  if (innerWidth >= 900) {
+  mm.add("(min-width: 900px)", () => {
     const ptrack = $(".path__track"), pbar = $(".path__bar span");
     const dist = () => ptrack.scrollWidth - innerWidth;
     const horiz = gsap.to(ptrack, {
@@ -405,17 +452,27 @@ const CONTACTO = {
     $$(".step").forEach((s) => ScrollTrigger.create({
       trigger: s, containerAnimation: horiz, start: "left 75%", end: "right 25%", toggleClass: "is-on",
     }));
-  } else {
+  });
+  mm.add("(max-width: 899px)", () => {
     $$(".step").forEach((s) => gsap.from(s, { opacity: 0, y: 40, duration: 1, ease: "expo.out", scrollTrigger: { trigger: s, start: "top 88%" } }));
-  }
+  });
 
   /* ---------- Laboratorio: entrada ---------- */
   gsap.from(".exp", { opacity: 0, y: 60, scale: 0.96, duration: 1.2, stagger: 0.12, ease: "expo.out", scrollTrigger: { trigger: ".lab__grid", start: "top 85%" } });
   gsap.from(".contact__meta > *", { opacity: 0, y: 30, duration: 1, stagger: 0.1, ease: "expo.out", scrollTrigger: { trigger: ".contact__meta", start: "top 92%" } });
 
   /* ---------- Ajustes al cambiar tamaño ---------- */
-  let rz;
-  addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => { fitAll(); ScrollTrigger.refresh(); }, 150); });
+  // en celular la barra del navegador aparece/desaparece y dispara "resize":
+  // solo recalculamos si cambió el ancho (rotación o ventana nueva), así no salta el scroll
+  let rz, lastW = innerWidth;
+  addEventListener("resize", () => {
+    clearTimeout(rz);
+    rz = setTimeout(() => {
+      if (Math.abs(innerWidth - lastW) < 2) return;
+      lastW = innerWidth;
+      fitAll(); ScrollTrigger.refresh();
+    }, 180);
+  });
 })();
 
 // fitAll también se usa en el modo sin animaciones
@@ -445,7 +502,10 @@ function initLab() {
     const local = (e) => { const r = fig.getBoundingClientRect(); ptr.x = e.clientX - r.left; ptr.y = e.clientY - r.top; ptr.on = true; };
     fig.addEventListener("pointermove", local);
     fig.addEventListener("pointerdown", local);
-    fig.addEventListener("pointerleave", () => { ptr.on = false; ptr.x = ptr.y = -9999; });
+    const off = () => { ptr.on = false; ptr.x = ptr.y = -9999; };
+    fig.addEventListener("pointerleave", off);
+    fig.addEventListener("pointercancel", off);
+    fig.addEventListener("pointerup", (e) => { if (e.pointerType !== "mouse") off(); });
     const ex = { fig, ptr, visible: false, step: null, resize: () => {} };
 
     if (type === "kuzushi" || type === "tide") {
@@ -536,51 +596,46 @@ function initLab() {
       };
     }
 
-    if (type === "goo") {
-      // metaballs: gotas difuminadas + contraste alto = formas que se funden
-      const field = fig.querySelector(".goo__field");
-      const blobs = [];
-      let W = 0, H = 0, t = 0;
-      const add = (x, y, r, free = true) => {
-        const el = document.createElement("span");
-        el.className = "goo__blob";
-        field.appendChild(el);
-        const b = { el, x, y, r, free, ox: Math.random() * 6, oy: Math.random() * 6, sp: 0.4 + Math.random() * 0.6, tx: x, ty: y, born: 0 };
-        blobs.push(b);
-        return b;
-      };
+    if (type === "relief") {
+      // relieve: líneas apiladas que forman un terreno; el cursor levanta una montaña
+      const cv = fig.querySelector("canvas"), ctx = cv.getContext("2d");
+      let W = 0, H = 0, t = 0, lines = [];
+      const sm = { x: -9999, y: -9999, a: 0 }; // cursor suavizado
       ex.resize = () => {
+        const d = Math.min(devicePixelRatio || 1, 2);
         W = fig.clientWidth; H = fig.clientHeight;
-        if (!blobs.length) {
-          const u = Math.min(W, H);
-          for (let i = 0; i < 7; i++) add(W * (0.12 + (i / 6) * 0.76), H * (0.25 + Math.random() * 0.4), u * (0.045 + Math.random() * 0.07));
-          ex.cursor = add(W / 2, H / 2, u * 0.085, false);
-        }
+        cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0);
+        const n = Math.max(22, Math.round(H / 13));
+        lines = Array.from({ length: n }, (_, i) => ({ i, p1: Math.random() * 10, p2: Math.random() * 10, p3: Math.random() * 10 }));
       };
-      fig.addEventListener("click", (e) => {
-        const r = fig.getBoundingClientRect();
-        const u = Math.min(W, H);
-        const b = add(e.clientX - r.left, e.clientY - r.top, u * (0.05 + Math.random() * 0.07));
-        if (blobs.length > 16) { const old = blobs.splice(0, 1)[0]; old.el.remove(); }
-        b.born = 1;
-      });
       ex.step = () => {
-        t += 0.008;
-        for (const b of blobs) {
-          if (b.free) {
-            // cada gota orbita lento alrededor de su punto de origen
-            const px = b.x + Math.sin(t * b.sp + b.ox) * W * 0.12;
-            const py = b.y + Math.cos(t * b.sp * 0.8 + b.oy) * H * 0.1;
-            b.tx += (px - b.tx) * 0.05; b.ty += (py - b.ty) * 0.05;
-          } else {
-            const gx = ptr.on ? ptr.x : W / 2 + Math.sin(t * 1.3) * W * 0.18;
-            const gy = ptr.on ? ptr.y : H / 2 + Math.cos(t) * H * 0.12;
-            b.tx += (gx - b.tx) * 0.12; b.ty += (gy - b.ty) * 0.12;
+        t += 0.012;
+        if (ptr.on) { sm.x += (ptr.x - sm.x) * (sm.a ? 0.12 : 1); sm.y += (ptr.y - sm.y) * (sm.a ? 0.12 : 1); }
+        sm.a += ((ptr.on ? 1 : 0) - sm.a) * 0.06;
+        ctx.fillStyle = "#0B0B0C"; ctx.fillRect(0, 0, W, H);
+        const top = H * 0.2, bottom = H * 0.86, gap = (bottom - top) / lines.length;
+        const step = W < 500 ? 5 : 4, amp = gap * 6;
+        for (const L of lines) {
+          const y0 = top + L.i * gap;
+          ctx.beginPath();
+          ctx.moveTo(0, y0);
+          for (let x = 0; x <= W; x += step) {
+            const u = x / W;
+            // campana central: los picos viven en el medio, los bordes quedan planos
+            const env = Math.exp(-Math.pow((u - 0.5) / 0.2, 2));
+            let h = (Math.sin(u * 23 + L.p1 + t) * 0.5 + Math.sin(u * 41 - L.p2 - t * 1.3) * 0.3 + Math.sin(u * 67 + L.p3 + t * 0.7) * 0.2);
+            h = Math.max(0, h) * env;
+            const dx = (x - sm.x) / (W * 0.12), dy = (y0 - sm.y) / (H * 0.25);
+            const bump = sm.a * Math.exp(-(dx * dx + dy * dy)) * 1.6 * (0.6 + 0.4 * Math.sin(u * 50 + t * 3 + L.i));
+            ctx.lineTo(x, y0 - (h + Math.max(0, bump)) * amp);
           }
-          if (b.born > 0) b.born = Math.max(0, b.born - 0.04);
-          const s = 1 - b.born;
-          b.el.style.transform = `translate3d(${b.tx - b.r}px, ${b.ty - b.r}px, 0) scale(${s})`;
-          b.el.style.width = b.el.style.height = b.r * 2 + "px";
+          ctx.lineTo(W, y0);
+          // relleno oscuro para tapar las líneas de atrás (sensación de volumen)
+          ctx.lineTo(W, y0 + 2); ctx.lineTo(0, y0 + 2); ctx.closePath();
+          ctx.fillStyle = "#0B0B0C"; ctx.fill();
+          ctx.strokeStyle = L.i % 7 === 3 ? "rgba(143,160,255,.95)" : "rgba(236,233,226,.82)";
+          ctx.lineWidth = 1.2;
+          ctx.stroke();
         }
       };
     }
@@ -655,8 +710,16 @@ function initLab() {
     new IntersectionObserver(([e]) => (ex.visible = e.isIntersecting)).observe(fig);
   });
 
-  let rz;
-  addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => exps.forEach((e) => e.resize()), 200); });
+  // cada experimento se redimensiona solo cuando cambia SU tamaño (no con la barra del navegador móvil)
+  const ro = new ResizeObserver((ents) => ents.forEach((en) => {
+    const ex = exps.find((x) => x.fig === en.target);
+    if (!ex) return;
+    const w = Math.round(en.contentRect.width), h = Math.round(en.contentRect.height);
+    if (ex.w === w && ex.h === h) return;
+    ex.w = w; ex.h = h;
+    ex.resize();
+  }));
+  exps.forEach((e) => ro.observe(e.fig));
   const loop = () => { exps.forEach((e) => e.visible && e.step && e.step()); requestAnimationFrame(loop); };
   requestAnimationFrame(loop);
 }
