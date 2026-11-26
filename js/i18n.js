@@ -45,6 +45,7 @@
     // portada
     [".hero__kicker", 0, '<span class="reveal-line"><span>(Manuel Alzugaray — Portfolio 2026)</span></span>'],
     [".badge textPath", 0, "DESIGN ✦ CODE ✦ BRAND ✦ URUGUAY ✦"],
+    [".badge__core small", 0, "Since"],
     [".hero__intro", 0, '<span class="reveal-line"><span>I design and build</span></span><span class="reveal-line"><span><em>brands</em>, websites and video</span></span><span class="reveal-line"><span>with an athlete’s method.</span></span>'],
     [".hero__tags", 0, "<li>Brand</li><li>Web</li><li>Video</li><li>Punta del Este, UY</li>"],
     [".hero__scroll span", 0, "See projects"],
@@ -155,7 +156,7 @@
     ['meta[name="description"]', "content", "Manuel Alzugaray, independent designer and developer in Punta del Este, Uruguay. Brands, websites, apps and video."],
     ['meta[property="og:description"]', "content", "Brand, web and video design and development, with an athlete’s method."],
     [".nav__logo", "data-cursor", "Home"],
-    [".badge", "data-cursor", "Athlete ↓"], [".badge", "aria-label", "Go to the athlete section"],
+    [".badge", "data-cursor", "Journey ↓"], [".badge", "aria-label", "Working since 2023: see journey"],
     [".hero__scroll", "data-cursor", "See work ↓"],
     [".now__cta", "data-cursor", "Write me ↘"], [".now__title", "aria-label", "Waiting for your project"],
     [".card__pip", "data-cursor", "See the site ↗"],

@@ -198,7 +198,7 @@ a:hover .roll > span, .roll:hover > span { transform: translateY(-1.2em); }
   transition: transform .6s var(--ease-out), background .4s;
 }
 .badge__core b { font-weight: 800; font-size: clamp(1.1rem, 1.7vw, 1.6rem); letter-spacing: -.04em; font-variation-settings: "wdth" 80, "wght" 800; }
-.badge__core small { font-family: var(--mono); font-size: .58rem; letter-spacing: .1em; text-transform: uppercase; opacity: .8; margin-top: .25rem; }
+.badge__core small { font-family: var(--mono); font-size: .58rem; letter-spacing: .1em; text-transform: uppercase; opacity: .8; margin-bottom: .2rem; }
 .badge:hover .badge__core { transform: scale(1.08) rotate(-8deg); background: var(--ink); }
 .badge:hover .badge__ring { animation-duration: 4s; }
 @keyframes spin { to { transform: rotate(360deg); } }
