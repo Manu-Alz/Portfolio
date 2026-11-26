@@ -69,7 +69,7 @@
     [".card__info > p", 0, "Brand and platform to discover what’s on in Punta del Este. I conceived the product, designed the identity and built the site: events, map and trip planner in three languages, with indexable pages generated automatically."],
     [".card__info > p", 1, "Institutional website for a martial arts association founded in 1983. News, gallery, schedules and contact, with a system that lets the club publish on its own, without relying on a developer."],
     [".card__info > p", 2, "Installable app custom-built for a dojo, which adopted it as its progression system: the 100 Kodokan techniques with video, belt progress, attendance tracking, live dojo status and Japanese vocabulary with audio."],
-    [".card__results", 0, '<li><b>+70</b><span class="mono">events listed</span></li><li><b>3</b><span class="mono">languages: ES · EN · PT</span></li><li><b>↗</b><span class="mono">organic traffic growing</span></li>'],
+    [".card__results", 0, '<li><b>+70</b><span class="mono">events listed</span></li><li><b>3</b><span class="mono">languages · ES EN PT</span></li><li><b>↗</b><span class="mono">organic traffic growing</span></li>'],
     [".card__results", 1, '<li><b>1</b><span class="mono">dojo uses it as its official system</span></li><li><b>100</b><span class="mono">techniques with video</span></li><li><b>PWA</b><span class="mono">installs like an app</span></li>'],
     [".reel__play span", 0, "Watch with sound"], [".reel__top > span", 0, "<i class=\"reel__rec\"></i>REC · Eventos PDE reel"],
     [".reel-modal__close", 0, "Close ✕"],
@@ -79,7 +79,7 @@
     [".card .tags", 0, "<li>Brand</li><li>Product</li><li>Web</li><li>SEO</li><li>3 languages</li>"],
     [".card .tags", 1, "<li>Web</li><li>Identity</li><li>Content</li>"],
     [".card .tags", 2, "<li>Product</li><li>PWA</li><li>Accounts</li><li>Mobile UX</li>"],
-    [".card__cta", 1, "View site ↗"], [".card__cta", 2, "Open app ↗"],
+    [".card__cta", 0, "Visit eventospde.com"], [".card__cta", 1, "View the club’s site"], [".card__cta", 2, "Open the app"],
     // servicios
     ["#hago .label", 0, "(03) — What I do"],
     [".svc__intro", 0, "End to end or by stages, for brands, companies and athletes. One point of contact from strategy to launch."],
