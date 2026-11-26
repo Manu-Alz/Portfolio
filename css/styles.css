@@ -884,3 +884,20 @@ a, button { -webkit-tap-highlight-color: transparent; }
 @media (max-width: 1180px) { .nav__mid { display: none; } .nav { grid-template-columns: 1fr auto; } }
 /* indicador en el margen izquierdo, en vertical: no pisa el contenido */
 .sect { left: calc(var(--pad) / 2); top: 50%; bottom: auto; transform: translate(-50%, -50%) rotate(-90deg); white-space: nowrap; font-size: .62rem; }
+
+/* =========================================================
+   Textos de apoyo y fichas de proyecto
+   ========================================================= */
+.work__intro { max-width: 46ch; color: var(--muted); font-size: clamp(1rem, 1.3vw, 1.2rem); margin-top: 1.6rem; margin-left: auto; }
+.svc__head { display: grid; grid-template-columns: 1fr minmax(0, 46ch); gap: 1rem 3rem; align-items: start; margin-bottom: clamp(1.5rem, 4vw, 3rem); }
+.svc__head .label { margin-bottom: 0; }
+.svc__intro { color: var(--muted); font-size: clamp(1rem, 1.3vw, 1.2rem); }
+.card__facts { margin: 0; display: grid; gap: .55rem; padding: .9rem 0; border-top: 1px solid rgba(255,255,255,.1); border-bottom: 1px solid rgba(255,255,255,.1); }
+.card__facts div { display: grid; grid-template-columns: 5.5rem 1fr; gap: .8rem; }
+.card__facts dt { color: var(--blue-soft); }
+.card__facts dd { margin: 0; color: rgba(236,233,226,.85); text-transform: none; letter-spacing: 0; font-size: .74rem; line-height: 1.45; }
+@media (max-width: 900px) {
+  .work__intro { margin-left: 0; }
+  .svc__head { grid-template-columns: 1fr; }
+}
+.svc__link { text-decoration: underline; text-underline-offset: .2em; text-decoration-thickness: 1px; white-space: nowrap; }
