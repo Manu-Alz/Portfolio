@@ -24,19 +24,37 @@ Un proyecto aparece en varios lugares. Al sumar uno, revisar todos:
 
 1. **Captura** en `assets/work/` (JPG, ~1600 px de ancho, recortada arriba).
 2. **Trabajo** (`index.html`, `#trabajo`): copiar un `<article class="card">`, cambiar número (`card__num`), título, año, link, captura, texto, `card__results`, `card__facts` (Rol / Desafío) y `tags`. Las tarjetas se apilan solas.
-3. **Contador** del título "Trabajo" (`<sup class="mono">03</sup>`) → nueva cantidad.
+3. **Contador** del título "Trabajo" (`<sup class="mono">05</sup>` en `index.html` y en la línea `kh("Work")` de `js/i18n.js`) → nueva cantidad.
 4. **Trayectoria**: si es un hito, sumarlo o mencionarlo en el `article.step` del año.
 5. **Servicios / capacidades**: si suma un servicio nuevo (por ejemplo, apps o CRM), agregarlo a la lista de capacidades.
 6. **Inglés** (`js/i18n.js`): traducir cada texto nuevo. Ojo: varias entradas van por posición (`".card__info > p", 2`, `".card__results", 1`, …), así que al insertar una tarjeta hay que correr los índices de las que siguen.
 7. **CV** (`cv.html`): sumarlo si corresponde, también en su traducción.
-8. **Caché**: subir `?v=N` en los `<link>`/`<script>` de `index.html` para que los navegadores tomen los cambios.
+8. **Build**: correr `tools/build.ps1` (ver abajo). Actualiza la versión de caché sola y regenera `/en/`.
 
 ## Publicar
 GitHub → Settings → Pages → Source: "Deploy from a branch", rama `main`, carpeta `/ (root)`.
 
+## Build (antes de cada commit)
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools/build.ps1
+```
+
+1. Pone `?v=<hash>` en los CSS/JS de `index.html` según su contenido: no hay que subir la versión a mano.
+2. Genera `en/index.html`, la versión en inglés como página real (indexable por Google), a partir de `index.html` + las traducciones de `js/i18n.js`. Usa Microsoft Edge en modo headless.
+
+`en/index.html` es un archivo generado: no se edita a mano.
+
 ## Idiomas (ES / EN)
 
-- El español está escrito directamente en `index.html`.
-- El inglés vive en `js/i18n.js`: cada línea dice qué elemento cambiar y con qué texto. Si editás un texto en español, actualizá también su versión ahí.
-- El botón **ES / EN** guarda la elección en el navegador. También se puede forzar con `?lang=en` o `?lang=es` en la URL (sirve para mandar el link directo en inglés).
+- **Español:** `index.html` (la página base, en `/`).
+- **Inglés:** `en/index.html` (en `/en/`), generado con el build. Las traducciones viven en `js/i18n.js`: cada línea dice qué elemento cambiar y con qué texto. Si editás un texto en español, actualizá su versión ahí y corré el build.
+- Las dos páginas se enlazan con `hreflang` y tienen su propio `canonical`, título y metadatos.
+- El botón **ES / EN** lleva a la otra página y guarda la elección en el navegador. Los links viejos con `?lang=en` siguen funcionando (redirigen a `/en/`).
 - El CV (`cv.html`) tiene su propia traducción al final del archivo y respeta el mismo idioma elegido.
+
+## SEO
+
+- Metadatos: `canonical`, `hreflang`, Open Graph y Twitter Card en el `<head>`. Imagen para compartir: `assets/og.jpg` y `assets/og-en.jpg` (1200×630).
+- Datos estructurados JSON-LD (`Person` y `WebSite`) en el `<head>`.
+- `sitemap.xml` y `robots.txt` en la raíz. Ojo: en un sitio de proyecto de GitHub Pages (`/Portfolio/`) los buscadores solo leen el `robots.txt` del dominio (`manu-alz.github.io/robots.txt`). El sitemap hay que enviarlo a mano en Google Search Console.

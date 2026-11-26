@@ -1,33 +1,52 @@
 /* =========================================================
-   Idioma: español (base, en el HTML) e inglés.
-   Se aplica antes de main.js, así las animaciones ya arrancan
-   con el texto correcto. El idioma se guarda en el navegador
-   y también se puede forzar con ?lang=en o ?lang=es.
+   Idioma: dos páginas reales, indexables por separado.
+   - /            → español (el HTML base)
+   - /en/         → inglés, generado con tools/build-en.ps1 a partir
+                    de las traducciones de este archivo
+   Cada página trae el idioma en <html data-static-lang="…">, así
+   este script no reescribe nada al cargar: solo maneja el botón
+   ES / EN y recuerda la elección del visitante.
+   Al generar /en/ se abre la página con ?build=en y ahí sí se
+   aplican las traducciones (ver apply() al final).
    ========================================================= */
 (() => {
-  const q = new URLSearchParams(location.search).get("lang");
-  let saved = null;
-  try { saved = localStorage.getItem("lang"); } catch (e) {}
-  const nav = (navigator.language || "es").toLowerCase();
-  const LANG = q === "en" || q === "es" ? q : saved || (nav.startsWith("es") ? "es" : "en");
-  try { localStorage.setItem("lang", LANG); } catch (e) {}
+  const root = document.documentElement;
+  const params = new URLSearchParams(location.search);
+  const BUILD = params.get("build") === "en";
+  const PAGE = BUILD ? "en" : root.dataset.staticLang || "es";
+  const LANG = PAGE;
+  // URL de la otra versión (relativa, sirve igual en GitHub Pages y en local)
+  const otherUrl = (lang) => (lang === "en" ? (PAGE === "en" ? "./" : "en/") : PAGE === "en" ? "../" : "./");
+
+  if (!BUILD) {
+    let saved = null;
+    try { saved = localStorage.getItem("lang"); } catch (e) {}
+    // links viejos con ?lang=xx, o una elección guardada distinta a esta página → ir a la versión correcta
+    const asked = params.get("lang") === "en" || params.get("lang") === "es" ? params.get("lang") : null;
+    const want = asked || saved;
+    if (asked) { try { localStorage.setItem("lang", asked); } catch (e) {} }
+    if (want && want !== PAGE) {
+      location.replace(otherUrl(want) + location.hash);
+      return;
+    }
+  }
   window.LANG = LANG;
   window.T = (es, en) => (LANG === "en" ? en : es);
-  document.documentElement.lang = LANG;
+  root.lang = LANG;
 
-  // botón ES / EN: guarda la elección y recarga (salteando la precarga larga)
+  // botón ES / EN: guarda la elección y va a la otra página (salteando la precarga larga)
   document.addEventListener("click", (e) => {
     const b = e.target.closest("[data-lang-toggle]");
     if (!b) return;
     e.preventDefault();
     const next = LANG === "en" ? "es" : "en";
     try { localStorage.setItem("lang", next); sessionStorage.setItem("quickLoad", "1"); sessionStorage.setItem("scrollY", String(Math.round(scrollY))); } catch (err) {}
-    const u = new URL(location.href);
-    u.searchParams.delete("lang");
-    location.href = u.pathname + u.search + location.hash;
+    location.href = otherUrl(next) + location.hash;
   });
 
   const k = (word) => [...word].map((c) => `<span class="k">${c === " " ? "&nbsp;" : c}</span>`).join("");
+  // título accesible: el texto real para lectores de pantalla y buscadores, las letras sueltas solo visuales
+  const kh = (word) => `<span class="sr-only">${word}</span><span class="kw" aria-hidden="true">${k(word)}</span>`;
 
   // [selector, índice (o "all" con array), html]
   const EN = [
@@ -63,9 +82,9 @@
     [".manifesto__foot p", 1, "The other half of my life is sport. I train judo in the −73 kg category, coach strength training, and grew up in a family of high-performance athletes. That shapes how I work: clear goals, consistency and measured adjustments. I work in Spanish and English (C2)."],
     // trabajo
     ["#trabajo .label", 0, "(02) — Selected work"],
-    [".work__head .big-title", 0, k("Work") + '<sup class="mono">03</sup>'],
+    [".work__head .big-title", 0, kh("Work") + '<sup class="mono" aria-hidden="true">05</sup>'], [".hero__name .sr-only", 0, "Manuel Alzugaray — Brand, web and video design &amp; development in Punta del Este, Uruguay"],
     [".work__intro", 0, "Own and client projects, from idea to launch. Each one treated as a product: with a goal, an audience and something to improve next."],
-    [".card__year", 0, "2026 — live"], [".card__year", 1, "2026 — club"], [".card__year", 2, "2026 — app"],
+    [".card__year", 0, "2026 — live"], [".card__year", 1, "2026 — club"], [".card__year", 2, "2026 — app"], [".card__year", 3, "2026 — product"], [".card__year", 4, "2026 — product"],
     [".card__info > p", 0, "Brand and platform to discover what’s on in Punta del Este. I conceived the product, designed the identity and built the site: events, map and trip planner in three languages, with indexable pages generated automatically."],
     [".card__info > p", 1, "Institutional website for a martial arts association founded in 1983. News, gallery, schedules and contact, with a system that lets the club publish on its own, without relying on a developer."],
     [".card__info > p", 2, "Installable app custom-built for a dojo, which adopted it as its progression system: the 100 Kodokan techniques with video, belt progress, attendance tracking, live dojo status and Japanese vocabulary with audio."],
@@ -80,6 +99,15 @@
     [".card .tags", 1, "<li>Web</li><li>Identity</li><li>Content</li>"],
     [".card .tags", 2, "<li>Product</li><li>PWA</li><li>Accounts</li><li>Mobile UX</li>"],
     [".card__cta", 0, "Visit eventospde.com"], [".card__cta", 1, "View the club’s site"], [".card__cta", 2, "Open the app"],
+    [".card__info > p", 3, "A CRM for small sales teams: contacts, opportunities by stage, tasks with due dates and each client’s activity, with a dashboard that sums up sales, funnel and win rate. It runs entirely in the browser, no server."],
+    [".card__info > p", 4, "A browser music player built on Audius’ catalogue of independent artists: trends, search, genres, favourites and a play queue. It also plays your own files and installs like an app."],
+    [".card__results", 2, '<li><b>5</b><span class="mono">modules: dashboard, contacts, sales, tasks, activity</span></li><li><b>0</b><span class="mono">servers: data lives in the browser</span></li><li><b>⌘K</b><span class="mono">search and quick actions</span></li>'],
+    [".card__results", 3, '<li><b>16</b><span class="mono">genres to explore</span></li><li><b>API</b><span class="mono">real Audius catalogue</span></li><li><b>PWA</b><span class="mono">installs like an app</span></li>'],
+    [".card__facts", 3, "<div><dt>Role</dt><dd>Product, design and development</dd></div><div><dt>Challenge</dt><dd>Let a team see on one screen what to sell, who to call and what’s due today</dd></div>"],
+    [".card__facts", 4, "<div><dt>Role</dt><dd>Product, design and development</dd></div><div><dt>Challenge</dt><dd>A complete streaming experience with a real catalogue and no backend of its own</dd></div>"],
+    [".card .tags", 3, "<li>Product</li><li>Dashboard</li><li>Data</li><li>UX</li>"],
+    [".card .tags", 4, "<li>Product</li><li>Audio</li><li>API</li><li>PWA</li>"],
+    [".card__cta", 3, "Open the CRM"], [".card__cta", 4, "Listen on Pulso"],
     // servicios
     ["#hago .label", 0, "(03) — What I do"],
     [".svc__intro", 0, "End to end or by stages, for brands, companies and athletes. One point of contact from strategy to launch."],
@@ -105,7 +133,7 @@
     [".step p", 2, "Custom training plans with progress tracking. Clients came on their own, through referrals and social media."],
     [".step p", 3, "Responsible for pool safety during the season and for daily service to residents and visitors."],
     [".step p", 4, "A formal technical foundation for what I was already doing on my own. Not completed: I took what I needed and kept building."],
-    [".step p", 5, "Launched Punta del Este’s events guide in three languages and added apps and sites for judo. Alongside, a Business Administration course."],
+    [".step p", 5, "Launched Punta del Este’s events guide in three languages, added apps and sites for judo and built my own products: a CRM and a music player. Alongside, a Business Administration course."],
     [".step p", 6, "Moving to study and train judo more often, aiming to enter the competitive circuit."],
     // gráfica
     // atleta y método
@@ -126,10 +154,10 @@
     [".mstep__out", 0, "Deliverable · brief and goals"], [".mstep__out", 1, "Deliverable · sitemap and references"],
     [".mstep__out", 2, "Deliverable · live prototype"], [".mstep__out", 3, "Deliverable · launch and metrics"],
     [".caps .label", 0, "Capabilities"],
-    [".caps__list", 0, "<li>Brand identity</li><li>Art direction</li><li>Web design</li><li>Front-end development</li><li>Motion &amp; interaction</li><li>Installable apps (PWA)</li><li>Multilingual SEO</li><li>Video editing</li><li>Social content</li><li>Copywriting ES / EN</li><li>Training programming</li>"],
+    [".caps__list", 0, "<li>Brand identity</li><li>Art direction</li><li>Web design</li><li>Front-end development</li><li>Motion &amp; interaction</li><li>Installable apps (PWA)</li><li>Dashboards &amp; CRM</li><li>Multilingual SEO</li><li>Video editing</li><li>Social content</li><li>Copywriting ES / EN</li><li>Training programming</li>"],
     // contacto
     [".contact__label", 0, '(06) — Contact <span class="avail"><i></i>Available for projects · 2026</span>'],
-    [".contact__title", 0, k("Let’s talk")],
+    [".contact__title", 0, kh("Let’s talk")],
     [".contact__text", 0, "Have a project in mind? A brand, a website or a video: <em>tell me</em> where you’re at and I’ll get back to you shortly."],
     ["#contact-btn .magnet__inner", 0, "Email me"],
     [".copy__state", 0, "Copy ⧉"],
@@ -173,5 +201,6 @@
     b.innerHTML = `<span class="${LANG === "es" ? "is-on" : ""}">ES</span><i>/</i><span class="${LANG === "en" ? "is-on" : ""}">EN</span>`;
     b.setAttribute("aria-label", LANG === "en" ? "Cambiar a español" : "Switch to English");
   });
-  if (LANG === "en") apply();
+  // solo al generar /en/ (tools/build-en.ps1): las páginas publicadas ya vienen traducidas
+  if (BUILD) apply();
 })();

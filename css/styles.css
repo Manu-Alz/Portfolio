@@ -10,7 +10,7 @@
   --blue-soft: #8FA0FF;
   --bg: var(--paper);
   --fg: var(--ink);
-  --muted: rgba(14, 14, 14, .55);
+  --muted: rgba(14, 14, 14, .66); /* contraste AA (≈5,6:1) sobre el papel */
   --line: rgba(14, 14, 14, .14);
   --pad: clamp(1rem, 2.6vw, 2.5rem);
   --ease: cubic-bezier(.76, 0, .24, 1);
@@ -950,3 +950,9 @@ a, button { -webkit-tap-highlight-color: transparent; }
   .card__facts dd { font-size: .92rem; }
   .card__cta { margin-top: .4rem; font-size: 1.3rem; }
 }
+
+/* accesibilidad: texto solo para lectores de pantalla y buscadores */
+.sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.kw { display: contents; }
+.noscript { position: relative; z-index: 500; margin: 0; padding: .8rem var(--pad); background: var(--ink); color: var(--paper); font-size: .72rem; letter-spacing: .04em; }
+.noscript a { color: var(--blue-soft); text-decoration: underline; }

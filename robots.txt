@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://manu-alz.github.io/Portfolio/sitemap.xml

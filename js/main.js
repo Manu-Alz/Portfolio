@@ -328,25 +328,32 @@ const T = window.T || ((es) => es);
   const load = gsap.timeline({
     onComplete: () => { lenis && lenis.start(); $(".loader").remove(); ScrollTrigger.refresh(); },
   });
+  // precarga corta (~1,2 s hasta ver contenido) y completa solo la primera vez de la sesión
+  const STEP = 0.17;
   load.to(counter, {
-    v: 100, duration: 1.8, ease: "power2.inOut",
+    v: 100, duration: STEP * words.length, ease: "power2.inOut",
     onUpdate: () => (count.textContent = String(Math.round(counter.v)).padStart(3, "0")),
   }, 0);
   words.forEach((w, i) => {
-    load.fromTo(w, { yPercent: 60, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.28, ease: "power3.out" }, i * 0.3);
-    if (i < words.length - 1) load.to(w, { yPercent: -60, opacity: 0, duration: 0.24, ease: "power3.in" }, i * 0.3 + 0.24);
+    load.fromTo(w, { yPercent: 60, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.16, ease: "power3.out" }, i * STEP);
+    if (i < words.length - 1) load.to(w, { yPercent: -60, opacity: 0, duration: 0.14, ease: "power3.in" }, i * STEP + 0.14);
   });
+  const OUT = STEP * words.length;
   load
-    .to(".loader", { clipPath: "inset(0 0 100% 0)", duration: 1.1, ease: "expo.inOut" }, 2.0)
-    .add(() => intro.play(), 2.35);
-  // al cambiar de idioma: precarga rápida y volvés al mismo lugar de la página
-  let quick = null, backTo = 0;
-  try { quick = sessionStorage.getItem("quickLoad"); backTo = +sessionStorage.getItem("scrollY") || 0; sessionStorage.removeItem("quickLoad"); sessionStorage.removeItem("scrollY"); } catch (e) {}
-  if (quick) {
+    .to(".loader", { clipPath: "inset(0 0 100% 0)", duration: 0.8, ease: "expo.inOut" }, OUT)
+    .add(() => intro.play(), OUT + 0.2);
+  // al cambiar de idioma o en visitas siguientes de la misma sesión: casi instantánea
+  let quick = null, seen = null, backTo = 0;
+  try {
+    quick = sessionStorage.getItem("quickLoad"); seen = sessionStorage.getItem("seenLoader");
+    backTo = +sessionStorage.getItem("scrollY") || 0;
+    sessionStorage.removeItem("quickLoad"); sessionStorage.removeItem("scrollY"); sessionStorage.setItem("seenLoader", "1");
+  } catch (e) {}
+  if (quick || seen) {
     load.timeScale(4);
     load.eventCallback("onComplete", () => {
       lenis && lenis.start(); $(".loader").remove(); ScrollTrigger.refresh();
-      if (backTo && lenis) lenis.scrollTo(backTo, { immediate: true, force: true });
+      if (quick && backTo && lenis) lenis.scrollTo(backTo, { immediate: true, force: true });
     });
   }
 
