@@ -446,11 +446,11 @@ a:hover .roll > span, .roll:hover > span { transform: translateY(-1.2em); }
 .shot__crop--br { right: -14px; bottom: -14px; border-right-width: 1px; border-bottom-width: 1px; }
 /* anotación: quién soy en la foto */
 /* caja de tracking, como un sistema de cámaras que detecta y sigue */
-.shot__mark { position: absolute; left: 64.2%; top: 24%; width: 10.5%; aspect-ratio: .86; transform: translate(-50%, -50%); }
+.shot__mark { position: absolute; left: 57.5%; top: 17.5%; width: 17%; height: 74%; }
 .shot__box { position: absolute; inset: 0; border: 1px solid rgba(143,160,255,.75); animation: track 3.2s steps(1) infinite; }
 .shot__box::before {
   content: ""; position: absolute; inset: -3px;
-  --c: #8FA0FF; --l: 9px;
+  --c: #8FA0FF; --l: 14px;
   background:
     linear-gradient(var(--c), var(--c)) left top / var(--l) 2px, linear-gradient(var(--c), var(--c)) left top / 2px var(--l),
     linear-gradient(var(--c), var(--c)) right top / var(--l) 2px, linear-gradient(var(--c), var(--c)) right top / 2px var(--l),
