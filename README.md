@@ -20,3 +20,10 @@ Si esas librerías no cargan o el sistema pide "reducir movimiento", la página 
 
 ## Publicar
 GitHub → Settings → Pages → Source: "Deploy from a branch", rama `main`, carpeta `/ (root)`.
+
+## Idiomas (ES / EN)
+
+- El español está escrito directamente en `index.html`.
+- El inglés vive en `js/i18n.js`: cada línea dice qué elemento cambiar y con qué texto. Si editás un texto en español, actualizá también su versión ahí.
+- El botón **ES / EN** guarda la elección en el navegador. También se puede forzar con `?lang=en` o `?lang=es` en la URL (sirve para mandar el link directo en inglés).
+- El CV (`cv.html`) tiene su propia traducción al final del archivo y respeta el mismo idioma elegido.

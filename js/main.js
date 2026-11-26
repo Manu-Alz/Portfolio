@@ -9,6 +9,9 @@ const CONTACTO = {
   respaldo: "https://github.com/Manu-Alz",    // si no hay email, el botón lleva acá
 };
 
+// textos según idioma (definido en i18n.js; si falta, español)
+const T = window.T || ((es) => es);
+
 (() => {
   const $ = (s, el = document) => el.querySelector(s);
   const $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -17,7 +20,7 @@ const CONTACTO = {
   const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
 
   /* ---------- Reloj de Uruguay ---------- */
-  const fmt = new Intl.DateTimeFormat("es-UY", { hour: "2-digit", minute: "2-digit", timeZone: "America/Montevideo" });
+  const fmt = new Intl.DateTimeFormat(window.LANG === "en" ? "en-US" : "es-UY", { hour: "2-digit", minute: "2-digit", timeZone: "America/Montevideo" });
   const tick = () => $$("[data-clock]").forEach((el) => (el.textContent = fmt.format(new Date())));
   tick(); setInterval(tick, 15000);
 
@@ -30,9 +33,9 @@ const CONTACTO = {
   $$("[data-copy]").forEach((b) => {
     const state = $(".copy__state", b);
     b.addEventListener("click", async () => {
-      try { await navigator.clipboard.writeText(CONTACTO.email); state.textContent = "Copiado ✓"; }
+      try { await navigator.clipboard.writeText(CONTACTO.email); state.textContent = T("Copiado ✓", "Copied ✓"); }
       catch { location.href = "mailto:" + CONTACTO.email; }
-      setTimeout(() => (state.textContent = "Copiar ⧉"), 2200);
+      setTimeout(() => (state.textContent = T("Copiar ⧉", "Copy ⧉")), 2200);
     });
   });
 
@@ -42,7 +45,7 @@ const CONTACTO = {
     root.classList.toggle("menu-open", open);
     menuBtn.setAttribute("aria-expanded", String(open));
     mnav.setAttribute("aria-hidden", String(!open));
-    $(".nav__menu-t").textContent = open ? "Cerrar" : "Menú";
+    $(".nav__menu-t").textContent = open ? T("Cerrar", "Close") : T("Menú", "Menu");
     const l = window.__lenis;
     if (l) open ? l.stop() : l.start();
     document.body.style.overflow = open && !l ? "hidden" : "";
@@ -263,6 +266,16 @@ const CONTACTO = {
   load
     .to(".loader", { clipPath: "inset(0 0 100% 0)", duration: 1.1, ease: "expo.inOut" }, 2.0)
     .add(() => intro.play(), 2.35);
+  // al cambiar de idioma: precarga rápida y volvés al mismo lugar de la página
+  let quick = null, backTo = 0;
+  try { quick = sessionStorage.getItem("quickLoad"); backTo = +sessionStorage.getItem("scrollY") || 0; sessionStorage.removeItem("quickLoad"); sessionStorage.removeItem("scrollY"); } catch (e) {}
+  if (quick) {
+    load.timeScale(4);
+    load.eventCallback("onComplete", () => {
+      lenis && lenis.start(); $(".loader").remove(); ScrollTrigger.refresh();
+      if (backTo && lenis) lenis.scrollTo(backTo, { immediate: true, force: true });
+    });
+  }
 
   /* ---------- Hero al hacer scroll ---------- */
   const heroST = { trigger: ".hero", start: "top top", end: "bottom top", scrub: true };
@@ -417,8 +430,8 @@ const CONTACTO = {
   }
 
   /* ---------- Indicador de sección (abajo a la izquierda) ---------- */
-  const sects = [["inicio", "00", "Inicio"], ["sobre", "01", "Sobre mí"], ["trabajo", "02", "Trabajo"], ["hago", "03", "Servicios"],
-    ["trayectoria", "04", "Trayectoria"], ["lab", "05", "Experimentación gráfica"], ["atleta", "06", "Método"], ["contacto", "07", "Contacto"]];
+  const sects = [["inicio", "00", T("Inicio", "Home")], ["sobre", "01", T("Sobre mí", "About")], ["trabajo", "02", T("Trabajo", "Work")], ["hago", "03", T("Servicios", "Services")],
+    ["trayectoria", "04", T("Trayectoria", "Journey")], ["lab", "05", T("Experimentación gráfica", "Graphic experiments")], ["atleta", "06", T("Método", "Method")], ["contacto", "07", T("Contacto", "Contact")]];
   const sN = $(".sect__n"), sT = $(".sect__t");
   let curSect = "inicio";
   const showSect = ([id, n, t]) => {
@@ -616,7 +629,7 @@ function initLab() {
         W = fig.clientWidth; H = fig.clientHeight;
         cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0);
       };
-      const zone = (b) => (b < 100 ? ["Z1", "Recuperación"] : b < 125 ? ["Z2", "Base"] : b < 145 ? ["Z3", "Tempo"] : b < 162 ? ["Z4", "Umbral"] : ["Z5", "Máximo"]);
+      const zone = (b) => (b < 100 ? ["Z1", T("Recuperación", "Recovery")] : b < 125 ? ["Z2", "Base"] : b < 145 ? ["Z3", "Tempo"] : b < 162 ? ["Z4", T("Umbral", "Threshold")] : ["Z5", T("Máximo", "Max")]);
       ex.step = () => {
         if (++f % 4 === 0) { data.shift(); data.push(next()); }
         ctx.fillStyle = "#0B0B0C"; ctx.fillRect(0, 0, W, H);
@@ -650,7 +663,7 @@ function initLab() {
         // lectura grande
         const [zn, zt] = zone(last);
         ctx.textAlign = "left"; ctx.fillStyle = "rgba(236,233,226,.5)";
-        ctx.fillText("PULSACIONES · BPM", pad, 28);
+        ctx.fillText(T("PULSACIONES · BPM", "HEART RATE · BPM"), pad, 28);
         ctx.fillStyle = "#ECE9E2";
         const big = Math.min(H * 0.2, W * 0.22);
         ctx.font = `800 ${big}px Archivo, sans-serif`;
@@ -661,7 +674,7 @@ function initLab() {
         // min / prom / max
         const mn = Math.min(...data), mx = Math.max(...data), av = data.reduce((a, b) => a + b, 0) / N;
         ctx.textAlign = "right"; ctx.fillStyle = "rgba(236,233,226,.5)";
-        ctx.fillText(`MIN ${Math.round(mn)}  ·  PROM ${Math.round(av)}  ·  MAX ${Math.round(mx)}`, x1, 28);
+        ctx.fillText(`MIN ${Math.round(mn)}  ·  ${T("PROM", "AVG")} ${Math.round(av)}  ·  MAX ${Math.round(mx)}`, x1, 28);
         // lectura con el cursor
         if (ptr.on && ptr.x > x0 && ptr.x < x1 && ptr.y < y1 + 10) {
           const i = Math.round(((ptr.x - x0) / (x1 - x0)) * (N - 1)), b = data[i], cx = X(i), cy = Y(b);
@@ -682,7 +695,7 @@ function initLab() {
       // pósters suizos: 4 sistemas de composición con parámetros al azar, todo en HTML nítido.
       // La zona de abajo (≈90px) queda libre para el pie del experimento: nada importante va ahí.
       const box = fig.querySelector(".poster");
-      const words = ["Ritmo", "Forma", "Pulso", "Mover", "Marca", "Flujo", "Ippon", "Señal", "Tensión", "Cuerpo"];
+      const words = T(["Ritmo", "Forma", "Pulso", "Mover", "Marca", "Flujo", "Ippon", "Señal", "Tensión", "Cuerpo"], ["Rhythm", "Form", "Pulse", "Move", "Brand", "Flow", "Ippon", "Signal", "Tension", "Body"]);
       const pick = (a) => a[Math.floor(Math.random() * a.length)];
       const rnd = (a, b) => a + Math.random() * (b - a);
       const pal = [
@@ -735,7 +748,7 @@ function initLab() {
           ${shapes}
           <div class="poster__word pe pe--up ${vertical ? "is-v" : ""}" style="--d:.15s;${wordPos}"><span style="font-variation-settings:'wdth' ${wdth},'wght' ${wght}">${word}</span></div>
           <div class="poster__meta pe" style="--d:.25s"><span>Manuel Alzugaray</span><span>Nº ${String(n).padStart(3, "0")}</span></div>
-          <div class="poster__meta poster__meta--2 pe" style="--d:.3s"><span>Sistema ${["A", "B", "C", "D"][tpl]} · ${wdth}/${wght}</span><span>Punta del Este — 2026</span></div>`;
+          <div class="poster__meta poster__meta--2 pe" style="--d:.3s"><span>${T("Sistema", "System")} ${["A", "B", "C", "D"][tpl]} · ${wdth}/${wght}</span><span>Punta del Este — 2026</span></div>`;
         fit();
         // cada elemento entra con un barrido (GSAP; sin GSAP quedan visibles)
         if (window.gsap) box.querySelectorAll(".pe").forEach((el) => {

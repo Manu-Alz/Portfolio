@@ -21,6 +21,10 @@
     .bar a { text-decoration: none; }
     .print { font: inherit; border: 0; background: var(--blue); color: #fff; padding: 10px 18px; border-radius: 99px; cursor: pointer; font-weight: 600; }
     .print:hover { background: var(--ink); }
+    .bar__r { display: flex; gap: 14px; align-items: center; }
+    .lang { font: 500 11px "JetBrains Mono", monospace; background: none; border: 0; cursor: pointer; color: rgba(14,14,14,.45); }
+    .lang .on { color: var(--ink); text-decoration: underline; }
+    @media print { .bar__r { display: none; } }
     .sheet { width: 210mm; min-height: 297mm; margin: 24px auto 60px; background: var(--paper); padding: 16mm 15mm; position: relative; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.18); }
     .sheet::after { content: "M"; position: absolute; right: -10mm; bottom: -32mm; font-size: 120mm; font-weight: 800; line-height: 1; color: rgba(39,66,255,.06); font-variation-settings: "wdth" 125, "wght" 800; pointer-events: none; }
     header { display: grid; grid-template-columns: 1fr auto; gap: 8mm; align-items: end; padding-bottom: 7mm; border-bottom: 1.5px solid var(--ink); }
@@ -66,14 +70,14 @@
 <body>
   <div class="bar">
     <a href="index.html" class="mono">← Volver al portfolio</a>
-    <button class="print" type="button" onclick="print()">Guardar PDF / Imprimir</button>
+    <span class="bar__r"><button class="lang" type="button" data-cv-lang>ES / EN</button><button class="print" type="button" onclick="print()">Guardar PDF / Imprimir</button></span>
   </div>
 
   <main class="sheet">
     <header>
       <div>
         <h1>Manuel<br>Alzugaray<span>.</span></h1>
-        <p class="role">Atleta · Entrenador · <em>Webs y marcas</em></p>
+        <p class="role">Diseño y desarrollo · Entrenador · <em>Marca y video</em></p>
       </div>
       <div class="contact mono">
         <span><b>Mail</b><a href="mailto:manualzugaray@icloud.com">manualzugaray@icloud.com</a></span>
@@ -156,5 +160,47 @@
 
     <div class="foot mono"><span>Manuel Alzugaray — CV 2026</span><span>manu-alz.github.io/Portfolio</span></div>
   </main>
+  <script>
+  /* CV en español (base) o inglés, según el idioma elegido en el portfolio */
+  (() => {
+    let lang = "es";
+    try { lang = new URLSearchParams(location.search).get("lang") || localStorage.getItem("lang") || "es"; } catch (e) {}
+    const btn = document.querySelector("[data-cv-lang]");
+    btn.innerHTML = `<span class="${lang === "es" ? "on" : ""}">ES</span> / <span class="${lang === "en" ? "on" : ""}">EN</span>`;
+    btn.addEventListener("click", () => {
+      try { localStorage.setItem("lang", lang === "en" ? "es" : "en"); } catch (e) {}
+      location.href = location.pathname;
+    });
+    if (lang !== "en") return;
+    document.documentElement.lang = "en";
+    document.title = "CV — Manuel Alzugaray";
+    const set = (sel, i, html) => { const el = document.querySelectorAll(sel)[i]; if (el) el.innerHTML = html; };
+    set(".bar a", 0, "← Back to portfolio");
+    set(".print", 0, "Save PDF / Print");
+    set(".role", 0, "Design &amp; development · Coach · <em>Brand &amp; video</em>");
+    set(".contact span", 1, '<b>Phone</b><a href="tel:+59894717738">+598 94 717 738</a>');
+    set(".contact span", 2, "<b>Based</b>Punta del Este, Uruguay");
+    ["Profile", "Experience", "Education", "Sport", "Languages", "Skills", "References"].forEach((t, i) => set("h2", i, t));
+    set(".profile", 0, "Bilingual (Spanish–English) International Baccalaureate graduate, planning to study Communication at UdelaR from 2027. Judo is a central part of my life. I grew up in a family of high-performance athletes and professionals, which shaped my discipline, consistency and teamwork. I have dyslexia, which led me to develop strong visual-spatial reasoning, adaptability and a proactive attitude. Self-taught in programming and strength training.");
+    const when = ["2023 — today", "2024 — today", "Summers", "1 year"];
+    when.forEach((t, i) => set(".item .when", i, t));
+    set(".item h3", 0, "Programming &amp; web development"); set(".item .where", 0, "Freelance");
+    set(".item p", 0, "Websites for clients and my own projects, defining with each client what they needed. Own brand: Eventos PDE, Punta del Este’s events guide in three languages.");
+    set(".item h3", 1, "Strength coach"); set(".item .where", 1, "Freelance");
+    set(".item p", 1, "Personalised training plans with progress tracking. Client base built through referrals and social media.");
+    set(".item h3", 2, "Lifeguard");
+    set(".item p", 2, "Responsible for pool safety during the season. Daily service to residents and visitors, and enforcement of rules and schedules.");
+    set(".item h3", 3, "Content creation &amp; video editing"); set(".item .where", 3, "Own project");
+    set(".item p", 3, "A year creating content: idea, shooting, editing and publishing. I edit video regularly.");
+    set(".item h3", 4, "Business Administration"); set(".item .where", 4, "Not completed");
+    set(".item h3", 5, "IT Technical Degree"); set(".item .where", 5, "UTEC, Maldonado · not completed");
+    set(".item h3", 6, "International Baccalaureate (IB), bilingual");
+    set("aside section p", 1, "Judo in Maldonado with Martin La Cruz. Goal: enter competition from Montevideo. Self-programmed, judo-specific strength and conditioning.");
+    set("aside ul", 0, "<li>Spanish — native</li><li>English — C2</li>");
+    set("aside ul", 1, "<li>Responsibility and commitment</li><li>Customer service</li><li>Teamwork</li><li>Oral and written communication</li><li>Problem solving</li><li>Self-directed learning</li><li>Programming and digital tools</li><li>Design, branding and video editing</li>");
+    set("aside section p", 2, "Available on request.");
+    set(".web", 0, "Request references ↗");
+  })();
+  </script>
 </body>
 </html>
