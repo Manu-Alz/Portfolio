@@ -58,3 +58,11 @@ powershell -ExecutionPolicy Bypass -File tools/build.ps1
 - Metadatos: `canonical`, `hreflang`, Open Graph y Twitter Card en el `<head>`. Imagen para compartir: `assets/og.jpg` y `assets/og-en.jpg` (1200×630).
 - Datos estructurados JSON-LD (`Person` y `WebSite`) en el `<head>`.
 - `sitemap.xml` y `robots.txt` en la raíz. Ojo: en un sitio de proyecto de GitHub Pages (`/Portfolio/`) los buscadores solo leen el `robots.txt` del dominio (`manu-alz.github.io/robots.txt`). El sitemap hay que enviarlo a mano en Google Search Console.
+
+## Detalles escondidos
+
+- **Barra de progreso:** es un cinturón de judo que pasa de blanco a negro según cuánto recorriste la página (`.progress` en `main.js`).
+- **Clima y olas:** la barra de arriba muestra temperatura y altura de ola en Punta del Este (Open-Meteo, sin clave). Solo en pantallas de más de 1440 px.
+- **Sonido:** interruptor en la barra (y en el menú móvil), apagado por defecto. Clics suaves y ambiente de olas generados con Web Audio, sin archivos.
+- **Easter egg:** código Konami (↑ ↑ ↓ ↓ ← → ← → B A) o clic largo en el logo → marcador de judo con IPPON.
+- **Stack:** marquesina de herramientas antes de Trayectoria (`.stack` en `index.html`, y su versión en inglés en `js/i18n.js`).

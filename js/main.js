@@ -24,6 +24,142 @@ const T = window.T || ((es) => es);
   const tick = () => $$("[data-clock]").forEach((el) => (el.textContent = fmt.format(new Date())));
   tick(); setInterval(tick, 15000);
 
+  /* ---------- Clima y olas en Punta del Este (Open-Meteo, sin clave ni datos del visitante) ---------- */
+  (async () => {
+    const out = $("[data-wx]");
+    if (!out) return;
+    const sky = (c) =>
+      c === 0 ? T("despejado", "clear") : c <= 3 ? T("algo nublado", "partly cloudy") : c <= 48 ? T("niebla", "fog")
+      : c <= 67 || (c >= 80 && c <= 82) ? T("lluvia", "rain") : c <= 77 ? T("nieve", "snow") : T("tormenta", "storm");
+    let d = null;
+    try { const c = JSON.parse(sessionStorage.getItem("wx") || "null"); if (c && Date.now() - c.t < 15 * 60e3) d = c; } catch (e) {}
+    if (!d) {
+      try {
+        const q = "&timezone=America%2FMontevideo";
+        const [w, m] = await Promise.all([
+          fetch("https://api.open-meteo.com/v1/forecast?latitude=-34.96&longitude=-54.94&current=temperature_2m,weather_code" + q).then((r) => r.json()),
+          fetch("https://marine-api.open-meteo.com/v1/marine?latitude=-34.98&longitude=-54.93&current=wave_height,wave_period" + q).then((r) => r.json()).catch(() => null),
+        ]);
+        d = { t: Date.now(), temp: w.current.temperature_2m, code: w.current.weather_code, wave: m && m.current ? m.current.wave_height : null };
+        try { sessionStorage.setItem("wx", JSON.stringify(d)); } catch (e) {}
+      } catch (e) { return; } // sin conexión o API caída: no se muestra nada
+    }
+    const fmt1 = (n) => n.toLocaleString(window.LANG === "en" ? "en-US" : "es-UY", { maximumFractionDigits: 1 });
+    out.textContent = ` · ${Math.round(d.temp)}°` + (d.wave != null ? ` · ${T("olas", "waves")} ${fmt1(d.wave)} m` : "");
+    out.title = T("Ahora en Punta del Este: ", "Now in Punta del Este: ") + sky(d.code);
+    out.hidden = false;
+  })();
+
+  /* ---------- Sonido opcional (apagado por defecto): clics suaves y ambiente de olas, sintetizados ---------- */
+  (() => {
+    const btns = $$("[data-sound]");
+    if (!btns.length || !(window.AudioContext || window.webkitAudioContext)) { btns.forEach((b) => b.remove()); return; }
+    let on = false, ctx = null, master = null, sea = null;
+    try { on = localStorage.getItem("sound") === "on"; } catch (e) {}
+    const label = () => btns.forEach((b) => {
+      b.setAttribute("aria-pressed", String(on));
+      b.innerHTML = `<span class="snd__bars" aria-hidden="true"><i></i><i></i><i></i></span>${T("Sonido", "Sound")} <b>${on ? "on" : "off"}</b>`;
+      b.classList.toggle("is-on", on);
+    });
+    const init = () => {
+      if (ctx) return;
+      ctx = new (window.AudioContext || window.webkitAudioContext)();
+      master = ctx.createGain(); master.gain.value = 0; master.connect(ctx.destination);
+      // olas: ruido marrón filtrado, con un vaivén lento de volumen y de filtro
+      const len = ctx.sampleRate * 4, buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
+      let last = 0;
+      for (let i = 0; i < len; i++) { const w = Math.random() * 2 - 1; last = (last + 0.02 * w) / 1.02; d[i] = last * 3.2; }
+      const src = ctx.createBufferSource(); src.buffer = buf; src.loop = true;
+      const lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 700;
+      const g = ctx.createGain(); g.gain.value = 0.22;
+      const lfo = ctx.createOscillator(); lfo.frequency.value = 0.09;
+      const lfoG = ctx.createGain(); lfoG.gain.value = 0.16; lfo.connect(lfoG).connect(g.gain);
+      const lfo2 = ctx.createOscillator(); lfo2.frequency.value = 0.07;
+      const lfo2G = ctx.createGain(); lfo2G.gain.value = 380; lfo2.connect(lfo2G).connect(lp.frequency);
+      src.connect(lp).connect(g).connect(master);
+      src.start(); lfo.start(); lfo2.start();
+      sea = g;
+    };
+    const fade = (v) => { if (!ctx) return; const t = ctx.currentTime; master.gain.cancelScheduledValues(t); master.gain.setTargetAtTime(v, t, 0.35); };
+    const set = (v) => {
+      on = v;
+      try { localStorage.setItem("sound", on ? "on" : "off"); } catch (e) {}
+      if (on) { init(); ctx.resume(); fade(0.5); } else fade(0);
+      label();
+    };
+    // efectos: un "tic" de madera para clics y un gong para el ippon
+    const blip = (f, dur, vol, type = "sine") => {
+      const t = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = type; o.frequency.setValueAtTime(f, t); o.frequency.exponentialRampToValueAtTime(f * 0.6, t + dur);
+      g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g).connect(ctx.destination); o.start(t); o.stop(t + dur + 0.02);
+    };
+    window.__sfx = (name) => {
+      if (!on || !ctx) return;
+      if (name === "click") blip(1500, 0.06, 0.06, "triangle");
+      if (name === "ippon") { blip(196, 1.6, 0.22); blip(392, 1.2, 0.08); }
+    };
+    btns.forEach((b) => b.addEventListener("click", (e) => { e.preventDefault(); set(!on); window.__sfx("click"); }));
+    document.addEventListener("click", (e) => { if (e.target.closest("a, button:not([data-sound])")) window.__sfx("click"); });
+    // si lo dejaste encendido, se reanuda con la primera interacción (los navegadores no permiten sonar antes)
+    if (on) addEventListener("pointerdown", () => { init(); ctx.resume(); fade(0.5); }, { once: true });
+    document.addEventListener("visibilitychange", () => { if (ctx && on) fade(document.hidden ? 0 : 0.5); });
+    label();
+  })();
+
+  /* ---------- Easter egg: código Konami o clic largo en el logo → marcador de judo con IPPON ---------- */
+  (() => {
+    let egg = null, timer = 0;
+    const p2 = (n) => String(n).padStart(2, "0");
+    const close = () => { if (!egg) return; egg.classList.remove("is-open"); clearInterval(timer); window.__lenis && window.__lenis.start(); setTimeout(() => { egg && egg.remove(); egg = null; }, 500); };
+    const open = () => {
+      if (egg) return;
+      window.__sfx && window.__sfx("ippon");
+      egg = document.createElement("div");
+      egg.className = "egg";
+      egg.setAttribute("role", "dialog");
+      egg.setAttribute("aria-label", T("Easter egg: ippon", "Easter egg: ippon"));
+      egg.innerHTML = `
+        <div class="egg__board mono">
+          <div class="egg__row egg__row--w"><span class="egg__flag"></span><b>MANU</b><span class="egg__score"><i>1</i><i>0</i><i>0</i></span></div>
+          <div class="egg__row egg__row--b"><span class="egg__flag egg__flag--b"></span><b>${T("TU PROYECTO", "YOUR PROJECT")}</b><span class="egg__score"><i>0</i><i>0</i><i>0</i></span></div>
+          <div class="egg__clock" data-egg-clock>4:00</div>
+        </div>
+        <p class="egg__big">IPPON<span>一本</span></p>
+        <p class="egg__cap mono">${T("Encontraste el ippon escondido. Cuando quieras, hablemos.", "You found the hidden ippon. Whenever you’re ready, let’s talk.")}</p>
+        <button class="egg__close mono" type="button">${T("Cerrar ✕", "Close ✕")}</button>`;
+      document.body.appendChild(egg);
+      window.__lenis && window.__lenis.stop();
+      requestAnimationFrame(() => egg.classList.add("is-open"));
+      // el reloj del combate corre hacia atrás y se frena: el ippon termina el combate
+      let s = 240; const clock = egg.querySelector("[data-egg-clock]");
+      timer = setInterval(() => { s -= 7; if (s <= 3 * 60 + 12) { s = 3 * 60 + 12; clearInterval(timer); clock.classList.add("is-stop"); } clock.textContent = `${Math.floor(s / 60)}:${p2(s % 60)}`; }, 60);
+      egg.querySelector(".egg__close").addEventListener("click", close);
+      egg.addEventListener("click", (e) => { if (e.target === egg) close(); });
+      egg.querySelector(".egg__close").focus();
+    };
+    addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
+    // ↑ ↑ ↓ ↓ ← → ← → B A
+    const code = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
+    let pos = 0;
+    addEventListener("keydown", (e) => {
+      const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+      pos = k === code[pos] ? pos + 1 : k === code[0] ? 1 : 0;
+      if (pos === code.length) { pos = 0; open(); }
+    });
+    // clic largo (o toque largo) en el logo
+    const logo = $(".nav__logo");
+    if (logo) {
+      let hold = 0, fired = false;
+      const start = () => { fired = false; hold = setTimeout(() => { fired = true; open(); }, 700); };
+      const stop = () => clearTimeout(hold);
+      logo.addEventListener("pointerdown", start);
+      ["pointerup", "pointerleave", "pointercancel"].forEach((ev) => logo.addEventListener(ev, stop));
+      logo.addEventListener("click", (e) => { if (fired) { e.preventDefault(); e.stopImmediatePropagation(); fired = false; } }, true);
+      logo.addEventListener("contextmenu", (e) => { if (fired) e.preventDefault(); });
+    }
+  })();
+
   /* ---------- Botón de contacto ---------- */
   const btn = $("#contact-btn");
   if (CONTACTO.email) { btn.href = "mailto:" + CONTACTO.email; btn.removeAttribute("target"); }
@@ -112,7 +248,7 @@ const T = window.T || ((es) => es);
 
   /* ---------- Sin librerías o con "reducir movimiento": todo visible ---------- */
   if (!window.gsap || !window.ScrollTrigger || reduce) {
-    root.classList.remove("js");
+    root.classList.remove("js", "is-quick");
     fitAll();
     addEventListener("resize", fitAll);
     return;
@@ -226,7 +362,24 @@ const T = window.T || ((es) => es);
   });
 
   /* ---------- Barra de progreso ---------- */
-  gsap.to(".progress", { scaleX: 1, ease: "none", scrollTrigger: { start: 0, end: "max", scrub: true } });
+  // es un cinturón de judo: avanza y cambia de color de blanco a negro según cuánto recorriste
+  const BELTS = [
+    ["#F4F2EC", T("Blanco", "White")], ["#F2C230", T("Amarillo", "Yellow")], ["#EE7A2A", T("Naranja", "Orange")],
+    ["#2FA35A", T("Verde", "Green")], ["#2742FF", T("Azul", "Blue")], ["#7A4A26", T("Marrón", "Brown")], ["#0E0E0E", T("Negro", "Black")],
+  ];
+  const belt = $(".progress"), beltTag = $(".progress__tag");
+  let beltI = -1;
+  ScrollTrigger.create({
+    start: 0, end: "max",
+    onUpdate: (s) => {
+      gsap.set(belt, { scaleX: s.progress });
+      const i = Math.min(BELTS.length - 1, Math.floor(s.progress * BELTS.length));
+      if (i === beltI) return;
+      beltI = i;
+      belt.style.setProperty("--belt", BELTS[i][0]);
+      if (beltTag && s.progress > 0.01) { beltTag.style.setProperty("--belt", BELTS[i][0]); beltTag.textContent = T("Cinturón ", "") + BELTS[i][1].toLowerCase() + T("", " belt"); beltTag.classList.add("is-show"); clearTimeout(beltTag._t); beltTag._t = setTimeout(() => beltTag.classList.remove("is-show"), 1400); }
+    },
+  });
 
   /* ---------- Cursor ---------- */
   if (fine) {
@@ -349,7 +502,20 @@ const T = window.T || ((es) => es);
     backTo = +sessionStorage.getItem("scrollY") || 0;
     sessionStorage.removeItem("quickLoad"); sessionStorage.removeItem("scrollY"); sessionStorage.setItem("seenLoader", "1");
   } catch (e) {}
-  if (quick || seen) {
+  if (quick) {
+    // venís del botón ES / EN: sin precarga; la cortina azul (que ya tapa la página desde el primer cuadro) se levanta
+    load.kill(); $(".loader").remove();
+    const cur = $(".curtain");
+    $(".curtain__label").textContent = T("Español", "English");
+    gsap.set(cur, { clipPath: "inset(0% 0 0% 0)" });
+    root.classList.remove("is-quick");
+    lenis && lenis.start();
+    if (backTo && lenis) lenis.scrollTo(backTo, { immediate: true, force: true });
+    ScrollTrigger.refresh();
+    gsap.timeline({ delay: 0.15 })
+      .to(cur, { clipPath: "inset(0% 0 100% 0)", duration: 0.8, ease: "expo.inOut" })
+      .add(() => intro.play(), 0.3);
+  } else if (seen) {
     load.timeScale(4);
     load.eventCallback("onComplete", () => {
       lenis && lenis.start(); $(".loader").remove(); ScrollTrigger.refresh();

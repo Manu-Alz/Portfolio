@@ -58,8 +58,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&amp;family=Instrument+Serif:ital@0;1&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/styles.css?v=3000a47d">
-  <script>document.documentElement.classList.add('js');setTimeout(function(){if(!window.gsap){document.documentElement.classList.remove('js');}},4000);</script>
+  <link rel="stylesheet" href="../css/styles.css?v=8eac38d3">
+  <script>(function(d){d.classList.add('js');try{if(sessionStorage.getItem('quickLoad')){d.classList.add('is-quick');}}catch(e){}setTimeout(function(){if(!window.gsap){d.classList.remove('js','is-quick');}},4000);})(document.documentElement);</script>
 </head>
 <body style="">
   <noscript><p class="noscript mono">You are viewing the version without animations: all the content is available. Contact: <a href="mailto:manualzugaray@icloud.com">manualzugaray@icloud.com</a> · <a href="https://wa.me/59894717738">WhatsApp 094 717 738</a></p></noscript>
@@ -67,6 +67,7 @@
   <!-- Grano y cursor -->
   <div class="grain" aria-hidden="true"></div>
   <div class="progress" aria-hidden="true"></div>
+  <span class="progress__tag mono" aria-hidden="true"></span>
   <div class="sect mono" aria-hidden="true"><span class="sect__n">(00)</span><span class="sect__t">Home</span></div>
   <div class="curtain" aria-hidden="true"><span class="curtain__label"></span></div>
   <div class="tcur" aria-hidden="true"><i class="tcur__c tcur__c--tl"></i><i class="tcur__c tcur__c--tr"></i><i class="tcur__c tcur__c--bl"></i><i class="tcur__c tcur__c--br"></i><span class="tcur__tag mono"></span></div>
@@ -84,11 +85,12 @@
   <!-- Navegación -->
   <header class="nav">
     <a href="#inicio" class="nav__logo" data-cursor="Home">Manu<sup>®</sup></a>
-    <div class="nav__mid mono"><span class="dot"></span> Uruguay — <span data-clock="">--:--</span></div>
+    <div class="nav__mid mono"><span class="dot"></span> Uruguay — <span data-clock="">--:--</span><span class="nav__wx" data-wx="" hidden=""></span></div>
     <nav class="nav__links">
       <a href="#trabajo" class="link" data-cursor="">Work</a>
       <a href="#trayectoria" class="link" data-cursor="">Journey</a>
       <a href="#atleta" class="link" data-cursor="">Athlete</a>
+      <button class="snd" type="button" data-sound="" aria-pressed="false" data-cursor="">Sonido <b>off</b></button>
       <button class="lang" type="button" data-lang-toggle="" data-cursor="" aria-label="Cambiar a español"><span class="">ES</span><i>/</i><span class="is-on">EN</span></button>
       <a href="#contacto" class="link link--pill" data-cursor="">Let’s talk</a>
       <button class="nav__menu" type="button" aria-expanded="false" aria-controls="mnav"><span class="nav__menu-t">Menu</span><span class="nav__burger" aria-hidden="true"><i></i><i></i></span></button>
@@ -109,6 +111,7 @@
       <a href="https://wa.me/59894717738" target="_blank" rel="noopener">WhatsApp ↗</a>
       <a href="mailto:manualzugaray@icloud.com">Mail ↗</a>
       <a href="../cv.html" target="_blank">CV ↗</a>
+      <button class="snd snd--m" type="button" data-sound="" aria-pressed="false">Sonido <b>off</b></button>
       <button class="lang lang--m" type="button" data-lang-toggle="" aria-label="Cambiar a español"><span class="">ES</span><i>/</i><span class="is-on">EN</span></button>
     </div>
   </div>
@@ -320,6 +323,17 @@
       </ul>
     </section>
 
+    <!-- ============ STACK (marquesina de herramientas) ============ -->
+    <section class="stack" aria-label="Tools I work with">
+      <p class="stack__k mono">(Stack)</p>
+      <div class="stack__view">
+        <div class="stack__track">
+          <ul class="stack__list mono"><li>HTML</li><li>CSS</li><li>JavaScript</li><li>GSAP</li><li>ScrollTrigger</li><li>Lenis</li><li>Canvas</li><li>SVG</li><li>Web Audio</li><li>PWA</li><li>REST APIs</li><li>Technical SEO</li><li>i18n</li><li>GitHub Pages</li></ul>
+          <ul class="stack__list mono" aria-hidden="true"><li>HTML</li><li>CSS</li><li>JavaScript</li><li>GSAP</li><li>ScrollTrigger</li><li>Lenis</li><li>Canvas</li><li>SVG</li><li>Web Audio</li><li>PWA</li><li>REST APIs</li><li>Technical SEO</li><li>i18n</li><li>GitHub Pages</li></ul>
+        </div>
+      </div>
+    </section>
+
     <!-- ============ TRAYECTORIA (scroll horizontal) ============ -->
     <section class="path" id="trayectoria" aria-label="Journey">
       <div class="path__pin">
@@ -511,8 +525,8 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" integrity="sha384-g4NTh/Iv5PPU4xPyhEWqPcwtNXOvdaDI8LLnyYfyNZOjKJeYQyjzQ9X5275eBjpt" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" integrity="sha384-Z3REaz79l2IaAZqJsSABtTbhjgOUYyV3p90XNnAPCSHg3EMTz1fouunq9WZRtj3d" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" integrity="sha384-B2WBjDzEjJpYvhmi2UyEn7rektqkf5suS6sNoyyrf0EBAwBHdkiXxIlU0V5Ru2ed" crossorigin="anonymous"></script>
-  <script src="../js/i18n.js?v=3000a47d"></script>
-  <script src="../js/main.js?v=3000a47d"></script>
+  <script src="../js/i18n.js?v=8eac38d3"></script>
+  <script src="../js/main.js?v=8eac38d3"></script>
 
 
 </body></html>

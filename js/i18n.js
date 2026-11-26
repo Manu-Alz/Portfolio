@@ -41,7 +41,14 @@
     e.preventDefault();
     const next = LANG === "en" ? "es" : "en";
     try { localStorage.setItem("lang", next); sessionStorage.setItem("quickLoad", "1"); sessionStorage.setItem("scrollY", String(Math.round(scrollY))); } catch (err) {}
-    location.href = otherUrl(next) + location.hash;
+    const go = () => (location.href = otherUrl(next) + location.hash);
+    // la cortina azul tapa la página con el nombre del idioma; la otra página arranca tapada y la destapa
+    const cur = document.querySelector(".curtain");
+    if (!cur || matchMedia("(prefers-reduced-motion: reduce)").matches) return go();
+    cur.querySelector(".curtain__label").textContent = next === "en" ? "English" : "Español";
+    cur.style.transition = "clip-path .6s cubic-bezier(.76,0,.24,1)";
+    requestAnimationFrame(() => (cur.style.clipPath = "inset(0% 0 0 0)"));
+    setTimeout(go, 640);
   });
 
   const k = (word) => [...word].map((c) => `<span class="k">${c === " " ? "&nbsp;" : c}</span>`).join("");
@@ -66,6 +73,7 @@
     [".badge textPath", 0, "DESIGN ✦ CODE ✦ BRAND ✦ URUGUAY ✦"],
     [".badge__core small", 0, "Since"],
     [".hero__intro", 0, '<span class="reveal-line"><span>I design and build</span></span><span class="reveal-line"><span><em>brands</em>, websites and video</span></span><span class="reveal-line"><span>with an athlete’s method.</span></span>'],
+    [".stack__list", 0, "<li>HTML</li><li>CSS</li><li>JavaScript</li><li>GSAP</li><li>ScrollTrigger</li><li>Lenis</li><li>Canvas</li><li>SVG</li><li>Web Audio</li><li>PWA</li><li>REST APIs</li><li>Technical SEO</li><li>i18n</li><li>GitHub Pages</li>"], [".stack__list", 1, "<li>HTML</li><li>CSS</li><li>JavaScript</li><li>GSAP</li><li>ScrollTrigger</li><li>Lenis</li><li>Canvas</li><li>SVG</li><li>Web Audio</li><li>PWA</li><li>REST APIs</li><li>Technical SEO</li><li>i18n</li><li>GitHub Pages</li>"],
     [".hero__tags", 0, "<li>Brand</li><li>Web</li><li>Video</li><li>Punta del Este, UY</li>"],
     [".hero__scroll span", 0, "See projects"],
     [".marquee__track", 0, '<span>Judo</span><i>✦</i><span class="serif">Surf</span><i>✦</i><span>Brands</span><i>✦</i><span class="serif">Websites</span><i>✦</i><span>Video editing</span><i>✦</i><span class="serif">Content</span><i>✦</i><span>Motion</span><i>✦</i><span class="serif">Art direction</span><i>✦</i>'],
@@ -158,6 +166,7 @@
     [".copy", "data-cursor", "Copy"],
     [".path", "aria-label", "Journey"],
     [".work__index", "aria-label", "Projects"],
+    [".stack", "aria-label", "Tools I work with"],
     [".shot", "aria-label", "Manuel (blue trousers) with training partners in front of the ring"],
   ];
 

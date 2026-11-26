@@ -149,7 +149,22 @@ a:hover .roll > span, .roll:hover > span { transform: translateY(-1.2em); }
 .nav .link::after { display: none; }
 
 /* progreso de lectura */
-.progress { position: fixed; left: 0; top: 0; right: 0; height: 2px; z-index: 150; background: var(--blue); transform: scaleX(0); transform-origin: left; pointer-events: none; }
+/* barra de progreso = cinturón de judo (el color lo cambia main.js según el avance) */
+.progress {
+  position: fixed; left: 0; top: 0; right: 0; height: 4px; z-index: 150; pointer-events: none;
+  --belt: #F4F2EC; background: var(--belt);
+  background-image: repeating-linear-gradient(90deg, rgba(0,0,0,.16) 0 1px, transparent 1px 7px), linear-gradient(rgba(255,255,255,.18), rgba(0,0,0,.12));
+  box-shadow: 0 0 0 1px rgba(14,14,14,.18);
+  transform: scaleX(0); transform-origin: left; transition: background-color .5s;
+}
+.progress__tag {
+  position: fixed; right: var(--pad); bottom: 1rem; z-index: 150; pointer-events: none;
+  display: inline-flex; align-items: center; gap: .5rem; padding: .45rem .7rem; border-radius: 99px;
+  background: var(--ink); color: var(--paper); font-size: .62rem; letter-spacing: .06em; text-transform: uppercase;
+  opacity: 0; transform: translateY(8px); transition: opacity .4s, transform .5s var(--ease-out);
+}
+.progress__tag::before { content: ""; width: 18px; height: 6px; border-radius: 2px; background: var(--belt, #fff); box-shadow: 0 0 0 1px rgba(255,255,255,.3); }
+.progress__tag.is-show { opacity: 1; transform: none; }
 
 /* ---------- Revelado de líneas ---------- */
 .reveal-line { display: block; overflow: hidden; }
@@ -977,3 +992,63 @@ a, button { -webkit-tap-highlight-color: transparent; }
   .card__body { gap: 1rem; padding-top: 1rem; }
   .card__cta { padding-top: .85rem; font-size: 1.2rem; }
 }
+
+/* llegada desde el botón ES / EN: sin precarga, la página arranca tapada por la cortina azul */
+.is-quick .loader { display: none !important; }
+.is-quick .curtain { clip-path: inset(0% 0 0% 0); }
+
+/* ---------- Easter egg: marcador de judo ---------- */
+.egg {
+  position: fixed; inset: 0; z-index: 280; display: grid; place-content: center; justify-items: center; gap: 1.6rem;
+  padding: 2rem var(--pad); background: rgba(8,8,10,.94); color: var(--paper); text-align: center;
+  opacity: 0; transition: opacity .4s;
+}
+.egg.is-open { opacity: 1; }
+.egg__board { display: grid; gap: 3px; width: min(560px, 92vw); font-size: clamp(.8rem, 1.6vw, 1.05rem); transform: translateY(20px); transition: transform .7s var(--ease-out); }
+.egg.is-open .egg__board { transform: none; }
+.egg__row { display: grid; grid-template-columns: 2.2em 1fr auto; align-items: center; gap: 1em; padding: .7em 1em; letter-spacing: .08em; }
+.egg__row--w { background: #F4F2EC; color: var(--ink); }
+.egg__row--b { background: var(--blue); color: #fff; }
+.egg__flag { width: 1.6em; height: 1.1em; border-radius: 2px; background: linear-gradient(#fff 0 11%, #2E6ED6 11% 22%, #fff 22% 33%, #2E6ED6 33% 44%, #fff 44% 55%, #2E6ED6 55% 66%, #fff 66% 77%, #2E6ED6 77% 88%, #fff 88%); box-shadow: 0 0 0 1px rgba(14,14,14,.2); }
+.egg__flag--b { background: rgba(255,255,255,.25); }
+.egg__score { display: flex; gap: .35em; font-weight: 500; }
+.egg__score i { font-style: normal; display: grid; place-items: center; width: 1.7em; height: 1.7em; background: rgba(14,14,14,.08); }
+.egg__row--b .egg__score i { background: rgba(255,255,255,.15); }
+.egg__row--w .egg__score i:first-child { background: #FFD23F; color: var(--ink); animation: eggFlash .5s steps(2) 6; }
+.egg__clock { justify-self: end; padding: .4em .8em; background: #111; color: #FFD23F; font-size: 1.4em; font-variant-numeric: tabular-nums; letter-spacing: .06em; }
+.egg__clock.is-stop { color: #FF4B3E; }
+.egg__big { margin: 0; font-weight: 800; font-size: clamp(4rem, 16vw, 13rem); line-height: .82; letter-spacing: -.05em; font-variation-settings: "wdth" 125, "wght" 800; transform: scale(.6); opacity: 0; transition: transform .8s var(--ease-out) .15s, opacity .4s .15s; }
+.egg__big span { display: block; font-size: .3em; letter-spacing: .2em; font-weight: 400; color: var(--blue-soft); margin-top: .25em; }
+.egg.is-open .egg__big { transform: none; opacity: 1; }
+.egg__cap { margin: 0; color: rgba(236,233,226,.7); font-size: .75rem; letter-spacing: .05em; text-transform: uppercase; }
+.egg__close { color: var(--paper); background: none; border: 1px solid rgba(236,233,226,.4); border-radius: 99px; padding: .55rem 1rem; cursor: pointer; }
+@keyframes eggFlash { 50% { background: #fff; } }
+
+/* ---------- Interruptor de sonido ---------- */
+.snd { font: inherit; font-family: var(--mono); font-size: .7rem; letter-spacing: .04em; text-transform: uppercase; color: inherit; background: none; border: 0; padding: .3rem 0; cursor: pointer; display: inline-flex; gap: .4rem; align-items: center; }
+.snd b { font-weight: 500; opacity: .5; }
+.snd.is-on b { opacity: 1; color: var(--blue); }
+.is-dark .snd.is-on b { color: var(--blue-soft); }
+.snd__bars { display: inline-flex; align-items: flex-end; gap: 2px; height: 10px; }
+.snd__bars i { width: 2px; height: 3px; background: currentColor; opacity: .6; }
+.snd.is-on .snd__bars i { opacity: 1; animation: sndBar .9s ease-in-out infinite; }
+.snd.is-on .snd__bars i:nth-child(2) { animation-delay: .2s; } .snd.is-on .snd__bars i:nth-child(3) { animation-delay: .4s; }
+@keyframes sndBar { 0%, 100% { height: 3px; } 50% { height: 10px; } }
+@media (max-width: 900px) { .nav__links .snd { display: none; } }
+.mnav__foot .snd { color: inherit; }
+
+/* ---------- Stack: marquesina de herramientas ---------- */
+.stack { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 1.5rem; padding: 0 0 0 var(--pad); margin: 0 0 clamp(4rem, 8vw, 7rem); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.stack__k { font-size: .7rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 0; }
+.stack__view { overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+.stack__track { display: flex; width: max-content; animation: stackRun 38s linear infinite; }
+.stack:hover .stack__track { animation-play-state: paused; }
+.stack__list { display: flex; margin: 0; padding: 0; list-style: none; }
+.stack__list li { padding: 1.3rem 1.6rem; font-size: clamp(.95rem, 1.6vw, 1.35rem); letter-spacing: .02em; text-transform: uppercase; white-space: nowrap; display: inline-flex; align-items: center; gap: 1.6rem; }
+.stack__list li::after { content: "✦"; color: var(--blue); font-size: .7em; }
+@keyframes stackRun { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .stack__track { animation: none; } }
+@media (max-width: 900px) { .stack { grid-template-columns: 1fr; gap: 0; padding: .9rem 0 0; margin-bottom: 2.5rem; } .stack__k { padding-left: var(--pad); } .stack__list li { padding: 1rem 1.1rem; gap: 1.1rem; } }
+/* clima y olas: solo con lugar de sobra en la barra */
+.nav__wx { white-space: nowrap; }
+@media (max-width: 1440px) { .nav__wx { display: none; } }
