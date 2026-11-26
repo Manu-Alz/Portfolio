@@ -127,18 +127,29 @@ const CONTACTO = {
 
   /* ---------- Cursor ---------- */
   if (fine) {
-    root.classList.add("has-cursor");
-    const cur = $(".cursor"), label = $(".cursor__label");
-    const xTo = gsap.quickTo(cur, "x", { duration: 0.35, ease: "power3" });
-    const yTo = gsap.quickTo(cur, "y", { duration: 0.35, ease: "power3" });
-    addEventListener("pointermove", (e) => { xTo(e.clientX); yTo(e.clientY); });
+    // círculo = el mouse (sin lag); pelotita = lo persigue con un poco de lag
+    root.classList.add("has-cursor", "cur-out");
+    const ring = $(".cursor-ring"), dot = $(".cursor-dot"), cur = $(".cursor"), label = $(".cursor__label");
+    const setX = gsap.quickSetter([ring, cur], "x", "px"), setY = gsap.quickSetter([ring, cur], "y", "px");
+    const dXTo = gsap.quickTo(dot, "x", { duration: 0.45, ease: "power3" });
+    const dYTo = gsap.quickTo(dot, "y", { duration: 0.45, ease: "power3" });
+    let first = true;
+    addEventListener("pointermove", (e) => {
+      setX(e.clientX); setY(e.clientY);
+      if (first) { gsap.set(dot, { x: e.clientX, y: e.clientY }); first = false; }
+      dXTo(e.clientX); dYTo(e.clientY);
+      root.classList.remove("cur-out");
+    });
+    document.documentElement.addEventListener("pointerleave", () => root.classList.add("cur-out"));
+    addEventListener("pointerdown", () => root.classList.add("cur-down"));
+    addEventListener("pointerup", () => root.classList.remove("cur-down"));
     $$("[data-cursor], a, button").forEach((el) => {
       el.addEventListener("pointerenter", () => {
         const txt = el.getAttribute("data-cursor");
-        if (txt) { label.textContent = txt; cur.classList.add("is-label"); }
-        else cur.classList.add("is-link");
+        if (txt) { label.textContent = txt; root.classList.add("cur-label"); }
+        else root.classList.add("cur-link");
       });
-      el.addEventListener("pointerleave", () => cur.classList.remove("is-label", "is-link"));
+      el.addEventListener("pointerleave", () => root.classList.remove("cur-label", "cur-link"));
     });
   }
 

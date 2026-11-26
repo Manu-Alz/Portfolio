@@ -72,16 +72,28 @@ body.is-dark .grain { opacity: .14; filter: invert(1); }
 }
 
 /* ---------- Cursor ---------- */
-.cursor { position: fixed; top: 0; left: 0; z-index: 300; pointer-events: none; display: none; }
-.has-cursor .cursor { display: block; }
+.cursor, .cursor-ring, .cursor-dot { position: fixed; top: 0; left: 0; z-index: 300; pointer-events: none; display: none; will-change: transform; }
+.has-cursor .cursor, .has-cursor .cursor-ring, .has-cursor .cursor-dot { display: block; }
 .has-cursor, .has-cursor a, .has-cursor button { cursor: none; }
-.cursor__dot {
-  position: absolute; width: 12px; height: 12px; margin: -6px 0 0 -6px;
-  border-radius: 50%; background: #fff; mix-blend-mode: difference;
+/* círculo: es el mouse, sin lag */
+.cursor-ring { mix-blend-mode: difference; }
+.cursor-ring::before {
+  content: ""; position: absolute; width: 34px; height: 34px; left: -17px; top: -17px;
+  border-radius: 50%; border: 1.5px solid #fff;
+  transition: transform .45s var(--ease-out), opacity .3s, background-color .3s;
+}
+/* pelotita: persigue al círculo con un poco de lag */
+.cursor-dot { mix-blend-mode: difference; }
+.cursor-dot::before {
+  content: ""; position: absolute; width: 8px; height: 8px; left: -4px; top: -4px;
+  border-radius: 50%; background: #fff;
   transition: transform .45s var(--ease-out), opacity .3s;
 }
-.cursor.is-link .cursor__dot { transform: scale(3.4); }
-.cursor.is-label .cursor__dot { transform: scale(0); }
+.cur-link .cursor-ring::before { transform: scale(1.7); background-color: rgba(255,255,255,.12); }
+.cur-link .cursor-dot::before { transform: scale(.6); }
+.cur-label .cursor-ring::before, .cur-label .cursor-dot::before { transform: scale(0); opacity: 0; }
+.cur-down .cursor-ring::before { transform: scale(.8); }
+.cur-out .cursor-ring::before, .cur-out .cursor-dot::before { opacity: 0; }
 .cursor__label {
   position: absolute; left: 0; top: 0;
   transform: translate(-50%, -50%) scale(0);
@@ -91,7 +103,7 @@ body.is-dark .grain { opacity: .14; filter: invert(1); }
   font-family: var(--mono); font-size: .7rem; text-transform: uppercase; white-space: nowrap;
   transition: transform .5s var(--ease-out);
 }
-.cursor.is-label .cursor__label { transform: translate(-50%, -50%) scale(1); }
+.cur-label .cursor__label { transform: translate(-50%, -50%) scale(1); }
 
 /* ---------- Precarga ---------- */
 .loader {
