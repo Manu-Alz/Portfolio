@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manu — Atleta, marcas, webs y video</title>
+  <meta name="description" content="Portfolio de Manu: atleta de judo y surf, construyo marcas, webs y productos digitales, edito video y creo contenido. Uruguay.">
+  <meta name="theme-color" content="#ECE9E2">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Manu — En movimiento">
+  <meta property="og:description" content="Atleta. Construyo marcas, webs y video.">
+  <meta property="og:image" content="https://manu-alz.github.io/Portfolio/assets/dojo.jpg">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script>document.documentElement.classList.add('js')</script>
+</head>
+<body>
+
+  <!-- Grano y cursor -->
+  <div class="grain" aria-hidden="true"></div>
+  <div class="cursor" aria-hidden="true"><span class="cursor__dot"></span><span class="cursor__label"></span></div>
+
+  <!-- Precarga -->
+  <div class="loader" aria-hidden="true">
+    <div class="loader__words">
+      <span>Judo</span><span>Surf</span><span>Marcas</span><span>Webs</span><span>Video</span><span>Manu</span>
+    </div>
+    <div class="loader__bottom">
+      <span class="mono">Cargando movimiento</span>
+      <span class="loader__count">000</span>
+    </div>
+  </div>
+
+  <!-- Navegación -->
+  <header class="nav">
+    <a href="#inicio" class="nav__logo" data-cursor="Inicio">Manu<sup>®</sup></a>
+    <div class="nav__mid mono"><span class="dot"></span> Uruguay — <span data-clock>--:--</span></div>
+    <nav class="nav__links">
+      <a href="#trabajo" class="link" data-cursor>Trabajo</a>
+      <a href="#hago" class="link" data-cursor>Servicios</a>
+      <a href="#atleta" class="link" data-cursor>Atleta</a>
+      <a href="#contacto" class="link link--pill" data-cursor>Hablemos</a>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="inicio">
+      <div class="hero__top">
+        <p class="hero__kicker mono"><span class="reveal-line"><span>(Portfolio — 2026)</span></span></p>
+        <p class="hero__intro">
+          <span class="reveal-line"><span>Atleta de judo y surf.</span></span>
+          <span class="reveal-line"><span>Construyo <em>marcas</em>, webs</span></span>
+          <span class="reveal-line"><span>y video que se mueven.</span></span>
+        </p>
+      </div>
+
+      <h1 class="hero__name kinetic" aria-label="Manu">
+        <span class="k">M</span><span class="k">A</span><span class="k">N</span><span class="k">U</span>
+      </h1>
+
+      <figure class="hero__photo" data-cursor="Ese soy yo">
+        <div class="hero__photo-inner"><img src="assets/manu.jpg" alt="Manu, de pantalón de judo azul, en el gimnasio" width="460" height="970"></div>
+        <figcaption class="mono">El de azul ↑</figcaption>
+      </figure>
+
+      <div class="hero__bottom">
+        <ul class="hero__tags mono">
+          <li>Judo · −73 kg</li>
+          <li>Surf</li>
+          <li>Ex guardavida</li>
+        </ul>
+        <a href="#trabajo" class="hero__scroll mono" data-cursor="Bajá">
+          <span>Scroll</span><span class="hero__scroll-line"></span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ============ MARQUESINA ============ -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <span>Judo</span><i>✦</i><span class="serif">Surf</span><i>✦</i><span>Marcas</span><i>✦</i><span class="serif">Webs</span><i>✦</i><span>Edición de video</span><i>✦</i><span class="serif">Contenido</span><i>✦</i><span>Guardavida</span><i>✦</i>
+      </div>
+    </div>
+
+    <!-- ============ MANIFIESTO ============ -->
+    <section class="manifesto" id="sobre">
+      <p class="label mono">(01) — Sobre mí</p>
+      <p class="manifesto__text" data-words>
+        Me muevo <span class="pill pill--img"><img src="assets/dojo.jpg" alt=""></span> en el tatami,
+        en el agua <span class="pill pill--wave"><svg viewBox="0 0 120 40" preserveAspectRatio="none"><path d="M0 22 Q 15 10 30 22 T 60 22 T 90 22 T 120 22 V40 H0Z"/></svg></span>
+        y en la pantalla <span class="pill pill--img"><img src="assets/work/eventos.jpg" alt=""></span>.
+        Construyo marcas y productos con la misma disciplina con la que entreno: todos los días, sin atajos, hasta que <em>funcionan</em>.
+      </p>
+      <div class="manifesto__foot">
+        <p>Soy Manu, de Uruguay. Hago judo, surfeo y fui guardavida privado. En paralelo diseño y programo webs, armo marcas desde cero, creé contenido durante un año y edito video seguido.</p>
+        <p>Todo lo que ves acá lo hice yo: idea, diseño, código, textos y lanzamiento.</p>
+      </div>
+    </section>
+
+    <!-- ============ TRABAJO ============ -->
+    <section class="work" id="trabajo" data-theme="dark">
+      <header class="work__head">
+        <p class="label mono">(02) — Trabajo seleccionado</p>
+        <h2 class="big-title kinetic"><span class="k">T</span><span class="k">r</span><span class="k">a</span><span class="k">b</span><span class="k">a</span><span class="k">j</span><span class="k">o</span><sup class="mono">05</sup></h2>
+      </header>
+
+      <div class="work__stack">
+
+        <article class="card" style="--i:0">
+          <a class="card__link" href="https://eventospde.com/" target="_blank" rel="noopener" data-cursor="Visitar ↗">
+            <div class="card__meta">
+              <span class="card__num mono">01</span>
+              <h3 class="card__title">Eventos PDE</h3>
+              <span class="card__year mono">2026 — en vivo</span>
+            </div>
+            <div class="card__body">
+              <div class="card__media"><img src="assets/work/eventos.jpg" alt="Captura de eventospde.com" loading="lazy"></div>
+              <div class="card__info">
+                <p>La agenda de Punta del Este. Marca, producto y negocio: calendario, mapa, planificador de viaje, en español, inglés y portugués, con páginas para Google que se generan solas.</p>
+                <ul class="tags mono"><li>Marca</li><li>Producto</li><li>Web</li><li>SEO</li><li>3 idiomas</li></ul>
+                <span class="card__cta mono">eventospde.com ↗</span>
+              </div>
+            </div>
+          </a>
+        </article>
+
+        <article class="card" style="--i:1">
+          <a class="card__link" href="https://manu-alz.github.io/Judokan/" target="_blank" rel="noopener" data-cursor="Visitar ↗">
+            <div class="card__meta">
+              <span class="card__num mono">02</span>
+              <h3 class="card__title">Judokan Uruguay</h3>
+              <span class="card__year mono">2026 — club</span>
+            </div>
+            <div class="card__body">
+              <div class="card__media"><img src="assets/work/judokan.jpg" alt="Captura del sitio de Judokan Uruguay" loading="lazy"></div>
+              <div class="card__info">
+                <p>El sitio de una asociación de artes marciales con historia desde 1983. Noticias, galería, horarios y contacto, pensado para que el club publique solo, sin tocar código.</p>
+                <ul class="tags mono"><li>Web</li><li>Identidad</li><li>Contenido</li></ul>
+                <span class="card__cta mono">Ver sitio ↗</span>
+              </div>
+            </div>
+          </a>
+        </article>
+
+        <article class="card" style="--i:2">
+          <a class="card__link" href="https://manu-alz.github.io/Judo-Uruguay/" target="_blank" rel="noopener" data-cursor="Abrir app ↗">
+            <div class="card__meta">
+              <span class="card__num mono">03</span>
+              <h3 class="card__title">Judo Uruguay</h3>
+              <span class="card__year mono">2026 — app</span>
+            </div>
+            <div class="card__body">
+              <div class="card__media"><img src="assets/work/judo-uruguay.jpg" alt="Captura de la app Judo Uruguay" loading="lazy"></div>
+              <div class="card__info">
+                <p>Una app instalable para el grupo de judo: las 100 técnicas del Kodokan con video, progreso por cinturón, asistencia a clase, el dojo en vivo y vocabulario japonés con audio.</p>
+                <ul class="tags mono"><li>Producto</li><li>PWA</li><li>Cuentas</li><li>UX móvil</li></ul>
+                <span class="card__cta mono">Abrir app ↗</span>
+              </div>
+            </div>
+          </a>
+        </article>
+
+        <article class="card" style="--i:3">
+          <a class="card__link" href="https://manu-alz.github.io/Plan-73/" target="_blank" rel="noopener" data-cursor="Ver plan ↗">
+            <div class="card__meta">
+              <span class="card__num mono">04</span>
+              <h3 class="card__title">Plan −73</h3>
+              <span class="card__year mono">2026 — rendimiento</span>
+            </div>
+            <div class="card__body">
+              <div class="card__media"><img src="assets/work/plan73.jpg" alt="Captura de Plan -73" loading="lazy"></div>
+              <div class="card__info">
+                <p>Mi plan para competir en −73 kg: gimnasio, días atléticos, flexibilidad, comida y objetivos. Hecho para leerse en el gimnasio, desde el celular, entre serie y serie.</p>
+                <ul class="tags mono"><li>Deporte</li><li>Datos</li><li>Web</li></ul>
+                <span class="card__cta mono">Ver plan ↗</span>
+              </div>
+            </div>
+          </a>
+        </article>
+
+        <article class="card card--private" style="--i:4">
+          <a class="card__link" href="https://manu-alz.github.io/Manu-HQ/" target="_blank" rel="noopener" data-cursor="Privado 🔒">
+            <div class="card__meta">
+              <span class="card__num mono">05</span>
+              <h3 class="card__title">Manu HQ</h3>
+              <span class="card__year mono">2026 — sistema propio</span>
+            </div>
+            <div class="card__body">
+              <div class="card__media">
+                <img src="assets/work/hq.jpg" alt="" loading="lazy">
+                <div class="hq-grid" aria-hidden="true">
+                  <span>Gym</span><span>Judo</span><span>Hábitos</span><span>Lectura</span><span>Surf</span><span>Contenido</span><span>Calendario</span><span>Diario</span><span>Idiomas</span>
+                </div>
+                <span class="lock mono">● Acceso privado</span>
+              </div>
+              <div class="card__info">
+                <p>Mi centro de mando: entrenamiento, judo, cambio físico, hábitos, lectura, proyectos de video y contenido, sincronizado entre dispositivos. Es privado, pero existe, y lo uso todos los días.</p>
+                <ul class="tags mono"><li>Sistema</li><li>App personal</li><li>Sync</li></ul>
+                <span class="card__cta mono">Con contraseña ↗</span>
+              </div>
+            </div>
+          </a>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ============ SERVICIOS ============ -->
+    <section class="services" id="hago">
+      <p class="label mono">(03) — Lo que hago</p>
+      <ul class="svc">
+        <li class="svc__row" data-cursor>
+          <span class="svc__num mono">01</span>
+          <h3 class="svc__name">Marcas</h3>
+          <div class="svc__desc"><div><p>Construyo marcas desde cero: nombre, identidad, voz y el sistema para que crezcan. Eventos PDE empezó como una idea y hoy es una marca con su web, sus redes y su negocio.</p></div></div>
+          <span class="svc__arrow">↗</span>
+        </li>
+        <li class="svc__row" data-cursor>
+          <span class="svc__num mono">02</span>
+          <h3 class="svc__name">Webs <em>&amp;</em> producto</h3>
+          <div class="svc__desc"><div><p>Sitios y apps a medida, sin plantillas. Diseño, código, textos y lanzamiento. Rápidos, pensados para el celular y fáciles de actualizar.</p></div></div>
+          <span class="svc__arrow">↗</span>
+        </li>
+        <li class="svc__row" data-cursor>
+          <span class="svc__num mono">03</span>
+          <h3 class="svc__name">Edición de video</h3>
+          <div class="svc__desc"><div><p>Edito video seguido: ritmo, cortes, color, sonido y subtítulos. Piezas cortas para redes y videos para marcas y deportistas.</p></div></div>
+          <span class="svc__arrow">↗</span>
+        </li>
+        <li class="svc__row" data-cursor>
+          <span class="svc__num mono">04</span>
+          <h3 class="svc__name">Contenido</h3>
+          <div class="svc__desc"><div><p>Creé contenido durante un año entero: idea, guion, grabación, edición y publicación. Sé lo que cuesta sostenerlo y cómo hacer que la gente se quede.</p></div></div>
+          <span class="svc__arrow">↗</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ NÚMEROS ============ -->
+    <section class="stats">
+      <div class="stat"><span class="stat__n" data-count="1">0</span><span class="stat__l mono">año creando<br>contenido</span></div>
+      <div class="stat"><span class="stat__n" data-count="5">0</span><span class="stat__l mono">proyectos<br>en vivo</span></div>
+      <div class="stat"><span class="stat__n" data-count="100">0</span><span class="stat__l mono">técnicas de judo<br>documentadas</span></div>
+      <div class="stat"><span class="stat__n" data-count="3">0</span><span class="stat__l mono">idiomas en<br>Eventos PDE</span></div>
+    </section>
+
+    <!-- ============ ATLETA ============ -->
+    <section class="athlete" id="atleta" data-theme="dark">
+      <div class="expand">
+        <div class="expand__sticky">
+          <canvas class="waves" aria-hidden="true"></canvas>
+          <div class="expand__img"><img src="assets/dojo.jpg" alt="Manu con sus compañeros en el gimnasio, frente al ring, con la bandera de Uruguay"></div>
+          <h2 class="expand__title">
+            <span class="reveal-line"><span>El cuerpo es</span></span>
+            <span class="reveal-line"><span>mi <em>primer</em> proyecto.</span></span>
+          </h2>
+          <p class="expand__label mono">(04) — Fuera de la pantalla</p>
+        </div>
+      </div>
+
+      <div class="disciplines">
+        <article class="disc">
+          <span class="disc__num mono">A</span>
+          <h3>Judo</h3>
+          <p>Entreno para competir en −73 kg. El tatami me enseñó a caer, levantarme y leer al otro antes de que se mueva.</p>
+        </article>
+        <article class="disc">
+          <span class="disc__num mono">B</span>
+          <h3>Surf</h3>
+          <p>El mar no negocia. Paciencia, lectura de olas y saber cuándo remar fuerte y cuándo esperar.</p>
+        </article>
+        <article class="disc">
+          <span class="disc__num mono">C</span>
+          <h3>Guardavida</h3>
+          <p>Fui guardavida privado: responsabilidad real, atención constante y reaccionar rápido cuando importa.</p>
+        </article>
+        <article class="disc">
+          <span class="disc__num mono">D</span>
+          <h3>Moverse</h3>
+          <p>Gimnasio, días atléticos, acrobacias, flexibilidad. Todo lo que tenga que ver con moverse, me interesa.</p>
+        </article>
+      </div>
+
+      <blockquote class="quote">
+        <p data-words>Lo que aprendo entrenando lo llevo al trabajo: <em>disciplina</em>, constancia y no soltar hasta que salga.</p>
+      </blockquote>
+    </section>
+
+    <!-- ============ CONTACTO ============ -->
+    <section class="contact" id="contacto">
+      <p class="label mono">(05) — Contacto</p>
+      <h2 class="contact__title kinetic"><span class="k">H</span><span class="k">a</span><span class="k">b</span><span class="k">l</span><span class="k">e</span><span class="k">m</span><span class="k">o</span><span class="k">s</span></h2>
+      <div class="contact__row">
+        <p class="contact__text">¿Tenés una marca, una web o un video en mente? <em>Contame.</em> Respondo rápido.</p>
+        <a class="magnet" id="contact-btn" href="https://github.com/Manu-Alz" target="_blank" rel="noopener" data-cursor>
+          <span class="magnet__inner">Escribime</span>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="footer__links mono">
+      <a href="https://github.com/Manu-Alz" target="_blank" rel="noopener" class="link" data-cursor>GitHub ↗</a>
+      <a href="https://eventospde.com/" target="_blank" rel="noopener" class="link" data-cursor>Eventos PDE ↗</a>
+      <a href="#inicio" class="link" data-cursor>Volver arriba ↑</a>
+    </div>
+    <div class="footer__bottom mono">
+      <span>© 2026 Manu — Hecho a mano en Uruguay</span>
+      <span>Hora local <span data-clock>--:--</span></span>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
