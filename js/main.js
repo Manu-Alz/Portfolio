@@ -30,43 +30,59 @@ const T = window.T || ((es) => es);
     if (!panel) return;
     const t0 = Date.now();
     const p2 = (n) => String(n).padStart(2, "0");
-    const hms = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false, timeZone: "America/Montevideo" });
+    const parts = new Intl.DateTimeFormat("en-GB", { weekday: "short", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false, timeZone: "America/Montevideo" });
     const elT = $("[data-uy-time]"), elS = $("[data-uy-sec]"), elRec = $("[data-rec]");
+    const now = $(".day__now"), nowLbl = $("[data-day-now]"), msg = $("[data-day-msg]");
+    // mensaje según la hora de Uruguay (horario de trabajo: lunes a viernes, 9 a 19)
+    const status = (wd, h) => {
+      const weekend = wd === "Sat" || wd === "Sun" || (wd === "Fri" && h >= 19);
+      if (weekend) return T("Fin de semana · respondo el lunes", "Weekend · I reply on Monday");
+      if (h >= 9 && h < 19) return T("En horario · respondo hoy", "Office hours · I reply today");
+      if (h < 9) return T("Fuera de horario · respondo desde las 9", "Off hours · I reply from 9 am");
+      return T("Fuera de horario · respondo mañana", "Off hours · I reply tomorrow");
+    };
     const clock = () => {
-      const [h, m, s] = hms.format(new Date()).split(":");
-      if (elT) elT.textContent = `${h}:${m}`;
-      if (elS) elS.textContent = `:${s}`;
+      const o = {};
+      parts.formatToParts(new Date()).forEach((p) => (o[p.type] = p.value));
+      const h = +o.hour % 24, m = +o.minute;
+      if (elT) elT.textContent = `${p2(h)}:${o.minute}`;
+      if (elS) elS.textContent = `:${o.second}`;
+      if (now) now.style.left = ((h + m / 60) / 24) * 100 + "%";
+      if (nowLbl) nowLbl.textContent = `${p2(h)}:${o.minute}`;
+      if (msg) msg.textContent = status(o.weekday, h);
       const d = Math.floor((Date.now() - t0) / 1000);
       if (elRec) elRec.textContent = `REC ${p2(Math.floor(d / 3600))}:${p2(Math.floor(d / 60) % 60)}:${p2(d % 60)}`;
     };
     clock(); setInterval(clock, 1000);
 
     // latencia real: se pide cada sitio (sin cookies ni caché) y se mide cuánto tarda en responder
-    const rows = $$("[data-ping]", panel).map((li) => {
-      const sp = $(".mon__sp", li);
-      for (let k = 0; k < 18; k++) sp.appendChild(document.createElement("i"));
-      return { li, url: li.dataset.ping, bars: $$("i", sp), ms: $(".mon__ms", li), st: $(".mon__s", li), hist: [] };
-    });
+    const N = 24;
+    const rows = $$("[data-ping]", panel).map((li) => ({
+      li, url: li.dataset.ping, line: $(".mon__sp polyline", li), ms: $(".mon__ms", li), st: $(".mon__s", li), hist: [],
+    }));
     const avg = $("[data-ms-avg]");
+    const draw = (r) => {
+      if (!r.line || !r.hist.length) return;
+      const max = Math.max(120, ...r.hist) * 1.15;
+      // osciloscopio: los valores nuevos entran por la derecha; antes de tener historial, la línea arranca plana
+      const pts = Array.from({ length: N }, (_, i) => r.hist[i - (N - r.hist.length)] ?? r.hist[0]);
+      r.line.setAttribute("points", pts.map((v, i) => `${((i / (N - 1)) * 100).toFixed(1)},${(22 - (v / max) * 20).toFixed(1)}`).join(" "));
+    };
     const ping = async (r) => {
       const a = performance.now();
       try {
         await fetch(r.url + "?ping=" + Date.now(), { mode: "no-cors", cache: "no-store", credentials: "omit" });
         const ms = Math.round(performance.now() - a);
-        r.hist.push(ms); if (r.hist.length > r.bars.length) r.hist.shift();
+        r.hist.push(ms); if (r.hist.length > N) r.hist.shift();
         r.ms.textContent = ms + " ms";
-        r.st.textContent = T("Online", "Online");
+        r.st.textContent = "Online";
         r.li.classList.add("is-up"); r.li.classList.remove("is-down");
       } catch (e) {
         r.ms.textContent = "— ms";
         r.st.textContent = T("Sin señal", "No signal");
         r.li.classList.add("is-down"); r.li.classList.remove("is-up");
       }
-      const max = Math.max(200, ...r.hist);
-      r.bars.forEach((b, i) => {
-        const v = r.hist[i - (r.bars.length - r.hist.length)];
-        b.style.height = v ? Math.max(8, (v / max) * 100) + "%" : "0";
-      });
+      draw(r);
     };
     const round = async () => {
       await Promise.all(rows.map(ping));
@@ -76,8 +92,25 @@ const T = window.T || ((es) => es);
     let timer = 0;
     new IntersectionObserver(([en]) => {
       clearInterval(timer);
-      if (en.isIntersecting) { round(); timer = setInterval(round, 3500); }
+      if (en.isIntersecting) { round(); timer = setInterval(round, 3000); }
     }, { rootMargin: "200px" }).observe(panel);
+
+    // "Esperando tu proyecto" se escribe letra por letra la primera vez que se ve
+    const typed = $("[data-type]", panel);
+    if (typed && !reduce) {
+      const full = typed.textContent;
+      typed.textContent = "";
+      const io = new IntersectionObserver(([en]) => {
+        if (!en.isIntersecting) return;
+        io.disconnect();
+        let k = 0;
+        setTimeout(function step() {
+          typed.textContent = full.slice(0, ++k);
+          if (k < full.length) setTimeout(step, 55 + Math.random() * 70);
+        }, 1400);
+      }, { threshold: 0.6 });
+      io.observe(typed.closest(".stat"));
+    }
   })();
 
   /* ---------- Botón de contacto ---------- */
@@ -499,17 +532,33 @@ const T = window.T || ((es) => es);
       });
     });
   });
-  gsap.from(".stat__top, .stat__n, .stat__d", { opacity: 0, y: 16, duration: 1, stagger: 0.04, ease: "expo.out", scrollTrigger: { trigger: ".stats", start: "top 85%" } });
-  gsap.from(".stats__head > *", { opacity: 0, y: 10, duration: 0.9, stagger: 0.08, ease: "expo.out", scrollTrigger: { trigger: ".stats", start: "top 88%" } });
+  // el panel se "enciende": las esquinas encuadran y cada canal aparece en orden
+  gsap.from(".hud__c", { scale: 2.2, opacity: 0, duration: 1, stagger: 0.05, ease: "expo.out", scrollTrigger: { trigger: ".stats", start: "top 85%" } });
+  gsap.from(".stats__head > *", { opacity: 0, y: 10, duration: 0.9, stagger: 0.08, ease: "expo.out", scrollTrigger: { trigger: ".stats", start: "top 85%" } });
+  gsap.from(".stat", { opacity: 0, duration: 0.6, stagger: 0.12, ease: "steps(4)", scrollTrigger: { trigger: ".stats__grid", start: "top 85%" } });
+  gsap.from(".stat__top, .stat__hero, .stat__d", { opacity: 0, y: 16, duration: 1, stagger: 0.04, ease: "expo.out", scrollTrigger: { trigger: ".stats__grid", start: "top 85%" } });
   // 01 · los sitios se van conectando
   gsap.from(".mon li", { opacity: 0, x: -14, duration: 0.8, stagger: 0.12, ease: "expo.out", scrollTrigger: { trigger: ".stat--mon", start: "top 80%" } });
-  // 02 · datos de estado
+  // 02 · la marca de "ahora" entra desde la medianoche
+  gsap.from(".day__now", { left: "0%", duration: 2, ease: "expo.out", scrollTrigger: { trigger: ".stat--avail", start: "top 80%" } });
   gsap.from(".kv div", { opacity: 0, x: -14, duration: 0.8, stagger: 0.08, ease: "expo.out", scrollTrigger: { trigger: ".stat--avail", start: "top 80%" } });
-  // 03 · las etapas se cargan y el cabezal recorre el proceso en loop
-  gsap.fromTo(".proc__bar i", { "--f": 0 }, { "--f": 1, duration: 0.9, stagger: 0.18, ease: "power3.inOut", scrollTrigger: { trigger: ".stat--proc", start: "top 80%" } });
-  gsap.fromTo(".proc__head", { left: "0%" }, { left: "100%", duration: 7, ease: "none", repeat: -1 });
+  // 03 · los clips se cargan en la pista y el cabezal reproduce el proceso en loop
+  gsap.fromTo(".nle__lane i", { "--f": 0 }, { "--f": 1, duration: 0.8, stagger: 0.15, ease: "power3.inOut", scrollTrigger: { trigger: ".stat--proc", start: "top 80%" } });
+  gsap.from(".nle__lane--rev em", { scale: 0, duration: 0.5, stagger: 0.1, ease: "back.out(3)", scrollTrigger: { trigger: ".stat--proc", start: "top 80%" } });
+  const nleTc = $("[data-nle-tc]"), nleHead = $(".nle__head");
+  if (nleHead) {
+    const ph = { p: 0 };
+    gsap.to(ph, {
+      p: 1, duration: 9, ease: "none", repeat: -1,
+      onUpdate() {
+        nleHead.style.left = `calc(var(--lbl) + (100% - var(--lbl)) * ${ph.p})`;
+        if (nleTc) nleTc.textContent = (window.LANG === "en" ? "W" : "S") + Math.min(6, Math.floor(ph.p * 6) + 1);
+      },
+    });
+  }
   // 04 · el registro se escribe línea por línea
-  gsap.from(".log li", { opacity: 0, clipPath: "inset(0 100% 0 0)", duration: 0.7, stagger: 0.14, ease: "power2.out", scrollTrigger: { trigger: ".stat--log", start: "top 80%" } });
+  gsap.from(".term__cmd, .log li", { opacity: 0, clipPath: "inset(0 100% 0 0)", duration: 0.6, stagger: 0.12, ease: "power2.out", scrollTrigger: { trigger: ".stat--log", start: "top 80%" } });
+  gsap.from(".term__cta", { opacity: 0, y: 10, duration: 0.8, delay: 1, ease: "expo.out", scrollTrigger: { trigger: ".stat--log", start: "top 80%" } });
 
   /* ---------- Atleta: la foto se expande ---------- */
   // negro + logo → la foto entra en tiras que se arman (a tamaño real, sin zoom) → anotación y título

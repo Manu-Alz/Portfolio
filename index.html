@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=40">
+  <link rel="stylesheet" href="css/styles.css?v=41">
   <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
@@ -255,52 +255,71 @@
 
     <!-- ============ NÚMEROS ============ -->
     <section class="stats" aria-label="Panel en vivo">
+      <i class="hud__c hud__c--tl"></i><i class="hud__c hud__c--tr"></i><i class="hud__c hud__c--bl"></i><i class="hud__c hud__c--br"></i>
       <header class="stats__head mono">
-        <span class="stats__k">(Panel en vivo)</span>
-        <span class="stats__t">Manu — Estudio</span>
+        <span class="stats__k"><b>CAM 02</b> Panel en vivo</span>
+        <span class="stats__t">Manu — Estudio de diseño y desarrollo</span>
         <span class="stats__u"><i class="stats__live"></i><span data-rec>REC 00:00:00</span></span>
       </header>
       <div class="stats__grid">
         <article class="stat stat--mon">
-          <div class="stat__top mono"><span class="stat__l">Proyectos en producción</span><span class="stat__i">01</span></div>
-          <span class="stat__n"><span data-ms-avg>···</span><sup>ms</sup></span>
+          <div class="stat__top mono"><span class="stat__l">Proyectos en producción</span><span class="stat__i">CH·01</span></div>
+          <div class="stat__hero">
+            <span class="stat__n"><span data-ms-avg>···</span><sup>ms</sup></span>
+            <span class="stat__cap mono">Latencia media<br>de mis sitios</span>
+          </div>
           <ul class="mon mono">
-            <li data-ping="https://eventospde.com/"><span class="mon__n">Eventos PDE</span><span class="mon__t">Web + agenda · ES/EN/PT</span><span class="mon__sp" aria-hidden="true"></span><span class="mon__ms">— ms</span><b class="mon__s">Conectando</b></li>
-            <li data-ping="https://manu-alz.github.io/Judokan/"><span class="mon__n">Judokan Uruguay</span><span class="mon__t">Web del club</span><span class="mon__sp" aria-hidden="true"></span><span class="mon__ms">— ms</span><b class="mon__s">Conectando</b></li>
-            <li data-ping="https://manu-alz.github.io/Judo-Uruguay/"><span class="mon__n">Judo Uruguay</span><span class="mon__t">App instalable · PWA</span><span class="mon__sp" aria-hidden="true"></span><span class="mon__ms">— ms</span><b class="mon__s">Conectando</b></li>
+            <li data-ping="https://eventospde.com/"><span class="mon__n">Eventos PDE</span><span class="mon__t">Web + agenda · ES/EN/PT</span><svg class="mon__sp" viewBox="0 0 100 24" preserveAspectRatio="none" aria-hidden="true"><polyline points=""/></svg><span class="mon__ms">— ms</span><b class="mon__s">Conectando</b></li>
+            <li data-ping="https://manu-alz.github.io/Judokan/"><span class="mon__n">Judokan Uruguay</span><span class="mon__t">Web del club</span><svg class="mon__sp" viewBox="0 0 100 24" preserveAspectRatio="none" aria-hidden="true"><polyline points=""/></svg><span class="mon__ms">— ms</span><b class="mon__s">Conectando</b></li>
+            <li data-ping="https://manu-alz.github.io/Judo-Uruguay/"><span class="mon__n">Judo Uruguay</span><span class="mon__t">App instalable · PWA</span><svg class="mon__sp" viewBox="0 0 100 24" preserveAspectRatio="none" aria-hidden="true"><polyline points=""/></svg><span class="mon__ms">— ms</span><b class="mon__s">Conectando</b></li>
           </ul>
-          <p class="stat__d">Latencia real de cada sitio, medida ahora mismo desde tu navegador.</p>
+          <p class="stat__d">Medido en este momento desde tu navegador: sitios reales, en uso.</p>
         </article>
         <article class="stat stat--avail">
-          <div class="stat__top mono"><span class="stat__l">Disponibilidad</span><span class="stat__i">02</span></div>
-          <span class="stat__n stat__n--clock"><span data-uy-time>--:--</span><sup data-uy-sec>:--</sup></span>
+          <div class="stat__top mono"><span class="stat__l">Disponibilidad</span><span class="stat__i">CH·02</span></div>
+          <div class="stat__hero">
+            <span class="stat__n stat__n--clock"><span data-uy-time>--:--</span><sup data-uy-sec>:--</sup></span>
+            <span class="stat__cap mono">Hora en<br>Uruguay · GMT−3</span>
+          </div>
+          <div class="day mono" aria-hidden="true">
+            <div class="day__track"><span class="day__work"></span><span class="day__now"><b data-day-now>--:--</b></span></div>
+            <div class="day__lbl"><span>00</span><span>06</span><span>12</span><span>18</span><span>24</span></div>
+          </div>
           <dl class="kv mono">
             <div><dt>Estado</dt><dd class="kv__ok">Tomando proyectos 2026</dd></div>
-            <div><dt>Respuesta</dt><dd>En menos de 24 h</dd></div>
-            <div><dt>Base</dt><dd>Punta del Este · GMT−3</dd></div>
-            <div><dt>Modalidad</dt><dd>Remoto · ES / EN</dd></div>
+            <div><dt>Ahora</dt><dd data-day-msg>—</dd></div>
+            <div><dt>Base</dt><dd>Punta del Este · remoto</dd></div>
           </dl>
         </article>
         <article class="stat stat--proc">
-          <div class="stat__top mono"><span class="stat__l">Proceso típico · web</span><span class="stat__i">03</span></div>
-          <span class="stat__n">3–6<sup>semanas</sup></span>
-          <div class="proc mono" aria-hidden="true">
-            <div class="proc__bar"><i style="--w:15%"></i><i style="--w:30%"></i><i style="--w:40%"></i><i style="--w:15%"></i><span class="proc__head"></span></div>
-            <ol class="proc__l"><li style="--w:15%">Brief</li><li style="--w:30%">Diseño</li><li style="--w:40%">Desarrollo</li><li style="--w:15%">Lanz.</li></ol>
+          <div class="stat__top mono"><span class="stat__l">Proceso típico · web</span><span class="stat__i">CH·03</span></div>
+          <div class="stat__hero">
+            <span class="stat__n">3–6<sup>semanas</sup></span>
+            <span class="stat__cap mono">De la primera<br>charla al lanzamiento</span>
           </div>
-          <p class="stat__d">De la primera charla al lanzamiento, con avances cada semana.</p>
+          <div class="nle mono" aria-hidden="true">
+            <div class="nle__ruler"><span>S1</span><span>S2</span><span>S3</span><span>S4</span><span>S5</span><span>S6</span></div>
+            <div class="nle__track"><b>V1</b><div class="nle__lane"><i style="--l:0%;--w:15%">Brief</i><i style="--l:15%;--w:28%">Diseño</i><i style="--l:43%;--w:42%">Desarrollo</i><i style="--l:85%;--w:15%">Lanz.</i></div></div>
+            <div class="nle__track"><b>R</b><div class="nle__lane nle__lane--rev"><em style="--l:16.6%"></em><em style="--l:33.3%"></em><em style="--l:50%"></em><em style="--l:66.6%"></em><em style="--l:83.3%"></em></div></div>
+            <span class="nle__head"><b data-nle-tc>S1</b></span>
+          </div>
+          <p class="stat__d">Una revisión por semana sobre versiones navegables, no sobre promesas.</p>
         </article>
         <article class="stat stat--log">
-          <div class="stat__top mono"><span class="stat__l">Registro</span><span class="stat__i">04</span></div>
-          <ol class="log mono">
-            <li><time>2026</time><span>Eventos PDE en línea — +70 eventos en agenda, 3 idiomas</span></li>
-            <li><time>2026</time><span>Judo Uruguay adoptada por un dojo como sistema de progresión</span></li>
-            <li><time>2026</time><span>Judokan Uruguay — web del club publicada</span></li>
-            <li><time>2026</time><span>Reel de Eventos PDE — rodaje, edición y motion</span></li>
-            <li><time>2024</time><span>Planes de entrenamiento a medida, también en digital</span></li>
-            <li><time>2023</time><span>Primeros sitios para clientes</span></li>
-            <li class="log__now"><time>Ahora</time><span>Esperando tu proyecto<i class="log__caret"></i></span></li>
-          </ol>
+          <div class="stat__top mono"><span class="stat__l">Registro</span><span class="stat__i">CH·04</span></div>
+          <div class="term mono">
+            <p class="term__cmd"><span>manu@estudio</span>:<i>~</i>$ tail -f registro.log</p>
+            <ol class="log">
+              <li><time>2023</time><span>Primeros sitios para clientes</span></li>
+              <li><time>2024</time><span>Planes de entrenamiento a medida, también en digital</span></li>
+              <li><time>2026</time><span>Reel de Eventos PDE — rodaje, edición y motion</span></li>
+              <li><time>2026</time><span>Judokan Uruguay — web del club publicada</span></li>
+              <li><time>2026</time><span>Judo Uruguay adoptada por un dojo como sistema de progresión</span></li>
+              <li><time>2026</time><span>Eventos PDE en línea — +70 eventos en agenda, 3 idiomas</span></li>
+              <li class="log__now"><time>Ahora</time><span><span data-type="Esperando tu proyecto">Esperando tu proyecto</span><i class="log__caret"></i></span></li>
+            </ol>
+          </div>
+          <a class="term__cta mono" href="#contacto" data-cursor="Escribime ↘">&gt; iniciar proyecto nuevo <span>↘</span></a>
         </article>
       </div>
     </section>
@@ -509,7 +528,7 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-  <script src="js/i18n.js?v=40"></script>
-  <script src="js/main.js?v=40"></script>
+  <script src="js/i18n.js?v=41"></script>
+  <script src="js/main.js?v=41"></script>
 </body>
 </html>
