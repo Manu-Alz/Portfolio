@@ -318,9 +318,10 @@ a:hover .roll > span, .roll:hover > span { transform: translateY(-1.2em); }
 .card__link:hover .card__title { color: var(--blue-soft); }
 .card__year { color: rgba(236,233,226,.5); }
 .card__body { display: grid; grid-template-columns: 1.7fr 1fr; gap: clamp(1rem, 2.5vw, 2.5rem); padding-top: 1.4rem; }
-.card__media { position: relative; overflow: hidden; border-radius: 10px; aspect-ratio: 16 / 10; background: #000; }
-.card__media img { width: 100%; height: 114%; object-fit: cover; object-position: top; transition: transform 1.2s var(--ease-out); will-change: transform; }
-.card__link:hover .card__media img { transform: scale(1.04); }
+.card__media { position: relative; overflow: hidden; border-radius: 10px; aspect-ratio: 16 / 9; background: #000; }
+/* la captura (16:10) entra completa a lo ancho; como el marco es 16:9, sobra un poco de alto para el parallax vertical, sin recortar los costados */
+.card__media > img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; transition: transform 1.2s var(--ease-out); will-change: transform; transform-origin: 50% 0; }
+.card__link:hover .card__media > img { transform: scale(1.02); }
 .card__info { display: flex; flex-direction: column; gap: 1.4rem; font-size: 1.05rem; color: rgba(236,233,226,.78); }
 .card__info p { max-width: 38ch; }
 .tags { display: flex; flex-wrap: wrap; gap: .4rem; }
@@ -748,7 +749,7 @@ a, button { -webkit-tap-highlight-color: transparent; }
 @media (hover: none) {
   /* sin hover: lo que se revelaba al pasar el mouse queda visible o responde al toque */
   .svc__desc { grid-template-rows: 1fr; }
-  .card__link:active .card__media img { transform: scale(1.03); }
+  .card__link:active .card__media > img { transform: scale(1.02); }
   .mstep:active::before { transform: translateY(0); }
 }
 @media (max-width: 900px) {

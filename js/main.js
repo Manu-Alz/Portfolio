@@ -398,12 +398,13 @@ const T = window.T || ((es) => es);
   /* ---------- Tarjetas de trabajo apiladas ---------- */
   const cards = $$(".card");
   cards.forEach((card, i) => {
-    const img = $(".card__media img", card);
+    const img = $(".card__media > img", card); // solo la captura principal (no la miniatura del reel)
     gsap.fromTo($(".card__media", card), { clipPath: "inset(18% 10% 18% 10% round 24px)" }, {
       clipPath: "inset(0% 0% 0% 0% round 10px)", ease: "power2.out",
       scrollTrigger: { trigger: card, start: "top 92%", end: "top 30%", scrub: 0.6 },
     });
-    gsap.fromTo(img, { yPercent: -6 }, { yPercent: 6, ease: "none", scrollTrigger: { trigger: card, start: "top bottom", end: "bottom top", scrub: true } });
+    // parallax solo dentro del alto que sobra (la captura nunca deja un hueco ni pierde los costados)
+    if (img) gsap.fromTo(img, { yPercent: -9 }, { yPercent: 0, ease: "none", scrollTrigger: { trigger: card, start: "top bottom", end: "bottom top", scrub: true } });
     gsap.from($$(".card__meta > *, .card__info > *", card), {
       opacity: 0, y: 30, duration: 1, stagger: 0.06, ease: "expo.out",
       scrollTrigger: { trigger: card, start: "top 75%" },
