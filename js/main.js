@@ -116,6 +116,15 @@ const CONTACTO = {
     });
   });
 
+  /* ---------- Links con texto que rueda ---------- */
+  $$(".nav__links a, .footer__links a").forEach((a) => {
+    const t = a.textContent.trim();
+    a.innerHTML = `<span class="roll"><span>${t}</span></span>`;
+  });
+
+  /* ---------- Barra de progreso ---------- */
+  gsap.to(".progress", { scaleX: 1, ease: "none", scrollTrigger: { start: 0, end: "max", scrub: true } });
+
   /* ---------- Cursor ---------- */
   if (fine) {
     root.classList.add("has-cursor");
@@ -185,7 +194,6 @@ const CONTACTO = {
   $$(".hero__name .k").forEach((k, i) => {
     gsap.to(k, { y: () => -innerHeight * (0.12 + ((i * 37) % 4) * 0.07), ease: "none", scrollTrigger: heroST });
   });
-  gsap.to(".badge", { y: () => -innerHeight * 0.3, ease: "none", scrollTrigger: heroST });
   gsap.to(".hero__top", { y: () => innerHeight * 0.15, opacity: 0, ease: "none", scrollTrigger: heroST });
 
   /* ---------- Marquesina infinita que reacciona al scroll ---------- */
@@ -221,12 +229,17 @@ const CONTACTO = {
   gsap.from(".manifesto__foot p", { opacity: 0, y: 30, duration: 1.2, stagger: 0.15, ease: "expo.out", scrollTrigger: { trigger: ".manifesto__foot", start: "top 85%" } });
   gsap.from(".svc__row", { opacity: 0, y: 60, duration: 1.2, stagger: 0.1, ease: "expo.out", scrollTrigger: { trigger: ".svc", start: "top 80%" } });
   gsap.from(".disc", { opacity: 0, y: 60, duration: 1.2, stagger: 0.1, ease: "expo.out", scrollTrigger: { trigger: ".disciplines", start: "top 85%" } });
+  gsap.from(".footer__mark span", { yPercent: 100, ease: "none", scrollTrigger: { trigger: ".footer__mark", start: "top bottom", end: "bottom bottom", scrub: true } });
   gsap.from(".contact__row > *", { opacity: 0, y: 40, duration: 1.2, stagger: 0.12, ease: "expo.out", scrollTrigger: { trigger: ".contact__row", start: "top 90%" } });
 
   /* ---------- Tarjetas de trabajo apiladas ---------- */
   const cards = $$(".card");
   cards.forEach((card, i) => {
     const img = $(".card__media img", card);
+    gsap.fromTo($(".card__media", card), { clipPath: "inset(18% 10% 18% 10% round 24px)" }, {
+      clipPath: "inset(0% 0% 0% 0% round 10px)", ease: "power2.out",
+      scrollTrigger: { trigger: card, start: "top 92%", end: "top 30%", scrub: 0.6 },
+    });
     gsap.fromTo(img, { yPercent: -6 }, { yPercent: 6, ease: "none", scrollTrigger: { trigger: card, start: "top bottom", end: "bottom top", scrub: true } });
     gsap.from($$(".card__meta > *, .card__info > *", card), {
       opacity: 0, y: 30, duration: 1, stagger: 0.06, ease: "expo.out",
@@ -241,23 +254,46 @@ const CONTACTO = {
   });
 
   /* ---------- Números ---------- */
-  $$("[data-count]").forEach((el) => {
-    const end = +el.dataset.count, o = { v: 0 };
-    gsap.to(o, {
-      v: end, duration: 2, ease: "expo.out",
-      onUpdate: () => (el.textContent = Math.round(o.v)),
-      scrollTrigger: { trigger: el, start: "top 88%" },
+  // cada dígito es una columna 0-9 (dos vueltas) que rueda hasta su valor
+  $$("[data-odo]").forEach((el, n) => {
+    const digits = el.dataset.odo.split("");
+    el.textContent = "";
+    const cols = digits.map((d) => {
+      const col = document.createElement("span");
+      col.className = "odo__col";
+      for (let k = 0; k < 20; k++) { const s = document.createElement("span"); s.textContent = k % 10; col.appendChild(s); }
+      el.appendChild(col);
+      return { col, to: 10 + +d };
+    });
+    el.setAttribute("aria-label", el.dataset.odo);
+    const st = { trigger: el, start: "top 90%" };
+    cols.forEach(({ col, to }, i) => {
+      gsap.fromTo(col, { yPercent: 0 }, {
+        yPercent: (-100 / 20) * to, duration: 2.2 + i * 0.35, ease: "expo.out", delay: n * 0.08,
+        scrollTrigger: st,
+      });
     });
   });
+  gsap.from(".stat__d, .stat__l", { opacity: 0, y: 16, duration: 1, stagger: 0.05, ease: "expo.out", scrollTrigger: { trigger: ".stats", start: "top 85%" } });
 
   /* ---------- Atleta: la foto se expande ---------- */
-  const isMobile = innerWidth < 900;
-  const exp = gsap.timeline({ scrollTrigger: { trigger: ".expand", start: "top top", end: "bottom bottom", scrub: true } });
+  // negro + logo → el círculo azul del logo se abre y se vuelve la foto
+  const expandEl = $(".expand");
+  const radius = () => parseFloat(getComputedStyle(expandEl).getPropertyValue("--r")) || 78;
+  const full = () => Math.hypot(innerWidth, innerHeight) / 2 + 20;
+  const exp = gsap.timeline({
+    scrollTrigger: { trigger: ".expand", start: "top top", end: "bottom bottom", scrub: 0.6, invalidateOnRefresh: true },
+  });
   exp
-    .fromTo(".expand__img", { clipPath: isMobile ? "inset(32% 18% 32% 18% round 14px)" : "inset(30% 32% 30% 32% round 14px)" },
-      { clipPath: "inset(0% 0% 0% 0% round 0px)", ease: "none", duration: 1 }, 0)
-    .fromTo(".expand__img img", { scale: 1.3 }, { scale: 1, ease: "none", duration: 1 }, 0)
-    .to(".expand__title .reveal-line > span", { yPercent: 0, stagger: 0.06, duration: 0.25, ease: "power2.out" }, 0.35);
+    .to(".emblem__hint", { opacity: 0, duration: 0.08 }, 0.02)
+    .to(".emblem__ring", { scale: 2.6, opacity: 0, ease: "power2.in", duration: 0.32 }, 0.06)
+    .to(".emblem__core", { scale: 0.4, opacity: 0, ease: "power2.in", duration: 0.2 }, 0.1)
+    .fromTo(".expand__img", { clipPath: () => `circle(${radius()}px at 50% 50%)` },
+      { clipPath: () => `circle(${full()}px at 50% 50%)`, ease: "power2.inOut", duration: 0.5 }, 0.12)
+    .to(".expand__fill", { opacity: 0, ease: "none", duration: 0.28 }, 0.18)
+    .fromTo(".expand__img img", { scale: 1.45 }, { scale: 1, ease: "none", duration: 0.75 }, 0.12)
+    .to(".expand__title .reveal-line > span", { yPercent: 0, stagger: 0.06, duration: 0.18, ease: "power2.out" }, 0.62)
+    .to({}, { duration: 0.15 });
   gsap.set(".expand__title .reveal-line > span", { y: 0, yPercent: 110 });
 
   /* ---------- Olas (canvas): el surf de fondo ---------- */

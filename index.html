@@ -15,13 +15,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles.css?v=6">
   <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
 
   <!-- Grano y cursor -->
   <div class="grain" aria-hidden="true"></div>
+  <div class="progress" aria-hidden="true"></div>
   <div class="cursor" aria-hidden="true"><span class="cursor__dot"></span><span class="cursor__label"></span></div>
 
   <!-- Precarga -->
@@ -52,7 +53,16 @@
     <!-- ============ HERO ============ -->
     <section class="hero" id="inicio">
       <div class="hero__top">
-        <p class="hero__kicker mono"><span class="reveal-line"><span>(Portfolio — 2026)</span></span></p>
+        <div class="hero__left">
+          <p class="hero__kicker mono"><span class="reveal-line"><span>(Portfolio — 2026)</span></span></p>
+          <a href="#atleta" class="badge" data-cursor="Atleta ↓" aria-label="Ir a la sección de atleta">
+            <svg class="badge__ring" viewBox="0 0 200 200" aria-hidden="true">
+              <defs><path id="circ" d="M100,100 m-82,0 a82,82 0 1,1 164,0 a82,82 0 1,1 -164,0"/></defs>
+              <text><textPath href="#circ" textLength="508" lengthAdjust="spacing">ATLETA ✦ COACH ✦ CREADOR ✦ URUGUAY ✦</textPath></text>
+            </svg>
+            <span class="badge__core"><b>−73</b><small>kg</small></span>
+          </a>
+        </div>
         <p class="hero__intro">
           <span class="reveal-line"><span>Atleta y coach.</span></span>
           <span class="reveal-line"><span>Construyo <em>marcas</em>, webs</span></span>
@@ -63,14 +73,6 @@
       <h1 class="hero__name kinetic" aria-label="Manu">
         <span class="k">M</span><span class="k">A</span><span class="k">N</span><span class="k">U</span>
       </h1>
-
-      <a href="#atleta" class="badge" data-cursor="Atleta ↓" aria-label="Ir a la sección de atleta">
-        <svg class="badge__ring" viewBox="0 0 200 200" aria-hidden="true">
-          <defs><path id="circ" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
-          <text><textPath href="#circ" textLength="486" lengthAdjust="spacing">ATLETA ✦ COACH ✦ CREADOR ✦ URUGUAY ✦ </textPath></text>
-        </svg>
-        <span class="badge__core">−73</span>
-      </a>
 
       <div class="hero__bottom">
         <ul class="hero__tags mono">
@@ -96,9 +98,9 @@
     <section class="manifesto" id="sobre">
       <p class="label mono">(01) — Sobre mí</p>
       <p class="manifesto__text" data-words>
-        Me muevo <span class="pill pill--belt" aria-hidden="true"><i></i></span> en el tatami,
-        en el agua <span class="pill pill--wave"><svg viewBox="0 0 120 40" preserveAspectRatio="none"><path d="M0 22 Q 15 10 30 22 T 60 22 T 90 22 T 120 22 V40 H0Z"/></svg></span>
-        y en la pantalla <span class="pill pill--img"><img src="assets/work/eventos.jpg" alt=""></span>.
+        Me muevo <span class="pill pill--belt" aria-hidden="true"><svg viewBox="0 0 200 84" preserveAspectRatio="xMidYMid slice"><path class="gi" d="M0 0H200V84H0Z"/><path class="lapel" d="M70 -4 L100 40 L130 -4"/><rect class="band" x="-4" y="38" width="208" height="14"/><path class="tail" d="M96 50 L80 92 L94 92 L104 52Z"/><path class="tail" d="M104 50 L122 92 L136 92 L112 50Z"/><rect class="knot" x="90" y="34" width="22" height="22" rx="3"/></svg></span> en el tatami,
+        en el agua <span class="pill pill--wave" aria-hidden="true"><svg viewBox="0 0 400 84" preserveAspectRatio="none"><path class="w1" d="M0 40 Q50 22 100 40 T200 40 T300 40 T400 40 V84 H0Z"/><path class="w2" d="M0 52 Q50 36 100 52 T200 52 T300 52 T400 52 V84 H0Z"/><path class="w3" d="M0 64 Q50 52 100 64 T200 64 T300 64 T400 64 V84 H0Z"/></svg><i class="sun"></i></span>
+        y en la pantalla <span class="pill pill--screen" aria-hidden="true"><img src="assets/work/eventos.jpg" alt=""><span class="tl"><b></b><b></b><b></b><b></b></span><span class="ph"></span><span class="rec"></span></span>.
         Construyo marcas y productos con la misma disciplina con la que entreno: todos los días, sin atajos, hasta que <em>funcionan</em>.
       </p>
       <div class="manifesto__foot">
@@ -253,11 +255,27 @@
     </section>
 
     <!-- ============ NÚMEROS ============ -->
-    <section class="stats">
-      <div class="stat"><span class="stat__n" data-count="1">0</span><span class="stat__l mono">año creando<br>contenido</span></div>
-      <div class="stat"><span class="stat__n" data-count="5">0</span><span class="stat__l mono">proyectos<br>en vivo</span></div>
-      <div class="stat"><span class="stat__n" data-count="100">0</span><span class="stat__l mono">técnicas de judo<br>documentadas</span></div>
-      <div class="stat"><span class="stat__n" data-count="3">0</span><span class="stat__l mono">idiomas en<br>Eventos PDE</span></div>
+    <section class="stats" aria-label="En números">
+      <div class="stat">
+        <span class="stat__l mono">Categoría</span>
+        <span class="stat__n"><i>−</i><span class="odo" data-odo="73">73</span><sup>kg</sup></span>
+        <span class="stat__d">Judo. Peso que defiendo en el tatami.</span>
+      </div>
+      <div class="stat">
+        <span class="stat__l mono">Contenido</span>
+        <span class="stat__n"><span class="odo" data-odo="12">12</span><sup>meses</sup></span>
+        <span class="stat__d">Publicando sin cortar: idea, grabación, edición.</span>
+      </div>
+      <div class="stat">
+        <span class="stat__l mono">En vivo</span>
+        <span class="stat__n"><span class="odo" data-odo="05">05</span><sup>webs</sup></span>
+        <span class="stat__d">Marcas, apps y sistemas que hoy funcionan.</span>
+      </div>
+      <div class="stat">
+        <span class="stat__l mono">Hecho a mano</span>
+        <span class="stat__n"><span class="odo" data-odo="100">100</span><sup>%</sup></span>
+        <span class="stat__d">Idea, diseño, código y textos. Sin plantillas.</span>
+      </div>
     </section>
 
     <!-- ============ ATLETA ============ -->
@@ -265,7 +283,15 @@
       <div class="expand">
         <div class="expand__sticky">
           <canvas class="waves" aria-hidden="true"></canvas>
-          <div class="expand__img"><img src="assets/dojo.jpg" alt="Manu con sus compañeros en el gimnasio, frente al ring, con la bandera de Uruguay"></div>
+          <div class="expand__img"><img src="assets/dojo.jpg" alt="Manu con sus compañeros en el gimnasio, frente al ring, con la bandera de Uruguay"><span class="expand__fill"></span></div>
+          <div class="emblem" aria-hidden="true">
+            <svg class="emblem__ring" viewBox="0 0 200 200">
+              <defs><path id="circ2" d="M100,100 m-90,0 a90,90 0 1,1 180,0 a90,90 0 1,1 -180,0"/></defs>
+              <text><textPath href="#circ2" textLength="560" lengthAdjust="spacing">EN MOVIMIENTO ✦ DESDE SIEMPRE ✦ MANU ✦</textPath></text>
+            </svg>
+            <span class="emblem__core">M<sup>®</sup></span>
+            <span class="emblem__hint mono">Bajá</span>
+          </div>
           <h2 class="expand__title">
             <span class="reveal-line"><span>El cuerpo es</span></span>
             <span class="reveal-line"><span>mi <em>primer</em> proyecto.</span></span>
@@ -332,6 +358,7 @@
       <a href="https://eventospde.com/" target="_blank" rel="noopener" class="link" data-cursor>Eventos PDE ↗</a>
       <a href="#inicio" class="link" data-cursor>Volver arriba ↑</a>
     </div>
+    <div class="footer__mark" aria-hidden="true"><span>Manu<sup>®</sup></span></div>
     <div class="footer__bottom mono">
       <span>© 2026 Manu — Hecho a mano en Uruguay</span>
       <span>Hora local <span data-clock>--:--</span></span>
@@ -341,6 +368,6 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-  <script src="js/main.js"></script>
+  <script src="js/main.js?v=6"></script>
 </body>
 </html>
