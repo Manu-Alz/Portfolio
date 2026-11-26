@@ -157,11 +157,9 @@ const CONTACTO = {
   intro
     .to(".hero__name .k", { yPercent: 0, duration: 1.4, ease: "expo.out", stagger: 0.07 }, 0)
     .to(".hero .reveal-line > span", { yPercent: 0, duration: 1.2, ease: "expo.out", stagger: 0.08 }, 0.25)
-    .to(".hero__photo-inner", { clipPath: "inset(0% 0 0 0)", duration: 1.4, ease: "expo.inOut" }, 0.2)
-    .from(".hero__photo-inner img", { scale: 1.4, duration: 1.8, ease: "expo.out" }, 0.3)
+    .fromTo(".badge", { opacity: 0, scale: 0.4, rotate: -90 }, { opacity: 1, scale: 1, rotate: 0, duration: 1.6, ease: "expo.out" }, 0.5)
     .from(".nav", { yPercent: -100, opacity: 0, duration: 1, ease: "expo.out" }, 0.4)
     .from(".hero__bottom", { opacity: 0, y: 20, duration: 1, ease: "expo.out" }, 0.6);
-  intro.from(".hero__photo figcaption", { opacity: 0, duration: 1 }, 1);
   // las letras arrancan con translateY(105%) por CSS: las devolvemos a 0
   gsap.set(".hero__name .k", { y: 0, yPercent: 105 });
   gsap.set(".hero .reveal-line > span", { y: 0, yPercent: 110 });
@@ -187,7 +185,7 @@ const CONTACTO = {
   $$(".hero__name .k").forEach((k, i) => {
     gsap.to(k, { y: () => -innerHeight * (0.12 + ((i * 37) % 4) * 0.07), ease: "none", scrollTrigger: heroST });
   });
-  gsap.to(".hero__photo", { y: () => -innerHeight * 0.35, rotate: -4, ease: "none", scrollTrigger: heroST });
+  gsap.to(".badge", { y: () => -innerHeight * 0.3, ease: "none", scrollTrigger: heroST });
   gsap.to(".hero__top", { y: () => innerHeight * 0.15, opacity: 0, ease: "none", scrollTrigger: heroST });
 
   /* ---------- Marquesina infinita que reacciona al scroll ---------- */
