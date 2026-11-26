@@ -259,13 +259,13 @@ a:hover .roll > span, .roll:hover > span { transform: translateY(-1.2em); }
 
 /* agua: tres olas en capas a distinta velocidad */
 .pill--wave { background: linear-gradient(180deg, #DDE3FF 0%, #B9C5FF 100%); }
-.pill--wave svg { width: 200%; }
-.pill--wave path { animation: wave linear infinite; }
+/* las olas son más largas que la píldora y se mueven exactamente un período (200 unidades): nunca se ve un borde */
+.pill--wave path { animation: wave linear infinite; will-change: transform; }
 .pill--wave .w1 { fill: var(--blue-soft); animation-duration: 5s; }
 .pill--wave .w2 { fill: #5068FF; animation-duration: 3.4s; animation-direction: reverse; }
 .pill--wave .w3 { fill: var(--blue); animation-duration: 2.4s; }
-.pill--wave .sun { position: absolute; right: 16%; top: 14%; width: 18%; aspect-ratio: 1; border-radius: 50%; background: #fff; z-index: -1; }
-@keyframes wave { to { transform: translateX(-50%); } }
+.pill--wave .sun { position: absolute; right: 16%; top: 12%; width: 18%; aspect-ratio: 1; border-radius: 50%; background: #fff; box-shadow: 0 0 10px 2px rgba(255,255,255,.7); z-index: -1; }
+@keyframes wave { from { transform: translateX(0); } to { transform: translateX(-200px); } }
 
 /* pantalla: mini prototipo de web que se navega solo */
 .pill--screen { background: #fff; }
