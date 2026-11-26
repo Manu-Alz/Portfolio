@@ -637,12 +637,13 @@ html:not(.js) .emblem { display: none; }
 .lab__title { font-size: clamp(2.6rem, 6.4vw, 6.8rem); line-height: .9; letter-spacing: -.05em; font-weight: 700; }
 .lab__title em { color: var(--blue); }
 .lab__intro { color: var(--muted); max-width: 30ch; }
-.lab__grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: minmax(240px, 30vh); gap: 1rem; }
+.lab__grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: minmax(290px, 36vh); gap: 1rem; }
 .exp { position: relative; margin: 0; border-radius: 18px; overflow: hidden; background: #111113; color: var(--paper); isolation: isolate; touch-action: pan-y; }
-.exp--relief { grid-column: span 2; grid-row: span 2; background: #0B0B0C; }
+.exp--tide { grid-column: span 2; grid-row: span 2; }
+.exp--stats { background: #0B0B0C; }
 .exp--poster { grid-row: span 2; background: #ECE9E2; cursor: pointer; }
 .exp--type { grid-column: 1 / -1; }
-.exp--kuzushi { grid-column: span 2; }
+.exp--stats { grid-column: span 2; }
 .exp--poster figcaption { background: rgba(14,14,14,.86); margin: -.5rem; padding: .7rem .8rem; border-radius: 10px; backdrop-filter: blur(6px); }
 
 
@@ -708,8 +709,8 @@ html:not(.js) .emblem { display: none; }
   .lab__head { grid-template-columns: 1fr; }
   .lab__grid { grid-template-columns: 1fr; grid-auto-rows: auto; }
   .exp { height: 74vw; }
-  .exp--relief, .exp--poster, .exp--type, .exp--kuzushi { grid-column: auto; grid-row: auto; }
-  .exp--relief { height: 100vw; }
+  .exp--tide, .exp--poster, .exp--type, .exp--kuzushi, .exp--stats { grid-column: auto; grid-row: auto; }
+  .exp--tide { height: 100vw; }
   .exp--poster { height: 130vw; }
   .contact__meta { flex-direction: column; align-items: flex-start; }
   .contact__facts { text-align: left; }

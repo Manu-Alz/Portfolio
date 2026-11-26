@@ -596,46 +596,84 @@ function initLab() {
       };
     }
 
-    if (type === "relief") {
-      // relieve: líneas apiladas que forman un terreno; el cursor levanta una montaña
+    if (type === "stats") {
+      // monitor de pulsaciones simulado: intervalos de entrenamiento, serie que corre, lectura con el cursor
       const cv = fig.querySelector("canvas"), ctx = cv.getContext("2d");
-      let W = 0, H = 0, t = 0, lines = [];
-      const sm = { x: -9999, y: -9999, a: 0 }; // cursor suavizado
+      let W = 0, H = 0, f = 0, phase = 0;
+      const N = 140, data = [];
+      let v = 78, target = 78;
+      const next = () => {
+        phase += 0.06;
+        // series: sube fuerte, sostiene, baja a recuperación
+        const cyc = (Math.sin(phase) + 1) / 2;
+        target = 72 + Math.pow(cyc, 2.2) * 100 + (Math.random() - 0.5) * 6;
+        v += (target - v) * 0.08 + (Math.random() - 0.5) * 1.6;
+        return v;
+      };
+      for (let i = 0; i < N; i++) data.push(next());
       ex.resize = () => {
         const d = Math.min(devicePixelRatio || 1, 2);
         W = fig.clientWidth; H = fig.clientHeight;
         cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0);
-        const n = Math.max(22, Math.round(H / 13));
-        lines = Array.from({ length: n }, (_, i) => ({ i, p1: Math.random() * 10, p2: Math.random() * 10, p3: Math.random() * 10 }));
       };
+      const zone = (b) => (b < 100 ? ["Z1", "Recuperación"] : b < 125 ? ["Z2", "Base"] : b < 145 ? ["Z3", "Tempo"] : b < 162 ? ["Z4", "Umbral"] : ["Z5", "Máximo"]);
       ex.step = () => {
-        t += 0.012;
-        if (ptr.on) { sm.x += (ptr.x - sm.x) * (sm.a ? 0.12 : 1); sm.y += (ptr.y - sm.y) * (sm.a ? 0.12 : 1); }
-        sm.a += ((ptr.on ? 1 : 0) - sm.a) * 0.06;
+        if (++f % 4 === 0) { data.shift(); data.push(next()); }
         ctx.fillStyle = "#0B0B0C"; ctx.fillRect(0, 0, W, H);
-        const top = H * 0.2, bottom = H * 0.86, gap = (bottom - top) / lines.length;
-        const step = W < 500 ? 5 : 4, amp = gap * 6;
-        for (const L of lines) {
-          const y0 = top + L.i * gap;
-          ctx.beginPath();
-          ctx.moveTo(0, y0);
-          for (let x = 0; x <= W; x += step) {
-            const u = x / W;
-            // campana central: los picos viven en el medio, los bordes quedan planos
-            const env = Math.exp(-Math.pow((u - 0.5) / 0.2, 2));
-            let h = (Math.sin(u * 23 + L.p1 + t) * 0.5 + Math.sin(u * 41 - L.p2 - t * 1.3) * 0.3 + Math.sin(u * 67 + L.p3 + t * 0.7) * 0.2);
-            h = Math.max(0, h) * env;
-            const dx = (x - sm.x) / (W * 0.12), dy = (y0 - sm.y) / (H * 0.25);
-            const bump = sm.a * Math.exp(-(dx * dx + dy * dy)) * 1.6 * (0.6 + 0.4 * Math.sin(u * 50 + t * 3 + L.i));
-            ctx.lineTo(x, y0 - (h + Math.max(0, bump)) * amp);
-          }
-          ctx.lineTo(W, y0);
-          // relleno oscuro para tapar las líneas de atrás (sensación de volumen)
-          ctx.lineTo(W, y0 + 2); ctx.lineTo(0, y0 + 2); ctx.closePath();
-          ctx.fillStyle = "#0B0B0C"; ctx.fill();
-          ctx.strokeStyle = L.i % 7 === 3 ? "rgba(143,160,255,.95)" : "rgba(236,233,226,.82)";
-          ctx.lineWidth = 1.2;
-          ctx.stroke();
+        const pad = 20, x0 = pad + 30, x1 = W - pad, y0 = H * 0.4, y1 = H - 86;
+        const lo = 50, hi = 190;
+        const X = (i) => x0 + (i / (N - 1)) * (x1 - x0);
+        const Y = (b) => y1 - ((b - lo) / (hi - lo)) * (y1 - y0);
+        // grilla y escala
+        ctx.font = '500 9px "JetBrains Mono", monospace';
+        ctx.textAlign = "right";
+        [60, 100, 140, 180].forEach((b) => {
+          ctx.strokeStyle = "rgba(236,233,226,.08)"; ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.moveTo(x0, Y(b)); ctx.lineTo(x1, Y(b)); ctx.stroke();
+          ctx.fillStyle = "rgba(236,233,226,.35)"; ctx.textAlign = "left"; ctx.fillText(b, pad, Y(b) + 3);
+        });
+        // área
+        const g = ctx.createLinearGradient(0, y0, 0, y1);
+        g.addColorStop(0, "rgba(39,66,255,.55)"); g.addColorStop(1, "rgba(39,66,255,0)");
+        ctx.beginPath(); ctx.moveTo(X(0), y1);
+        data.forEach((b, i) => ctx.lineTo(X(i), Y(b)));
+        ctx.lineTo(X(N - 1), y1); ctx.closePath(); ctx.fillStyle = g; ctx.fill();
+        // línea
+        ctx.beginPath();
+        data.forEach((b, i) => (i ? ctx.lineTo(X(i), Y(b)) : ctx.moveTo(X(i), Y(b))));
+        ctx.strokeStyle = "#8FA0FF"; ctx.lineWidth = 1.8; ctx.lineJoin = "round"; ctx.stroke();
+        // punto actual con pulso
+        const last = data[N - 1], px = X(N - 1), py = Y(last), pulse = (f % 50) / 50;
+        ctx.fillStyle = `rgba(143,160,255,${0.5 * (1 - pulse)})`;
+        ctx.beginPath(); ctx.arc(px, py, 4 + pulse * 12, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(px, py, 3.5, 0, Math.PI * 2); ctx.fill();
+        // lectura grande
+        const [zn, zt] = zone(last);
+        ctx.textAlign = "left"; ctx.fillStyle = "rgba(236,233,226,.5)";
+        ctx.fillText("PULSACIONES · BPM", pad, 28);
+        ctx.fillStyle = "#ECE9E2";
+        const big = Math.min(H * 0.2, W * 0.22);
+        ctx.font = `800 ${big}px Archivo, sans-serif`;
+        ctx.fillText(Math.round(last), pad - 2, 28 + big * 0.95);
+        const bw = ctx.measureText(Math.round(last)).width;
+        ctx.font = '500 10px "JetBrains Mono", monospace';
+        ctx.fillStyle = "#8FA0FF"; ctx.fillText(`${zn} · ${zt.toUpperCase()}`, pad + bw + 10, 28 + big * 0.5);
+        // min / prom / max
+        const mn = Math.min(...data), mx = Math.max(...data), av = data.reduce((a, b) => a + b, 0) / N;
+        ctx.textAlign = "right"; ctx.fillStyle = "rgba(236,233,226,.5)";
+        ctx.fillText(`MIN ${Math.round(mn)}  ·  PROM ${Math.round(av)}  ·  MAX ${Math.round(mx)}`, x1, 28);
+        // lectura con el cursor
+        if (ptr.on && ptr.x > x0 && ptr.x < x1 && ptr.y < y1 + 10) {
+          const i = Math.round(((ptr.x - x0) / (x1 - x0)) * (N - 1)), b = data[i], cx = X(i), cy = Y(b);
+          ctx.strokeStyle = "rgba(236,233,226,.35)"; ctx.setLineDash([3, 3]);
+          ctx.beginPath(); ctx.moveTo(cx, y0 - 10); ctx.lineTo(cx, y1); ctx.stroke(); ctx.setLineDash([]);
+          ctx.fillStyle = "#2742FF"; ctx.beginPath(); ctx.arc(cx, cy, 4.5, 0, Math.PI * 2); ctx.fill();
+          const label = `${Math.round(b)} BPM · ${zone(b)[0]} · −${Math.round(((N - 1 - i) * 4) / 60)} s`;
+          ctx.font = '500 10px "JetBrains Mono", monospace'; ctx.textAlign = "left";
+          const lw = ctx.measureText(label).width + 14;
+          const lx = Math.min(Math.max(cx - lw / 2, x0), x1 - lw), ly = Math.max(cy - 34, y0 - 26);
+          ctx.fillStyle = "#ECE9E2"; ctx.fillRect(lx, ly, lw, 20);
+          ctx.fillStyle = "#0E0E0E"; ctx.fillText(label, lx + 7, ly + 14);
         }
       };
     }
