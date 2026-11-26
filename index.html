@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=38">
+  <link rel="stylesheet" href="css/styles.css?v=39">
   <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
@@ -46,7 +46,6 @@
     <nav class="nav__links">
       <a href="#trabajo" class="link" data-cursor>Trabajo</a>
       <a href="#trayectoria" class="link" data-cursor>Trayectoria</a>
-      <a href="#lab" class="link" data-cursor>Gráfica</a>
       <a href="#atleta" class="link" data-cursor>Atleta</a>
       <button class="lang" type="button" data-lang-toggle data-cursor>ES / EN</button>
       <a href="#contacto" class="link link--pill" data-cursor>Hablemos</a>
@@ -61,9 +60,8 @@
       <a href="#trabajo"><span class="mono">02</span>Trabajo</a>
       <a href="#hago"><span class="mono">03</span>Servicios</a>
       <a href="#trayectoria"><span class="mono">04</span>Trayectoria</a>
-      <a href="#lab"><span class="mono">05</span>Gráfica</a>
-      <a href="#atleta"><span class="mono">06</span>Método</a>
-      <a href="#contacto"><span class="mono">07</span>Contacto</a>
+      <a href="#atleta"><span class="mono">05</span>Método</a>
+      <a href="#contacto"><span class="mono">06</span>Contacto</a>
     </nav>
     <div class="mnav__foot mono">
       <a href="https://wa.me/59894717738" target="_blank" rel="noopener">WhatsApp ↗</a>
@@ -248,50 +246,53 @@
     </section>
 
     <!-- ============ NÚMEROS ============ -->
-    <section class="stats" aria-label="En números">
+    <section class="stats" aria-label="Panel en vivo">
       <header class="stats__head mono">
-        <span class="stats__k">(En números)</span>
-        <span class="stats__t">Ficha técnica</span>
-        <span class="stats__u"><i class="stats__live"></i>Actualizado 11 / 2026</span>
+        <span class="stats__k">(Panel en vivo)</span>
+        <span class="stats__t">Manu — Estudio</span>
+        <span class="stats__u"><i class="stats__live"></i><span data-rec>REC 00:00:00</span></span>
       </header>
       <div class="stats__grid">
-        <article class="stat stat--kg">
-          <div class="stat__top mono"><span class="stat__l">Categoría</span><span class="stat__i">01</span></div>
-          <span class="stat__n"><i>−</i><span class="odo" data-odo="73">73</span><sup>kg</sup></span>
-          <div class="stat__viz scale" aria-hidden="true">
-            <ol class="scale__row mono"><li>−60</li><li>−66</li><li class="is-on">−73</li><li>−81</li><li>−90</li><li>−100</li><li>+100</li></ol>
-            <div class="scale__ticks"><span class="scale__mark"></span></div>
+        <article class="stat stat--mon">
+          <div class="stat__top mono"><span class="stat__l">Proyectos en producción</span><span class="stat__i">01</span></div>
+          <span class="stat__n"><span data-ms-avg>···</span><sup>ms</sup></span>
+          <ul class="mon mono">
+            <li data-ping="https://eventospde.com/"><span class="mon__n">Eventos PDE</span><span class="mon__t">Web + agenda · ES/EN/PT</span><span class="mon__sp" aria-hidden="true"></span><span class="mon__ms">— ms</span><b class="mon__s">Conectando</b></li>
+            <li data-ping="https://manu-alz.github.io/Judokan/"><span class="mon__n">Judokan Uruguay</span><span class="mon__t">Web del club</span><span class="mon__sp" aria-hidden="true"></span><span class="mon__ms">— ms</span><b class="mon__s">Conectando</b></li>
+            <li data-ping="https://manu-alz.github.io/Judo-Uruguay/"><span class="mon__n">Judo Uruguay</span><span class="mon__t">App instalable · PWA</span><span class="mon__sp" aria-hidden="true"></span><span class="mon__ms">— ms</span><b class="mon__s">Conectando</b></li>
+          </ul>
+          <p class="stat__d">Latencia real de cada sitio, medida ahora mismo desde tu navegador.</p>
+        </article>
+        <article class="stat stat--avail">
+          <div class="stat__top mono"><span class="stat__l">Disponibilidad</span><span class="stat__i">02</span></div>
+          <span class="stat__n stat__n--clock"><span data-uy-time>--:--</span><sup data-uy-sec>:--</sup></span>
+          <dl class="kv mono">
+            <div><dt>Estado</dt><dd class="kv__ok">Tomando proyectos 2026</dd></div>
+            <div><dt>Respuesta</dt><dd>En menos de 24 h</dd></div>
+            <div><dt>Base</dt><dd>Punta del Este · GMT−3</dd></div>
+            <div><dt>Modalidad</dt><dd>Remoto · ES / EN</dd></div>
+          </dl>
+        </article>
+        <article class="stat stat--proc">
+          <div class="stat__top mono"><span class="stat__l">Proceso típico · web</span><span class="stat__i">03</span></div>
+          <span class="stat__n">3–6<sup>semanas</sup></span>
+          <div class="proc mono" aria-hidden="true">
+            <div class="proc__bar"><i style="--w:15%"></i><i style="--w:30%"></i><i style="--w:40%"></i><i style="--w:15%"></i><span class="proc__head"></span></div>
+            <ol class="proc__l"><li style="--w:15%">Brief</li><li style="--w:30%">Diseño</li><li style="--w:40%">Desarrollo</li><li style="--w:15%">Lanz.</li></ol>
           </div>
-          <p class="stat__d">Categoría de judo en la que me preparo para competir.</p>
+          <p class="stat__d">De la primera charla al lanzamiento, con avances cada semana.</p>
         </article>
-        <article class="stat stat--months">
-          <div class="stat__top mono"><span class="stat__l">Contenido</span><span class="stat__i">02</span></div>
-          <span class="stat__n"><span class="odo" data-odo="12">12</span><sup>meses</sup></span>
-          <ol class="stat__viz months mono" aria-hidden="true"><li>E</li><li>F</li><li>M</li><li>A</li><li>M</li><li>J</li><li>J</li><li>A</li><li>S</li><li>O</li><li>N</li><li>D</li></ol>
-          <p class="stat__d">De contenido publicado sin cortes: idea, rodaje y edición.</p>
-        </article>
-        <article class="stat stat--sites">
-          <div class="stat__top mono"><span class="stat__l">En vivo</span><span class="stat__i">03</span></div>
-          <span class="stat__n"><span class="odo" data-odo="05">05</span><sup>webs</sup></span>
-          <ul class="stat__viz sites mono" aria-hidden="true">
-            <li><span>Eventos PDE</span><b>Online</b></li>
-            <li><span>Judokan Uruguay</span><b>Online</b></li>
-            <li><span>Judo Uruguay</span><b>Online</b></li>
-            <li><span>Plan −73</span><b>Online</b></li>
-            <li><span>Portfolio</span><b>Online</b></li>
-          </ul>
-          <p class="stat__d">Proyectos en línea: marcas, aplicaciones y sistemas en uso real.</p>
-        </article>
-        <article class="stat stat--made">
-          <div class="stat__top mono"><span class="stat__l">Hecho a mano</span><span class="stat__i">04</span></div>
-          <span class="stat__n"><span class="odo" data-odo="100">100</span><sup>%</sup></span>
-          <ul class="stat__viz made mono" aria-hidden="true">
-            <li><span>Estrategia</span><i></i></li>
-            <li><span>Diseño</span><i></i></li>
-            <li><span>Código</span><i></i></li>
-            <li><span>Textos</span><i></i></li>
-          </ul>
-          <p class="stat__d">Estrategia, diseño, código y textos propios. Sin plantillas.</p>
+        <article class="stat stat--log">
+          <div class="stat__top mono"><span class="stat__l">Registro</span><span class="stat__i">04</span></div>
+          <ol class="log mono">
+            <li><time>2026</time><span>Eventos PDE en línea — +70 eventos en agenda, 3 idiomas</span></li>
+            <li><time>2026</time><span>Judo Uruguay adoptada por un dojo como sistema de progresión</span></li>
+            <li><time>2026</time><span>Judokan Uruguay — web del club publicada</span></li>
+            <li><time>2026</time><span>Reel de Eventos PDE — rodaje, edición y motion</span></li>
+            <li><time>2024</time><span>Planes de entrenamiento a medida, también en digital</span></li>
+            <li><time>2023</time><span>Primeros sitios para clientes</span></li>
+            <li class="log__now"><time>Ahora</time><span>Esperando tu proyecto<i class="log__caret"></i></span></li>
+          </ol>
         </article>
       </div>
     </section>
@@ -367,33 +368,6 @@
       </div>
     </section>
 
-    <!-- ============ LABORATORIO ============ -->
-    <section class="lab" id="lab">
-      <header class="lab__head">
-        <p class="label mono">(05) — Experimentación gráfica</p>
-        <h2 class="lab__title">Experimentación<br><em>gráfica.</em></h2>
-        <p class="lab__intro">Estudios de interacción, tipografía y sistemas generativos, escritos en código y renderizados en tiempo real. Sin plantillas ni librerías gráficas.</p>
-      </header>
-      <div class="lab__grid">
-        <figure class="exp exp--tide" data-exp="tide">
-          <canvas></canvas>
-          <figcaption><span class="mono">01</span><b>Flujo</b><span class="mono">Partículas sobre un campo vectorial · el cursor arma un remolino</span></figcaption>
-        </figure>
-        <figure class="exp exp--poster" data-exp="poster" data-cursor="Generar">
-          <div class="poster"></div>
-          <figcaption><span class="mono">02</span><b>Póster generativo</b><span class="mono">Sistema de grilla · clic para una composición nueva</span></figcaption>
-        </figure>
-        <figure class="exp exp--stats" data-exp="stats">
-          <canvas></canvas>
-          <figcaption><span class="mono">03</span><b>Monitor en vivo</b><span class="mono">Visualización de datos en tiempo real · pasá el mouse para leer</span></figcaption>
-        </figure>
-        <figure class="exp exp--kuzushi" data-exp="kuzushi">
-          <canvas></canvas>
-          <figcaption><span class="mono">04</span><b>Campo de fuerzas</b><span class="mono">Física de resortes sobre una grilla de puntos</span></figcaption>
-        </figure>
-      </div>
-    </section>
-
     <!-- ============ ATLETA ============ -->
     <section class="athlete" id="atleta" data-theme="dark">
       <div class="expand">
@@ -405,19 +379,26 @@
             <span class="shot__mark"><span class="shot__box"></span><span class="shot__tag mono"><b>ID 073 · Manuel</b><span data-conf>0.98</span></span></span>
             <figcaption class="shot__cap mono"><span>Fig. 01 — Entrenamiento</span><span>Maldonado, UY</span></figcaption>
           </figure>
-          <div class="emblem" aria-hidden="true">
-            <svg class="emblem__ring" viewBox="0 0 200 200">
-              <defs><path id="circ2" d="M100,100 m-90,0 a90,90 0 1,1 180,0 a90,90 0 1,1 -180,0"/></defs>
-              <text><textPath href="#circ2" textLength="560" lengthAdjust="spacing">EN MOVIMIENTO ✦ DESDE SIEMPRE ✦ MANU ✦</textPath></text>
-            </svg>
-            <span class="emblem__core">M<sup>®</sup></span>
-            <span class="emblem__hint mono">Bajá</span>
+          <div class="vf mono" aria-hidden="true">
+            <i class="vf__c vf__c--tl"></i><i class="vf__c vf__c--tr"></i><i class="vf__c vf__c--bl"></i><i class="vf__c vf__c--br"></i>
+            <span class="vf__rec"><i></i>REC <span data-tc>00:00:00:00</span></span>
+            <span class="vf__meta">4K · 24 FPS · ISO 800 · f/1.8</span>
+            <div class="vf__aim">
+              <span class="vf__box"><i></i><i></i><i></i><i></i></span>
+              <span class="vf__core">M<sup>®</sup></span>
+              <span class="vf__state">Buscando sujeto<b>…</b></span>
+            </div>
+            <div class="vf__focus">
+              <span class="vf__fl">Bajá para enfocar</span>
+              <div class="vf__scale"><span class="vf__ptr"></span></div>
+              <span class="vf__fr"><span>0.3 m</span><span>∞</span></span>
+            </div>
           </div>
           <h2 class="expand__title">
             <span class="reveal-line"><span>El cuerpo es</span></span>
             <span class="reveal-line"><span>mi <em>primer</em> proyecto.</span></span>
           </h2>
-          <p class="expand__label mono">(06) — Fuera de la pantalla</p>
+          <p class="expand__label mono">(05) — Fuera de la pantalla</p>
         </div>
       </div>
 
@@ -467,7 +448,7 @@
 
     <!-- ============ CONTACTO ============ -->
     <section class="contact" id="contacto">
-      <p class="label mono contact__label">(07) — Contacto <span class="avail"><i></i>Disponible para proyectos · 2026</span></p>
+      <p class="label mono contact__label">(06) — Contacto <span class="avail"><i></i>Disponible para proyectos · 2026</span></p>
       <h2 class="contact__title kinetic"><span class="k">H</span><span class="k">a</span><span class="k">b</span><span class="k">l</span><span class="k">e</span><span class="k">m</span><span class="k">o</span><span class="k">s</span></h2>
       <div class="contact__row">
         <p class="contact__text">¿Tenés un proyecto en mente? Una marca, un sitio o una pieza de video: <em>contame</em> en qué estás y te respondo a la brevedad.</p>
@@ -520,7 +501,7 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-  <script src="js/i18n.js?v=38"></script>
-  <script src="js/main.js?v=38"></script>
+  <script src="js/i18n.js?v=39"></script>
+  <script src="js/main.js?v=39"></script>
 </body>
 </html>

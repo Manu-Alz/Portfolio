@@ -24,6 +24,62 @@ const T = window.T || ((es) => es);
   const tick = () => $$("[data-clock]").forEach((el) => (el.textContent = fmt.format(new Date())));
   tick(); setInterval(tick, 15000);
 
+  /* ---------- Panel en vivo ---------- */
+  (() => {
+    const panel = $(".stats");
+    if (!panel) return;
+    const t0 = Date.now();
+    const p2 = (n) => String(n).padStart(2, "0");
+    const hms = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false, timeZone: "America/Montevideo" });
+    const elT = $("[data-uy-time]"), elS = $("[data-uy-sec]"), elRec = $("[data-rec]");
+    const clock = () => {
+      const [h, m, s] = hms.format(new Date()).split(":");
+      if (elT) elT.textContent = `${h}:${m}`;
+      if (elS) elS.textContent = `:${s}`;
+      const d = Math.floor((Date.now() - t0) / 1000);
+      if (elRec) elRec.textContent = `REC ${p2(Math.floor(d / 3600))}:${p2(Math.floor(d / 60) % 60)}:${p2(d % 60)}`;
+    };
+    clock(); setInterval(clock, 1000);
+
+    // latencia real: se pide cada sitio (sin cookies ni caché) y se mide cuánto tarda en responder
+    const rows = $$("[data-ping]", panel).map((li) => {
+      const sp = $(".mon__sp", li);
+      for (let k = 0; k < 18; k++) sp.appendChild(document.createElement("i"));
+      return { li, url: li.dataset.ping, bars: $$("i", sp), ms: $(".mon__ms", li), st: $(".mon__s", li), hist: [] };
+    });
+    const avg = $("[data-ms-avg]");
+    const ping = async (r) => {
+      const a = performance.now();
+      try {
+        await fetch(r.url + "?ping=" + Date.now(), { mode: "no-cors", cache: "no-store", credentials: "omit" });
+        const ms = Math.round(performance.now() - a);
+        r.hist.push(ms); if (r.hist.length > r.bars.length) r.hist.shift();
+        r.ms.textContent = ms + " ms";
+        r.st.textContent = T("Online", "Online");
+        r.li.classList.add("is-up"); r.li.classList.remove("is-down");
+      } catch (e) {
+        r.ms.textContent = "— ms";
+        r.st.textContent = T("Sin señal", "No signal");
+        r.li.classList.add("is-down"); r.li.classList.remove("is-up");
+      }
+      const max = Math.max(200, ...r.hist);
+      r.bars.forEach((b, i) => {
+        const v = r.hist[i - (r.bars.length - r.hist.length)];
+        b.style.height = v ? Math.max(8, (v / max) * 100) + "%" : "0";
+      });
+    };
+    const round = async () => {
+      await Promise.all(rows.map(ping));
+      const last = rows.map((r) => r.hist.at(-1)).filter(Boolean);
+      if (avg && last.length) avg.textContent = Math.round(last.reduce((a, b) => a + b, 0) / last.length);
+    };
+    let timer = 0;
+    new IntersectionObserver(([en]) => {
+      clearInterval(timer);
+      if (en.isIntersecting) { round(); timer = setInterval(round, 3500); }
+    }, { rootMargin: "200px" }).observe(panel);
+  })();
+
   /* ---------- Botón de contacto ---------- */
   const btn = $("#contact-btn");
   if (CONTACTO.email) { btn.href = "mailto:" + CONTACTO.email; btn.removeAttribute("target"); }
@@ -101,8 +157,6 @@ const T = window.T || ((es) => es);
     addEventListener("keydown", (e) => { if (e.key === "Escape") closeReel(); });
   }
 
-  /* ---------- Laboratorio (funciona con o sin GSAP) ---------- */
-  initLab();
 
   /* ---------- Sin librerías o con "reducir movimiento": todo visible ---------- */
   if (!window.gsap || !window.ScrollTrigger || reduce) {
@@ -237,11 +291,18 @@ const T = window.T || ((es) => es);
       h: gsap.quickTo(box, "height", { duration: 0.42, ease: "power3" }),
     };
     let mx = -100, my = -100, first = true, locked = null, label = "", raf = 0;
+    // rect del contenido real: un link estirado por la grilla (como el logo) se encuadra solo donde está el texto
+    const rectOf = (el) => {
+      const r = el.getBoundingClientRect();
+      const rg = document.createRange(); rg.selectNodeContents(el);
+      const c = rg.getBoundingClientRect();
+      return c.width > 0 && r.width - c.width > 40 ? c : r;
+    };
     const pad4 = (n) => String(Math.max(0, Math.round(n))).padStart(4, "0");
     const place = () => {
       raf = 0;
       if (locked && locked.isConnected) {
-        const r = locked.getBoundingClientRect();
+        const r = rectOf(locked);
         to.x(r.left - PAD); to.y(r.top - PAD); to.w(r.width + PAD * 2); to.h(r.height + PAD * 2);
       } else {
         const s = label ? 54 : S;
@@ -270,7 +331,7 @@ const T = window.T || ((es) => es);
       hovered = el; locked = null; label = "";
       root.classList.remove("cur-lock", "cur-label");
       if (el) {
-        const r = el.getBoundingClientRect();
+        const r = rectOf(el);
         const big = r.width > innerWidth * 0.6 || r.height > innerHeight * 0.45;
         label = el.getAttribute("data-cursor") || "";
         if (!big) { locked = el; root.classList.add("cur-lock"); if (!label) label = "Lock"; }
@@ -430,21 +491,17 @@ const T = window.T || ((es) => es);
       });
     });
   });
-  gsap.from(".stat__d, .stat__top", { opacity: 0, y: 16, duration: 1, stagger: 0.05, ease: "expo.out", scrollTrigger: { trigger: ".stats", start: "top 85%" } });
+  gsap.from(".stat__top, .stat__n, .stat__d", { opacity: 0, y: 16, duration: 1, stagger: 0.04, ease: "expo.out", scrollTrigger: { trigger: ".stats", start: "top 85%" } });
   gsap.from(".stats__head > *", { opacity: 0, y: 10, duration: 0.9, stagger: 0.08, ease: "expo.out", scrollTrigger: { trigger: ".stats", start: "top 88%" } });
-  // 01 · la marca recorre la balanza y frena en −73
-  gsap.from(".scale__mark", { left: "0%", duration: 2.4, ease: "expo.out", scrollTrigger: { trigger: ".stat--kg", start: "top 80%" } });
-  gsap.from(".scale__row li", { opacity: 0, y: 8, duration: 0.8, stagger: 0.06, ease: "expo.out", scrollTrigger: { trigger: ".stat--kg", start: "top 80%" } });
-  // 02 · los meses se llenan uno por uno
-  const monthTl = gsap.timeline({ scrollTrigger: { trigger: ".stat--months", start: "top 80%" } });
-  $$(".months li").forEach((m, i) => {
-    gsap.set(m, { "--f": 0 });
-    monthTl.to(m, { "--f": 1, duration: 0.45, ease: "power3.out", onStart: () => m.classList.add("is-full") }, i * 0.09);
-  });
-  // 03 · las webs se van conectando
-  gsap.from(".sites li", { opacity: 0, x: -14, duration: 0.8, stagger: 0.1, ease: "expo.out", scrollTrigger: { trigger: ".stat--sites", start: "top 80%" } });
-  // 04 · barras al 100 %
-  gsap.fromTo(".made i", { "--f": 0 }, { "--f": 1, duration: 1.6, stagger: 0.15, ease: "expo.inOut", scrollTrigger: { trigger: ".stat--made", start: "top 80%" } });
+  // 01 · los sitios se van conectando
+  gsap.from(".mon li", { opacity: 0, x: -14, duration: 0.8, stagger: 0.12, ease: "expo.out", scrollTrigger: { trigger: ".stat--mon", start: "top 80%" } });
+  // 02 · datos de estado
+  gsap.from(".kv div", { opacity: 0, x: -14, duration: 0.8, stagger: 0.08, ease: "expo.out", scrollTrigger: { trigger: ".stat--avail", start: "top 80%" } });
+  // 03 · las etapas se cargan y el cabezal recorre el proceso en loop
+  gsap.fromTo(".proc__bar i", { "--f": 0 }, { "--f": 1, duration: 0.9, stagger: 0.18, ease: "power3.inOut", scrollTrigger: { trigger: ".stat--proc", start: "top 80%" } });
+  gsap.fromTo(".proc__head", { left: "0%" }, { left: "100%", duration: 7, ease: "none", repeat: -1 });
+  // 04 · el registro se escribe línea por línea
+  gsap.from(".log li", { opacity: 0, clipPath: "inset(0 100% 0 0)", duration: 0.7, stagger: 0.14, ease: "power2.out", scrollTrigger: { trigger: ".stat--log", start: "top 80%" } });
 
   /* ---------- Atleta: la foto se expande ---------- */
   // negro + logo → la foto entra en tiras que se arman (a tamaño real, sin zoom) → anotación y título
@@ -453,9 +510,14 @@ const T = window.T || ((es) => es);
   });
   const slices = $$(".shot__slice");
   exp
-    .to(".emblem__hint", { opacity: 0, duration: 0.08 }, 0.02)
-    .to(".emblem__ring", { scale: 2.6, opacity: 0, ease: "power2.in", duration: 0.3 }, 0.05)
-    .to(".emblem__core", { scale: 0.4, opacity: 0, ease: "power2.in", duration: 0.18 }, 0.08)
+    // visor: el scroll gira el anillo de enfoque; al enfocar, el visor se apaga y entra la foto
+    .fromTo(".vf__ptr", { left: "0%" }, { left: "100%", ease: "none", duration: 0.15 }, 0)
+    .fromTo(".vf__core", { filter: "blur(7px)" }, { filter: "blur(0px)", ease: "power1.out", duration: 0.07 }, 0)
+    .to(".vf__state", { opacity: 0, duration: 0.04 }, 0.06)
+    .to(".vf__box", { opacity: 0, duration: 0.08 }, 0.1)
+    .to(".vf__core", { scale: 0.4, opacity: 0, ease: "power2.in", duration: 0.12 }, 0.08)
+    .to(".vf__focus, .vf__rec, .vf__meta", { opacity: 0, duration: 0.05 }, 0.14)
+    .to(".vf__c", { opacity: 0, scale: 0.6, duration: 0.08, stagger: 0.01 }, 0.14)
     .fromTo(slices, { yPercent: (i) => (i % 2 ? 105 : -105) },
       { yPercent: 0, ease: "power3.out", duration: 0.32, stagger: 0.035 }, 0.16)
     .fromTo(".shot__frame", { scale: 0.86, filter: "grayscale(1) brightness(.6)" },
@@ -467,6 +529,21 @@ const T = window.T || ((es) => es);
     .to(".expand__title .reveal-line > span", { yPercent: 0, stagger: 0.06, duration: 0.16, ease: "power2.out" }, 0.62)
     .to({}, { duration: 0.15 });
   gsap.set(".expand__title .reveal-line > span", { y: 0, yPercent: 110 });
+  // timecode del visor (24 fps), solo corre cuando la sección está cerca
+  const tc = $("[data-tc]");
+  if (tc) {
+    let tcT = 0, tcA = 0;
+    const p2 = (n) => String(n).padStart(2, "0");
+    const run = () => {
+      const f = Math.floor((performance.now() - tcA) / (1000 / 24));
+      const s = Math.floor(f / 24);
+      tc.textContent = `00:${p2(Math.floor(s / 60) % 60)}:${p2(s % 60)}:${p2(f % 24)}`;
+    };
+    new IntersectionObserver(([en]) => {
+      clearInterval(tcT);
+      if (en.isIntersecting) { if (!tcA) tcA = performance.now(); tcT = setInterval(run, 42); }
+    }).observe($(".expand"));
+  }
   // la confianza del "detector" varía como en un sistema real
   const conf = $("[data-conf]");
   if (conf) setInterval(() => (conf.textContent = (0.94 + Math.random() * 0.05).toFixed(2)), 700);
@@ -505,7 +582,7 @@ const T = window.T || ((es) => es);
 
   /* ---------- Indicador de sección (abajo a la izquierda) ---------- */
   const sects = [["inicio", "00", T("Inicio", "Home")], ["sobre", "01", T("Sobre mí", "About")], ["trabajo", "02", T("Trabajo", "Work")], ["hago", "03", T("Servicios", "Services")],
-    ["trayectoria", "04", T("Trayectoria", "Journey")], ["lab", "05", T("Experimentación gráfica", "Graphic experiments")], ["atleta", "06", T("Método", "Method")], ["contacto", "07", T("Contacto", "Contact")]];
+    ["trayectoria", "04", T("Trayectoria", "Journey")], ["atleta", "05", T("Método", "Method")], ["contacto", "06", T("Contacto", "Contact")]];
   const sN = $(".sect__n"), sT = $(".sect__t");
   let curSect = "inicio";
   const showSect = ([id, n, t]) => {
@@ -573,291 +650,4 @@ function fitAll() {
     const avail = el.parentElement.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
     el.style.fontSize = Math.min(100 * (avail / w) * 0.9, innerHeight * 0.62) + "px";
   });
-}
-
-/* =========================================================
-   Laboratorio: tres experimentos que se tocan
-   ========================================================= */
-function initLab() {
-  const figs = document.querySelectorAll("[data-exp]");
-  if (!figs.length) return;
-  const exps = [];
-
-  figs.forEach((fig) => {
-    const type = fig.dataset.exp;
-    const ptr = { x: -9999, y: -9999, on: false };
-    const local = (e) => { const r = fig.getBoundingClientRect(); ptr.x = e.clientX - r.left; ptr.y = e.clientY - r.top; ptr.on = true; };
-    fig.addEventListener("pointermove", local);
-    fig.addEventListener("pointerdown", local);
-    const off = () => { ptr.on = false; ptr.x = ptr.y = -9999; };
-    fig.addEventListener("pointerleave", off);
-    fig.addEventListener("pointercancel", off);
-    fig.addEventListener("pointerup", (e) => { if (e.pointerType !== "mouse") off(); });
-    const ex = { fig, ptr, visible: false, step: null, resize: () => {} };
-
-    if (type === "kuzushi" || type === "tide") {
-      const cv = fig.querySelector("canvas"), ctx = cv.getContext("2d");
-      let W = 0, H = 0, pts = [];
-      ex.resize = () => {
-        const d = Math.min(devicePixelRatio || 1, 2);
-        W = fig.clientWidth; H = fig.clientHeight;
-        cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0);
-        pts = [];
-        if (type === "kuzushi") {
-          const gap = W < 500 ? 20 : 24;
-          for (let y = gap; y < H; y += gap) for (let x = gap; x < W; x += gap) pts.push({ hx: x, hy: y, x, y, vx: 0, vy: 0 });
-        } else {
-          const n = Math.round((W * H) / (W < 500 ? 900 : 650));
-          for (let i = 0; i < n; i++) pts.push({ x: Math.random() * W, y: Math.random() * H, life: Math.random() * 200 });
-          ctx.fillStyle = "#06081a"; ctx.fillRect(0, 0, W, H);
-        }
-      };
-      if (type === "kuzushi") {
-        // los puntos vuelven a su lugar con un resorte: desequilibrio y recuperación
-        ex.step = () => {
-          ctx.clearRect(0, 0, W, H);
-          const R = Math.min(140, W * 0.22);
-          for (const p of pts) {
-            const dx = p.x - ptr.x, dy = p.y - ptr.y, d = Math.hypot(dx, dy);
-            if (d < R && d > 0.01) { const f = (1 - d / R) * 7; p.vx += (dx / d) * f; p.vy += (dy / d) * f; }
-            p.vx += (p.hx - p.x) * 0.045; p.vy += (p.hy - p.y) * 0.045;
-            p.vx *= 0.82; p.vy *= 0.82; p.x += p.vx; p.y += p.vy;
-            const off = Math.min(Math.hypot(p.x - p.hx, p.y - p.hy) / 40, 1);
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, 1.4 + off * 3.2, 0, Math.PI * 2);
-            ctx.fillStyle = off > 0.08 ? `rgba(${Math.round(143 - off * 104)},${Math.round(160 - off * 94)},255,${0.5 + off * 0.5})` : "rgba(236,233,226,.32)";
-            ctx.fill();
-          }
-        };
-      } else {
-        // partículas en un campo de corriente; el mouse hace un remolino
-        let t = 0;
-        ex.step = () => {
-          t += 0.004;
-          ctx.fillStyle = "rgba(6,8,26,0.09)"; ctx.fillRect(0, 0, W, H);
-          for (const p of pts) {
-            let a = Math.sin(p.x * 0.004 + t * 2) * 1.6 + Math.cos(p.y * 0.006 - t) * 1.4;
-            let vx = Math.cos(a) * 1.4 + 0.9, vy = Math.sin(a) * 1.1;
-            const dx = p.x - ptr.x, dy = p.y - ptr.y, d = Math.hypot(dx, dy);
-            if (d < 160) { const f = (1 - d / 160) * 5; vx += (-dy / d) * f; vy += (dx / d) * f; }
-            const ox = p.x, oy = p.y;
-            p.x += vx; p.y += vy; p.life -= 1;
-            if (p.x > W || p.x < 0 || p.y > H || p.y < 0 || p.life < 0) { p.x = Math.random() * W * 0.3; p.y = Math.random() * H; p.life = 120 + Math.random() * 200; continue; }
-            ctx.strokeStyle = d < 160 ? "rgba(255,255,255,.85)" : "rgba(143,160,255,.55)";
-            ctx.lineWidth = 1.2;
-            ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(p.x, p.y); ctx.stroke();
-          }
-        };
-      }
-    }
-
-    if (type === "type") {
-      // cada letra se estira y engorda según qué tan cerca está el dedo o el mouse
-      const box = fig.querySelector(".exp__type");
-      let letters = [];
-      const split = () => {
-        const txt = (box.textContent || "").replace(/\s+/g, " ").slice(0, 14) || " ";
-        box.innerHTML = "";
-        letters = [...txt].map((c) => { const s = document.createElement("span"); s.textContent = c === " " ? "\u00a0" : c; box.appendChild(s); return { s, w: 100, g: 700 }; });
-      };
-      const caretEnd = () => { const r = document.createRange(); r.selectNodeContents(box); r.collapse(false); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); };
-      box.addEventListener("input", () => { split(); caretEnd(); });
-      box.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); box.blur(); } });
-      split();
-      let auto = 0;
-      ex.step = () => {
-        auto += 0.02;
-        const r = fig.getBoundingClientRect();
-        // sin puntero, una "ola" recorre la palabra sola
-        const px = ptr.on ? ptr.x : (Math.sin(auto) * 0.5 + 0.5) * r.width;
-        const py = ptr.on ? ptr.y : r.height * 0.45;
-        letters.forEach((L) => {
-          const b = L.s.getBoundingClientRect();
-          const cx = b.left - r.left + b.width / 2, cy = b.top - r.top + b.height / 2;
-          const f = Math.max(0, 1 - Math.hypot(px - cx, (py - cy) * 0.5) / (r.width * 0.35));
-          L.w += (62 + f * 63 - L.w) * 0.12;
-          L.g += (300 + f * 600 - L.g) * 0.12;
-          L.s.style.fontVariationSettings = `"wdth" ${L.w.toFixed(1)}, "wght" ${L.g.toFixed(0)}`;
-          L.s.style.color = f > 0.6 ? "var(--blue)" : "";
-        });
-      };
-    }
-
-    if (type === "stats") {
-      // monitor de pulsaciones simulado: intervalos de entrenamiento, serie que corre, lectura con el cursor
-      const cv = fig.querySelector("canvas"), ctx = cv.getContext("2d");
-      let W = 0, H = 0, f = 0, phase = 0;
-      const N = 140, data = [];
-      let v = 78, target = 78;
-      const next = () => {
-        phase += 0.06;
-        // series: sube fuerte, sostiene, baja a recuperación
-        const cyc = (Math.sin(phase) + 1) / 2;
-        target = 72 + Math.pow(cyc, 2.2) * 100 + (Math.random() - 0.5) * 6;
-        v += (target - v) * 0.08 + (Math.random() - 0.5) * 1.6;
-        return v;
-      };
-      for (let i = 0; i < N; i++) data.push(next());
-      ex.resize = () => {
-        const d = Math.min(devicePixelRatio || 1, 2);
-        W = fig.clientWidth; H = fig.clientHeight;
-        cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0);
-      };
-      const zone = (b) => (b < 100 ? ["Z1", T("Recuperación", "Recovery")] : b < 125 ? ["Z2", "Base"] : b < 145 ? ["Z3", "Tempo"] : b < 162 ? ["Z4", T("Umbral", "Threshold")] : ["Z5", T("Máximo", "Max")]);
-      ex.step = () => {
-        if (++f % 4 === 0) { data.shift(); data.push(next()); }
-        ctx.fillStyle = "#0B0B0C"; ctx.fillRect(0, 0, W, H);
-        const pad = 20, x0 = pad + 30, x1 = W - pad, y0 = H * 0.4, y1 = H - 86;
-        const lo = 50, hi = 190;
-        const X = (i) => x0 + (i / (N - 1)) * (x1 - x0);
-        const Y = (b) => y1 - ((b - lo) / (hi - lo)) * (y1 - y0);
-        // grilla y escala
-        ctx.font = '500 9px "JetBrains Mono", monospace';
-        ctx.textAlign = "right";
-        [60, 100, 140, 180].forEach((b) => {
-          ctx.strokeStyle = "rgba(236,233,226,.08)"; ctx.lineWidth = 1;
-          ctx.beginPath(); ctx.moveTo(x0, Y(b)); ctx.lineTo(x1, Y(b)); ctx.stroke();
-          ctx.fillStyle = "rgba(236,233,226,.35)"; ctx.textAlign = "left"; ctx.fillText(b, pad, Y(b) + 3);
-        });
-        // área
-        const g = ctx.createLinearGradient(0, y0, 0, y1);
-        g.addColorStop(0, "rgba(39,66,255,.55)"); g.addColorStop(1, "rgba(39,66,255,0)");
-        ctx.beginPath(); ctx.moveTo(X(0), y1);
-        data.forEach((b, i) => ctx.lineTo(X(i), Y(b)));
-        ctx.lineTo(X(N - 1), y1); ctx.closePath(); ctx.fillStyle = g; ctx.fill();
-        // línea
-        ctx.beginPath();
-        data.forEach((b, i) => (i ? ctx.lineTo(X(i), Y(b)) : ctx.moveTo(X(i), Y(b))));
-        ctx.strokeStyle = "#8FA0FF"; ctx.lineWidth = 1.8; ctx.lineJoin = "round"; ctx.stroke();
-        // punto actual con pulso
-        const last = data[N - 1], px = X(N - 1), py = Y(last), pulse = (f % 50) / 50;
-        ctx.fillStyle = `rgba(143,160,255,${0.5 * (1 - pulse)})`;
-        ctx.beginPath(); ctx.arc(px, py, 4 + pulse * 12, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(px, py, 3.5, 0, Math.PI * 2); ctx.fill();
-        // lectura grande
-        const [zn, zt] = zone(last);
-        ctx.textAlign = "left"; ctx.fillStyle = "rgba(236,233,226,.5)";
-        ctx.fillText(T("PULSACIONES · BPM", "HEART RATE · BPM"), pad, 28);
-        ctx.fillStyle = "#ECE9E2";
-        const big = Math.min(H * 0.2, W * 0.22);
-        ctx.font = `800 ${big}px Archivo, sans-serif`;
-        ctx.fillText(Math.round(last), pad - 2, 28 + big * 0.95);
-        const bw = ctx.measureText(Math.round(last)).width;
-        ctx.font = '500 10px "JetBrains Mono", monospace';
-        ctx.fillStyle = "#8FA0FF"; ctx.fillText(`${zn} · ${zt.toUpperCase()}`, pad + bw + 10, 28 + big * 0.5);
-        // min / prom / max
-        const mn = Math.min(...data), mx = Math.max(...data), av = data.reduce((a, b) => a + b, 0) / N;
-        ctx.textAlign = "right"; ctx.fillStyle = "rgba(236,233,226,.5)";
-        ctx.fillText(`MIN ${Math.round(mn)}  ·  ${T("PROM", "AVG")} ${Math.round(av)}  ·  MAX ${Math.round(mx)}`, x1, 28);
-        // lectura con el cursor
-        if (ptr.on && ptr.x > x0 && ptr.x < x1 && ptr.y < y1 + 10) {
-          const i = Math.round(((ptr.x - x0) / (x1 - x0)) * (N - 1)), b = data[i], cx = X(i), cy = Y(b);
-          ctx.strokeStyle = "rgba(236,233,226,.35)"; ctx.setLineDash([3, 3]);
-          ctx.beginPath(); ctx.moveTo(cx, y0 - 10); ctx.lineTo(cx, y1); ctx.stroke(); ctx.setLineDash([]);
-          ctx.fillStyle = "#2742FF"; ctx.beginPath(); ctx.arc(cx, cy, 4.5, 0, Math.PI * 2); ctx.fill();
-          const label = `${Math.round(b)} BPM · ${zone(b)[0]} · −${Math.round(((N - 1 - i) * 4) / 60)} s`;
-          ctx.font = '500 10px "JetBrains Mono", monospace'; ctx.textAlign = "left";
-          const lw = ctx.measureText(label).width + 14;
-          const lx = Math.min(Math.max(cx - lw / 2, x0), x1 - lw), ly = Math.max(cy - 34, y0 - 26);
-          ctx.fillStyle = "#ECE9E2"; ctx.fillRect(lx, ly, lw, 20);
-          ctx.fillStyle = "#0E0E0E"; ctx.fillText(label, lx + 7, ly + 14);
-        }
-      };
-    }
-
-    if (type === "poster") {
-      // pósters suizos: 4 sistemas de composición con parámetros al azar, todo en HTML nítido.
-      // La zona de abajo (≈90px) queda libre para el pie del experimento: nada importante va ahí.
-      const box = fig.querySelector(".poster");
-      const words = T(["Ritmo", "Forma", "Pulso", "Mover", "Marca", "Flujo", "Ippon", "Señal", "Tensión", "Cuerpo"], ["Rhythm", "Form", "Pulse", "Move", "Brand", "Flow", "Ippon", "Signal", "Tension", "Body"]);
-      const pick = (a) => a[Math.floor(Math.random() * a.length)];
-      const rnd = (a, b) => a + Math.random() * (b - a);
-      const pal = [
-        { bg: "#2742FF", fg: "#ECE9E2", ac: "#0E0E0E" },
-        { bg: "#ECE9E2", fg: "#0E0E0E", ac: "#2742FF" },
-        { bg: "#0E0E0E", fg: "#ECE9E2", ac: "#2742FF" },
-        { bg: "#ECE9E2", fg: "#2742FF", ac: "#0E0E0E" },
-      ];
-      let n = 40, last = -1, timer, vertical = false;
-      // ajusta la palabra al ancho (o al alto si es vertical) sin regenerar el póster
-      const fit = () => {
-        const w = box.querySelector(".poster__word span");
-        if (!w || !box.clientWidth) return;
-        const H = box.clientHeight - 90;
-        w.style.fontSize = "100px";
-        const target = vertical ? H * 0.62 : box.clientWidth * 0.88;
-        w.style.fontSize = Math.max(12, Math.min(100 * (target / w.offsetWidth), H * (vertical ? 0.42 : 0.3))) + "px";
-      };
-      const render = () => {
-        if (!box.clientWidth) return;
-        n++;
-        let tpl; do { tpl = Math.floor(Math.random() * 4); } while (tpl === last);
-        last = tpl;
-        const c = pick(pal), word = pick(words);
-        const wdth = Math.round(rnd(62, 125)), wght = Math.round(rnd(700, 900));
-        let shapes = "";
-        if (tpl === 0) {
-          const d = rnd(62, 80);
-          shapes = `<i class="pe" style="--d:0s;left:${rnd(32, 46)}%;top:${rnd(-10, 4)}%;width:${d}%;aspect-ratio:1;border-radius:50%;background:${c.ac}"></i>`;
-        } else if (tpl === 1) {
-          for (let i = 0; i < 6; i++) {
-            const h = rnd(14, 40);
-            shapes += `<i class="pe pe--up" style="--d:${i * 0.06}s;left:${6 + i * 15}%;bottom:96px;width:12%;height:${h}%;background:${i === 2 || i === 4 ? c.ac : c.fg}"></i>`;
-          }
-        } else if (tpl === 2) {
-          shapes = `<i class="pe" style="--d:.05s;right:-24%;top:${rnd(22, 34)}%;width:62%;aspect-ratio:1;border-radius:50%;border:${Math.round(rnd(10, 20))}px solid ${c.ac}"></i>`;
-        } else {
-          let k = 0;
-          for (let y = 0; y < 4; y++) for (let x = 0; x < 4; x++) {
-            const on = Math.random() < 0.28;
-            shapes += `<i class="pe" style="--d:${(k++) * 0.02}s;left:${8 + x * 22}%;top:${32 + y * 9}%;width:6%;aspect-ratio:1;border-radius:${Math.random() < 0.5 ? "50%" : "0"};background:${on ? c.ac : "transparent"};border:1.5px solid ${on ? c.ac : c.fg}"></i>`;
-          }
-        }
-        vertical = tpl === 2;
-        const wordPos = tpl === 0 ? "left:6%;bottom:calc(96px + 4%)" : tpl === 1 ? "left:6%;top:15%" : tpl === 2 ? "left:6%;bottom:96px" : "left:6%;top:15%";
-        if (window.gsap) gsap.killTweensOf(box.querySelectorAll(".pe"));
-        box.style.background = c.bg; box.style.color = c.fg;
-        box.innerHTML = `
-          <div class="poster__grid">${"<span></span>".repeat(6)}</div>
-          ${shapes}
-          <div class="poster__word pe pe--up ${vertical ? "is-v" : ""}" style="--d:.15s;${wordPos}"><span style="font-variation-settings:'wdth' ${wdth},'wght' ${wght}">${word}</span></div>
-          <div class="poster__meta pe" style="--d:.25s"><span>Manuel Alzugaray</span><span>Nº ${String(n).padStart(3, "0")}</span></div>
-          <div class="poster__meta poster__meta--2 pe" style="--d:.3s"><span>${T("Sistema", "System")} ${["A", "B", "C", "D"][tpl]} · ${wdth}/${wght}</span><span>Punta del Este — 2026</span></div>`;
-        fit();
-        // cada elemento entra con un barrido (GSAP; sin GSAP quedan visibles)
-        if (window.gsap) box.querySelectorAll(".pe").forEach((el) => {
-          const up = el.classList.contains("pe--up");
-          gsap.fromTo(el, { clipPath: up ? "inset(100% 0% 0% 0%)" : "inset(0% 0% 100% 0%)" },
-            { clipPath: "inset(0% 0% 0% 0%)", duration: 0.9, ease: "expo.inOut", delay: parseFloat(el.style.getPropertyValue("--d")) || 0 });
-        });
-      };
-      const loop = () => { clearTimeout(timer); timer = setTimeout(() => { if (!ptr.on && ex.visible) render(); loop(); }, 6000); };
-      let lastClick = 0;
-      fig.addEventListener("click", () => {
-        if (performance.now() - lastClick < 350) return; // evita dobles clics que cortan la animación
-        lastClick = performance.now();
-        render(); loop();
-      });
-      // al cambiar de tamaño solo se reajusta; el primer póster se arma una vez cargadas las fuentes
-      ex.resize = () => (box.childElementCount ? fit() : render());
-      (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => { box.childElementCount ? fit() : render(); loop(); });
-    }
-
-    ex.resize();
-    exps.push(ex);
-    new IntersectionObserver(([e]) => (ex.visible = e.isIntersecting)).observe(fig);
-  });
-
-  // cada experimento se redimensiona solo cuando cambia SU tamaño (no con la barra del navegador móvil)
-  const ro = new ResizeObserver((ents) => ents.forEach((en) => {
-    const ex = exps.find((x) => x.fig === en.target);
-    if (!ex) return;
-    const w = Math.round(en.contentRect.width), h = Math.round(en.contentRect.height);
-    if (ex.w === w && ex.h === h) return;
-    ex.w = w; ex.h = h;
-    ex.resize();
-  }));
-  exps.forEach((e) => ro.observe(e.fig));
-  const loop = () => { exps.forEach((e) => e.visible && e.step && e.step()); requestAnimationFrame(loop); };
-  requestAnimationFrame(loop);
 }
