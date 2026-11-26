@@ -319,8 +319,8 @@ a:hover .roll > span, .roll:hover > span { transform: translateY(-1.2em); }
 }
 .card__meta { display: grid; grid-template-columns: 4rem 1fr auto; align-items: baseline; gap: 1rem; padding-bottom: 1.2rem; border-bottom: 1px solid rgba(255,255,255,.1); }
 .card__num { color: var(--blue-soft); }
-.card__title { font-size: clamp(1.8rem, 3.6vw, 3.6rem); font-weight: 700; letter-spacing: -.035em; line-height: 1; transition: font-variation-settings .6s var(--ease-out); font-variation-settings: "wdth" 100; }
-.card__link:hover .card__title { font-variation-settings: "wdth" 125; }
+.card__title { font-size: clamp(1.8rem, 3.6vw, 3.6rem); font-weight: 700; letter-spacing: -.035em; line-height: 1; transition: color .4s; font-variation-settings: "wdth" 100; }
+.card__link:hover .card__title { color: var(--blue-soft); }
 .card__year { color: rgba(236,233,226,.5); }
 .card__body { display: grid; grid-template-columns: 1.7fr 1fr; gap: clamp(1rem, 2.5vw, 2.5rem); padding-top: 1.4rem; }
 .card__media { position: relative; overflow: hidden; border-radius: 10px; aspect-ratio: 16 / 10; background: #000; }
@@ -368,7 +368,7 @@ a:hover .roll > span, .roll:hover > span { transform: translateY(-1.2em); }
   grid-area: name; font-size: clamp(2.4rem, 7.5vw, 7.5rem); line-height: .95; letter-spacing: -.045em; font-weight: 700;
   font-variation-settings: "wdth" 85; transition: font-variation-settings .7s var(--ease-out), transform .7s var(--ease-out);
 }
-.svc__row:hover .svc__name { font-variation-settings: "wdth" 125; transform: translateX(1rem); }
+.svc__row:hover .svc__name { transform: translateX(1rem); }
 .svc__desc { grid-area: desc; display: grid; grid-template-rows: 0fr; transition: grid-template-rows .6s var(--ease); }
 .svc__desc > div { overflow: hidden; }
 .svc__desc p { max-width: 52ch; padding: 1rem 0 .3rem 1rem; font-size: 1.05rem; }
@@ -446,7 +446,7 @@ a:hover .roll > span, .roll:hover > span { transform: translateY(-1.2em); }
 .shot__crop--br { right: -14px; bottom: -14px; border-right-width: 1px; border-bottom-width: 1px; }
 /* anotación: quién soy en la foto */
 /* caja de tracking, como un sistema de cámaras que detecta y sigue */
-.shot__mark { position: absolute; left: 57.5%; top: 17.5%; width: 17%; height: 74%; }
+.shot__mark { position: absolute; left: 55.8%; top: 17.5%; width: 18.7%; height: 74%; }
 .shot__box { position: absolute; inset: 0; border: 1px solid rgba(143,160,255,.75); }
 .shot__box::before {
   content: ""; position: absolute; inset: -3px;
@@ -737,8 +737,8 @@ html:not(.js) .emblem { display: none; }
 .mstep:hover::before { transform: translateY(0); }
 .mstep:first-child::before { left: -1px; }
 .mstep__n { color: var(--blue-soft); transition: color .4s; }
-.mstep h3 { font-size: clamp(1.8rem, 2.8vw, 2.8rem); letter-spacing: -.04em; line-height: 1; font-weight: 700; font-variation-settings: "wdth" 100; transition: font-variation-settings .6s var(--ease-out); }
-.mstep:hover h3 { font-variation-settings: "wdth" 125; }
+.mstep h3 { font-size: clamp(1.8rem, 2.8vw, 2.8rem); letter-spacing: -.04em; line-height: 1; font-weight: 700; font-variation-settings: "wdth" 100; transition: transform .6s var(--ease-out); }
+.mstep:hover h3 { transform: translateX(.4rem); }
 .mstep p { color: var(--muted); max-width: 30ch; transition: color .4s; }
 .mstep__out { margin-top: auto; color: var(--fg); opacity: .7; }
 .mstep:hover .mstep__n, .mstep:hover p { color: rgba(255,255,255,.85); }
@@ -748,9 +748,9 @@ html:not(.js) .emblem { display: none; }
 
 .caps { margin: clamp(4rem, 8vw, 7rem) var(--pad) 0; }
 .caps__list { display: flex; flex-wrap: wrap; gap: .1em .5em; font-size: clamp(1.8rem, 4.4vw, 4.6rem); font-weight: 700; letter-spacing: -.045em; line-height: 1.05; }
-.caps__list li { position: relative; color: var(--muted); transition: color .35s, font-variation-settings .6s var(--ease-out); font-variation-settings: "wdth" 100; overflow: hidden; }
+.caps__list li { position: relative; color: var(--muted); transition: color .35s, background-size .5s var(--ease); background: linear-gradient(var(--blue-soft), var(--blue-soft)) 0 92% / 0 2px no-repeat; }
 .caps__list li:not(:last-child)::after { content: "/"; margin-left: .35em; color: var(--blue-soft); font-weight: 300; }
-.caps__list li:hover { color: var(--fg); font-variation-settings: "wdth" 118; }
+.caps__list li:hover { color: var(--fg); background-size: 100% 2px; }
 
 @media (max-width: 900px) {
   .method__head { grid-template-columns: 1fr; }
