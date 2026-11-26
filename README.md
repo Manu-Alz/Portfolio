@@ -16,6 +16,7 @@ Si esas librerías no cargan o el sistema pide "reducir movimiento", la página 
 ## Cambios comunes
 - **Email de contacto:** arriba de `js/main.js`, en `CONTACTO.email`. Si está vacío, el botón "Escribime" lleva a GitHub.
 - **Sumar un proyecto:** ver la lista de abajo.
+- **Tipografías:** Archivo (variable, con eje de ancho), Instrument Serif y JetBrains Mono, de Google Fonts.
 
 ## Checklist: proyecto nuevo
 
@@ -24,15 +25,14 @@ Un proyecto aparece en varios lugares. Al sumar uno, revisar todos:
 1. **Captura** en `assets/work/` (JPG, ~1600 px de ancho, recortada arriba).
 2. **Trabajo** (`index.html`, `#trabajo`): copiar un `<article class="card">`, cambiar número (`card__num`), título, año, link, captura, texto, `card__results`, `card__facts` (Rol / Desafío) y `tags`. Las tarjetas se apilan solas.
 3. **Contador** del título "Trabajo" (`<sup class="mono">03</sup>`) → nueva cantidad.
-4. **Panel en vivo** (`.stats`):
-   - Monitor (CH·01): sumar un `<li data-ping="URL">` si el sitio está online (mide la latencia real).
-   - Registro (CH·04): sumar una línea `<li><time>AÑO</time><span>…</span></li>` en orden cronológico, antes de "Ahora".
+4. **Ahora** (`.now`, después de Servicios):
+   - "En línea ahora": sumar un `<li data-ping="URL"><span>Nombre</span><b>— ms</b></li>` si el sitio está online (mide la latencia real).
+   - "Registro": sumar `<li><time>AÑO</time><span>…</span></li>` arriba de todo (lo más nuevo primero; mostrar 4).
 5. **Trayectoria**: si es un hito, sumarlo o mencionarlo en el `article.step` del año.
 6. **Servicios / capacidades**: si suma un servicio nuevo (por ejemplo, apps o CRM), agregarlo a la lista de capacidades.
-7. **Inglés** (`js/i18n.js`): traducir cada texto nuevo. Ojo: varias entradas van por posición (`".card__info > p", 2`, `".log li", 5`, …), así que al insertar una tarjeta o una línea de registro hay que correr los índices de las que siguen.
+7. **Inglés** (`js/i18n.js`): traducir cada texto nuevo. Ojo: varias entradas van por posición (`".card__info > p", 2`, `".now__log li", 2`, …), así que al insertar una tarjeta o una línea de registro hay que correr los índices de las que siguen.
 8. **CV** (`cv.html`): sumarlo si corresponde, también en su traducción.
 9. **Caché**: subir `?v=N` en los `<link>`/`<script>` de `index.html` para que los navegadores tomen los cambios.
-- **Tipografías:** Archivo (variable, con eje de ancho), Instrument Serif y JetBrains Mono, de Google Fonts.
 
 ## Publicar
 GitHub → Settings → Pages → Source: "Deploy from a branch", rama `main`, carpeta `/ (root)`.

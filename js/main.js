@@ -24,93 +24,85 @@ const T = window.T || ((es) => es);
   const tick = () => $$("[data-clock]").forEach((el) => (el.textContent = fmt.format(new Date())));
   tick(); setInterval(tick, 15000);
 
-  /* ---------- Panel en vivo ---------- */
+  /* ---------- Ahora: reloj, latencia real y título que se tipea ---------- */
   (() => {
-    const panel = $(".stats");
-    if (!panel) return;
-    const t0 = Date.now();
+    const sec = $(".now");
+    if (!sec) return;
     const p2 = (n) => String(n).padStart(2, "0");
     const parts = new Intl.DateTimeFormat("en-GB", { weekday: "short", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false, timeZone: "America/Montevideo" });
-    const elT = $("[data-uy-time]"), elS = $("[data-uy-sec]"), elRec = $("[data-rec]");
-    const now = $(".day__now"), nowLbl = $("[data-day-now]"), msg = $("[data-day-msg]");
-    // mensaje según la hora de Uruguay (horario de trabajo: lunes a viernes, 9 a 19)
+    const elT = $("[data-uy-time]", sec), elS = $("[data-uy-sec]", sec), msg = $("[data-day-msg]", sec);
+    // mensaje según la hora de Uruguay (lunes a viernes, 9 a 19)
     const status = (wd, h) => {
-      const weekend = wd === "Sat" || wd === "Sun" || (wd === "Fri" && h >= 19);
-      if (weekend) return T("Fin de semana · respondo el lunes", "Weekend · I reply on Monday");
+      if (wd === "Sat" || wd === "Sun" || (wd === "Fri" && h >= 19)) return T("Fin de semana · respondo el lunes", "Weekend · I reply on Monday");
       if (h >= 9 && h < 19) return T("En horario · respondo hoy", "Office hours · I reply today");
-      if (h < 9) return T("Fuera de horario · respondo desde las 9", "Off hours · I reply from 9 am");
+      if (h < 9) return T("Respondo desde las 9", "I reply from 9 am");
       return T("Fuera de horario · respondo mañana", "Off hours · I reply tomorrow");
     };
     const clock = () => {
       const o = {};
       parts.formatToParts(new Date()).forEach((p) => (o[p.type] = p.value));
-      const h = +o.hour % 24, m = +o.minute;
+      const h = +o.hour % 24;
       if (elT) elT.textContent = `${p2(h)}:${o.minute}`;
       if (elS) elS.textContent = `:${o.second}`;
-      if (now) now.style.left = ((h + m / 60) / 24) * 100 + "%";
-      if (nowLbl) nowLbl.textContent = `${p2(h)}:${o.minute}`;
       if (msg) msg.textContent = status(o.weekday, h);
-      const d = Math.floor((Date.now() - t0) / 1000);
-      if (elRec) elRec.textContent = `REC ${p2(Math.floor(d / 3600))}:${p2(Math.floor(d / 60) % 60)}:${p2(d % 60)}`;
     };
     clock(); setInterval(clock, 1000);
 
-    // latencia real: se pide cada sitio (sin cookies ni caché) y se mide cuánto tarda en responder
-    const N = 24;
-    const rows = $$("[data-ping]", panel).map((li) => ({
-      li, url: li.dataset.ping, line: $(".mon__sp polyline", li), ms: $(".mon__ms", li), st: $(".mon__s", li), hist: [],
-    }));
-    const avg = $("[data-ms-avg]");
-    const draw = (r) => {
-      if (!r.line || !r.hist.length) return;
-      const max = Math.max(120, ...r.hist) * 1.15;
-      // osciloscopio: los valores nuevos entran por la derecha; antes de tener historial, la línea arranca plana
-      const pts = Array.from({ length: N }, (_, i) => r.hist[i - (N - r.hist.length)] ?? r.hist[0]);
-      r.line.setAttribute("points", pts.map((v, i) => `${((i / (N - 1)) * 100).toFixed(1)},${(22 - (v / max) * 20).toFixed(1)}`).join(" "));
-    };
+    // latencia real de cada sitio (sin cookies ni caché), solo mientras la sección está cerca
+    const rows = $$("[data-ping]", sec).map((li) => ({ li, url: li.dataset.ping, out: $("b", li) }));
     const ping = async (r) => {
       const a = performance.now();
       try {
         await fetch(r.url + "?ping=" + Date.now(), { mode: "no-cors", cache: "no-store", credentials: "omit" });
-        const ms = Math.round(performance.now() - a);
-        r.hist.push(ms); if (r.hist.length > N) r.hist.shift();
-        r.ms.textContent = ms + " ms";
-        r.st.textContent = "Online";
+        r.out.textContent = Math.round(performance.now() - a) + " ms";
         r.li.classList.add("is-up"); r.li.classList.remove("is-down");
       } catch (e) {
-        r.ms.textContent = "— ms";
-        r.st.textContent = T("Sin señal", "No signal");
+        r.out.textContent = T("Sin señal", "No signal");
         r.li.classList.add("is-down"); r.li.classList.remove("is-up");
       }
-      draw(r);
-    };
-    const round = async () => {
-      await Promise.all(rows.map(ping));
-      const last = rows.map((r) => r.hist.at(-1)).filter(Boolean);
-      if (avg && last.length) avg.textContent = Math.round(last.reduce((a, b) => a + b, 0) / last.length);
     };
     let timer = 0;
     new IntersectionObserver(([en]) => {
       clearInterval(timer);
-      if (en.isIntersecting) { round(); timer = setInterval(round, 3000); }
-    }, { rootMargin: "200px" }).observe(panel);
+      if (en.isIntersecting) { rows.forEach(ping); timer = setInterval(() => rows.forEach(ping), 4000); }
+    }, { rootMargin: "200px" }).observe(sec);
 
-    // "Esperando tu proyecto" se escribe letra por letra la primera vez que se ve
-    const typed = $("[data-type]", panel);
-    if (typed && !reduce) {
-      const full = typed.textContent;
-      typed.textContent = "";
-      const io = new IntersectionObserver(([en]) => {
-        if (!en.isIntersecting) return;
-        io.disconnect();
-        let k = 0;
-        setTimeout(function step() {
-          typed.textContent = full.slice(0, ++k);
-          if (k < full.length) setTimeout(step, 55 + Math.random() * 70);
-        }, 1400);
-      }, { threshold: 0.6 });
-      io.observe(typed.closest(".stat"));
-    }
+    // el título se escribe letra por letra; cada letra ya ocupa su lugar, así no hay saltos
+    const title = $("[data-typer]", sec);
+    if (!title) return;
+    const chars = [];
+    const split = (node) => {
+      [...node.childNodes].forEach((n) => {
+        if (n.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          [...n.textContent].forEach((c) => {
+            if (/\s/.test(c)) { frag.appendChild(document.createTextNode(c)); return; }
+            const s = document.createElement("span");
+            s.className = "ch"; s.textContent = c; s.setAttribute("aria-hidden", "true");
+            frag.appendChild(s); chars.push(s);
+          });
+          n.replaceWith(frag);
+        } else split(n);
+      });
+    };
+    split(title);
+    const last = chars[chars.length - 1];
+    const caret = document.createElement("i");
+    caret.className = "now__caret"; caret.setAttribute("aria-hidden", "true");
+    if (reduce || !chars.length) { if (last) last.after(caret); return; }
+    title.classList.add("is-typing");
+    const io = new IntersectionObserver(([en]) => {
+      if (!en.isIntersecting) return;
+      io.disconnect();
+      let k = 0;
+      const step = () => {
+        chars[k].classList.add("on"); chars[k].after(caret);
+        k++;
+        if (k < chars.length) setTimeout(step, chars[k - 1].parentElement.tagName === "EM" ? 95 : 70 + Math.random() * 60);
+      };
+      setTimeout(step, 350);
+    }, { threshold: 0.5 });
+    io.observe(title);
   })();
 
   /* ---------- Botón de contacto ---------- */
@@ -532,33 +524,10 @@ const T = window.T || ((es) => es);
       });
     });
   });
-  // el panel se "enciende": las esquinas encuadran y cada canal aparece en orden
-  gsap.from(".hud__c", { scale: 2.2, opacity: 0, duration: 1, stagger: 0.05, ease: "expo.out", scrollTrigger: { trigger: ".stats", start: "top 85%" } });
-  gsap.from(".stats__head > *", { opacity: 0, y: 10, duration: 0.9, stagger: 0.08, ease: "expo.out", scrollTrigger: { trigger: ".stats", start: "top 85%" } });
-  gsap.from(".stat", { opacity: 0, duration: 0.6, stagger: 0.12, ease: "steps(4)", scrollTrigger: { trigger: ".stats__grid", start: "top 85%" } });
-  gsap.from(".stat__top, .stat__hero, .stat__d", { opacity: 0, y: 16, duration: 1, stagger: 0.04, ease: "expo.out", scrollTrigger: { trigger: ".stats__grid", start: "top 85%" } });
-  // 01 · los sitios se van conectando
-  gsap.from(".mon li", { opacity: 0, x: -14, duration: 0.8, stagger: 0.12, ease: "expo.out", scrollTrigger: { trigger: ".stat--mon", start: "top 80%" } });
-  // 02 · la marca de "ahora" entra desde la medianoche
-  gsap.from(".day__now", { left: "0%", duration: 2, ease: "expo.out", scrollTrigger: { trigger: ".stat--avail", start: "top 80%" } });
-  gsap.from(".kv div", { opacity: 0, x: -14, duration: 0.8, stagger: 0.08, ease: "expo.out", scrollTrigger: { trigger: ".stat--avail", start: "top 80%" } });
-  // 03 · los clips se cargan en la pista y el cabezal reproduce el proceso en loop
-  gsap.fromTo(".nle__lane i", { "--f": 0 }, { "--f": 1, duration: 0.8, stagger: 0.15, ease: "power3.inOut", scrollTrigger: { trigger: ".stat--proc", start: "top 80%" } });
-  gsap.from(".nle__lane--rev em", { scale: 0, duration: 0.5, stagger: 0.1, ease: "back.out(3)", scrollTrigger: { trigger: ".stat--proc", start: "top 80%" } });
-  const nleTc = $("[data-nle-tc]"), nleHead = $(".nle__head");
-  if (nleHead) {
-    const ph = { p: 0 };
-    gsap.to(ph, {
-      p: 1, duration: 9, ease: "none", repeat: -1,
-      onUpdate() {
-        nleHead.style.left = `calc(var(--lbl) + (100% - var(--lbl)) * ${ph.p})`;
-        if (nleTc) nleTc.textContent = (window.LANG === "en" ? "W" : "S") + Math.min(6, Math.floor(ph.p * 6) + 1);
-      },
-    });
-  }
-  // 04 · el registro se escribe línea por línea
-  gsap.from(".term__cmd, .log li", { opacity: 0, clipPath: "inset(0 100% 0 0)", duration: 0.6, stagger: 0.12, ease: "power2.out", scrollTrigger: { trigger: ".stat--log", start: "top 80%" } });
-  gsap.from(".term__cta", { opacity: 0, y: 10, duration: 0.8, delay: 1, ease: "expo.out", scrollTrigger: { trigger: ".stat--log", start: "top 80%" } });
+  // Ahora: la barra y las columnas entran en orden
+  gsap.from(".now__bar > *", { opacity: 0, y: 10, duration: 0.9, stagger: 0.08, ease: "expo.out", scrollTrigger: { trigger: ".now", start: "top 85%" } });
+  gsap.from(".now__col", { opacity: 0, y: 30, duration: 1.2, stagger: 0.1, ease: "expo.out", scrollTrigger: { trigger: ".now__grid", start: "top 88%" } });
+  gsap.from(".now__cta", { opacity: 0, y: 30, duration: 1.2, ease: "expo.out", scrollTrigger: { trigger: ".now__cta", start: "top 92%" } });
 
   /* ---------- Atleta: la foto se expande ---------- */
   // negro + logo → la foto entra en tiras que se arman (a tamaño real, sin zoom) → anotación y título
