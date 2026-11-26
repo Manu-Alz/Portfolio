@@ -5,7 +5,7 @@
 
 // ---- Datos de contacto: completá lo que quieras mostrar ----
 const CONTACTO = {
-  email: "",                                  // ej: "hola@tudominio.com"
+  email: "manualznz@gmail.com",
   respaldo: "https://github.com/Manu-Alz",    // si no hay email, el botón lleva acá
 };
 
@@ -25,6 +25,19 @@ const CONTACTO = {
   const btn = $("#contact-btn");
   if (CONTACTO.email) { btn.href = "mailto:" + CONTACTO.email; btn.removeAttribute("target"); }
   else btn.href = CONTACTO.respaldo;
+
+  /* ---------- Email que se copia con un clic ---------- */
+  $$("[data-copy]").forEach((b) => {
+    const state = $(".copy__state", b);
+    b.addEventListener("click", async () => {
+      try { await navigator.clipboard.writeText(CONTACTO.email); state.textContent = "Copiado ✓"; }
+      catch { location.href = "mailto:" + CONTACTO.email; }
+      setTimeout(() => (state.textContent = "Copiar ⧉"), 2200);
+    });
+  });
+
+  /* ---------- Laboratorio (funciona con o sin GSAP) ---------- */
+  initLab();
 
   /* ---------- Sin librerías o con "reducir movimiento": todo visible ---------- */
   if (!window.gsap || !window.ScrollTrigger || reduce) {
@@ -51,6 +64,18 @@ const CONTACTO = {
         const target = $(a.getAttribute("href"));
         if (!target) return;
         e.preventDefault();
+        // desde el menú: cortina azul con el nombre de la sección
+        if (a.closest(".nav__links") && target.id !== "inicio") {
+          const cur = $(".curtain");
+          $(".curtain__label").textContent = a.textContent.trim();
+          gsap.timeline()
+            .set(cur, { clipPath: "inset(100% 0 0 0)" })
+            .to(cur, { clipPath: "inset(0% 0 0 0)", duration: 0.6, ease: "expo.inOut" })
+            .from(".curtain__label", { yPercent: 60, opacity: 0, duration: 0.5, ease: "expo.out" }, 0.25)
+            .add(() => lenis.scrollTo(target, { immediate: true, force: true }))
+            .to(cur, { clipPath: "inset(0 0 100% 0)", duration: 0.7, ease: "expo.inOut" }, "+=0.15");
+          return;
+        }
         lenis.scrollTo(target, { duration: 1.6, easing: (x) => 1 - Math.pow(1 - x, 4) });
       })
     );
@@ -339,6 +364,29 @@ const CONTACTO = {
     });
   }
 
+  /* ---------- Trayectoria: scroll horizontal ---------- */
+  if (innerWidth >= 900) {
+    const ptrack = $(".path__track"), pbar = $(".path__bar span");
+    const dist = () => ptrack.scrollWidth - innerWidth;
+    const horiz = gsap.to(ptrack, {
+      x: () => -dist(), ease: "none",
+      scrollTrigger: {
+        trigger: ".path", start: "top top", end: () => "+=" + dist(),
+        pin: true, scrub: 0.8, invalidateOnRefresh: true, refreshPriority: 1,
+        onUpdate: (s) => gsap.set(pbar, { scaleX: s.progress }),
+      },
+    });
+    $$(".step").forEach((s) => ScrollTrigger.create({
+      trigger: s, containerAnimation: horiz, start: "left 75%", end: "right 25%", toggleClass: "is-on",
+    }));
+  } else {
+    $$(".step").forEach((s) => gsap.from(s, { opacity: 0, y: 40, duration: 1, ease: "expo.out", scrollTrigger: { trigger: s, start: "top 88%" } }));
+  }
+
+  /* ---------- Laboratorio: entrada ---------- */
+  gsap.from(".exp", { opacity: 0, y: 60, scale: 0.96, duration: 1.2, stagger: 0.12, ease: "expo.out", scrollTrigger: { trigger: ".lab__grid", start: "top 85%" } });
+  gsap.from(".contact__meta > *", { opacity: 0, y: 30, duration: 1, stagger: 0.1, ease: "expo.out", scrollTrigger: { trigger: ".contact__meta", start: "top 92%" } });
+
   /* ---------- Ajustes al cambiar tamaño ---------- */
   let rz;
   addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => { fitAll(); ScrollTrigger.refresh(); }, 150); });
@@ -355,4 +403,120 @@ function fitAll() {
     const avail = el.parentElement.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
     el.style.fontSize = Math.min(100 * (avail / w) * 0.9, innerHeight * 0.62) + "px";
   });
+}
+
+/* =========================================================
+   Laboratorio: tres experimentos que se tocan
+   ========================================================= */
+function initLab() {
+  const figs = document.querySelectorAll("[data-exp]");
+  if (!figs.length) return;
+  const exps = [];
+
+  figs.forEach((fig) => {
+    const type = fig.dataset.exp;
+    const ptr = { x: -9999, y: -9999, on: false };
+    const local = (e) => { const r = fig.getBoundingClientRect(); ptr.x = e.clientX - r.left; ptr.y = e.clientY - r.top; ptr.on = true; };
+    fig.addEventListener("pointermove", local);
+    fig.addEventListener("pointerdown", local);
+    fig.addEventListener("pointerleave", () => { ptr.on = false; ptr.x = ptr.y = -9999; });
+    const ex = { fig, ptr, visible: false, step: null, resize: () => {} };
+
+    if (type === "kuzushi" || type === "tide") {
+      const cv = fig.querySelector("canvas"), ctx = cv.getContext("2d");
+      let W = 0, H = 0, pts = [];
+      ex.resize = () => {
+        const d = Math.min(devicePixelRatio || 1, 2);
+        W = fig.clientWidth; H = fig.clientHeight;
+        cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0);
+        pts = [];
+        if (type === "kuzushi") {
+          const gap = W < 500 ? 20 : 24;
+          for (let y = gap; y < H; y += gap) for (let x = gap; x < W; x += gap) pts.push({ hx: x, hy: y, x, y, vx: 0, vy: 0 });
+        } else {
+          const n = Math.round((W * H) / (W < 500 ? 900 : 650));
+          for (let i = 0; i < n; i++) pts.push({ x: Math.random() * W, y: Math.random() * H, life: Math.random() * 200 });
+          ctx.fillStyle = "#06081a"; ctx.fillRect(0, 0, W, H);
+        }
+      };
+      if (type === "kuzushi") {
+        // los puntos vuelven a su lugar con un resorte: desequilibrio y recuperación
+        ex.step = () => {
+          ctx.clearRect(0, 0, W, H);
+          const R = Math.min(140, W * 0.22);
+          for (const p of pts) {
+            const dx = p.x - ptr.x, dy = p.y - ptr.y, d = Math.hypot(dx, dy);
+            if (d < R && d > 0.01) { const f = (1 - d / R) * 7; p.vx += (dx / d) * f; p.vy += (dy / d) * f; }
+            p.vx += (p.hx - p.x) * 0.045; p.vy += (p.hy - p.y) * 0.045;
+            p.vx *= 0.82; p.vy *= 0.82; p.x += p.vx; p.y += p.vy;
+            const off = Math.min(Math.hypot(p.x - p.hx, p.y - p.hy) / 40, 1);
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 1.4 + off * 3.2, 0, Math.PI * 2);
+            ctx.fillStyle = off > 0.08 ? `rgba(${Math.round(143 - off * 104)},${Math.round(160 - off * 94)},255,${0.5 + off * 0.5})` : "rgba(236,233,226,.32)";
+            ctx.fill();
+          }
+        };
+      } else {
+        // partículas en un campo de corriente; el mouse hace un remolino
+        let t = 0;
+        ex.step = () => {
+          t += 0.004;
+          ctx.fillStyle = "rgba(6,8,26,0.09)"; ctx.fillRect(0, 0, W, H);
+          for (const p of pts) {
+            let a = Math.sin(p.x * 0.004 + t * 2) * 1.6 + Math.cos(p.y * 0.006 - t) * 1.4;
+            let vx = Math.cos(a) * 1.4 + 0.9, vy = Math.sin(a) * 1.1;
+            const dx = p.x - ptr.x, dy = p.y - ptr.y, d = Math.hypot(dx, dy);
+            if (d < 160) { const f = (1 - d / 160) * 5; vx += (-dy / d) * f; vy += (dx / d) * f; }
+            const ox = p.x, oy = p.y;
+            p.x += vx; p.y += vy; p.life -= 1;
+            if (p.x > W || p.x < 0 || p.y > H || p.y < 0 || p.life < 0) { p.x = Math.random() * W * 0.3; p.y = Math.random() * H; p.life = 120 + Math.random() * 200; continue; }
+            ctx.strokeStyle = d < 160 ? "rgba(255,255,255,.85)" : "rgba(143,160,255,.55)";
+            ctx.lineWidth = 1.2;
+            ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(p.x, p.y); ctx.stroke();
+          }
+        };
+      }
+    }
+
+    if (type === "type") {
+      // cada letra se estira y engorda según qué tan cerca está el dedo o el mouse
+      const box = fig.querySelector(".exp__type");
+      let letters = [];
+      const split = () => {
+        const txt = (box.textContent || "").replace(/\s+/g, " ").slice(0, 14) || " ";
+        box.innerHTML = "";
+        letters = [...txt].map((c) => { const s = document.createElement("span"); s.textContent = c === " " ? "\u00a0" : c; box.appendChild(s); return { s, w: 100, g: 700 }; });
+      };
+      const caretEnd = () => { const r = document.createRange(); r.selectNodeContents(box); r.collapse(false); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); };
+      box.addEventListener("input", () => { split(); caretEnd(); });
+      box.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); box.blur(); } });
+      split();
+      let auto = 0;
+      ex.step = () => {
+        auto += 0.02;
+        const r = fig.getBoundingClientRect();
+        // sin puntero, una "ola" recorre la palabra sola
+        const px = ptr.on ? ptr.x : (Math.sin(auto) * 0.5 + 0.5) * r.width;
+        const py = ptr.on ? ptr.y : r.height * 0.45;
+        letters.forEach((L) => {
+          const b = L.s.getBoundingClientRect();
+          const cx = b.left - r.left + b.width / 2, cy = b.top - r.top + b.height / 2;
+          const f = Math.max(0, 1 - Math.hypot(px - cx, (py - cy) * 0.5) / (r.width * 0.35));
+          L.w += (62 + f * 63 - L.w) * 0.12;
+          L.g += (300 + f * 600 - L.g) * 0.12;
+          L.s.style.fontVariationSettings = `"wdth" ${L.w.toFixed(1)}, "wght" ${L.g.toFixed(0)}`;
+          L.s.style.color = f > 0.6 ? "var(--blue)" : "";
+        });
+      };
+    }
+
+    ex.resize();
+    exps.push(ex);
+    new IntersectionObserver(([e]) => (ex.visible = e.isIntersecting)).observe(fig);
+  });
+
+  let rz;
+  addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => exps.forEach((e) => e.resize()), 200); });
+  const loop = () => { exps.forEach((e) => e.visible && e.step && e.step()); requestAnimationFrame(loop); };
+  requestAnimationFrame(loop);
 }

@@ -548,3 +548,105 @@ html:not(.js) .expand__fill, html:not(.js) .emblem { display: none; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* =========================================================
+   Trayectoria — scroll horizontal
+   ========================================================= */
+.path { position: relative; background: var(--blue); color: #fff; overflow: hidden; }
+.path__pin { height: 100vh; position: relative; display: flex; align-items: center; }
+.path__track { display: flex; align-items: stretch; gap: 0; padding: 0 var(--pad); height: 72vh; will-change: transform; }
+.path__head { flex: none; width: min(36vw, 560px); padding-right: 4vw; display: flex; flex-direction: column; }
+.path__head .label { color: rgba(255,255,255,.7); }
+.path__title { font-size: clamp(2.6rem, 5.2vw, 5.4rem); line-height: .92; letter-spacing: -.045em; font-weight: 700; }
+.path__title em { color: #fff; }
+.path__cv { margin-top: auto; align-self: flex-start; border: 1px solid rgba(255,255,255,.6); border-radius: 99px; padding: .7rem 1.1rem; transition: background .4s, color .4s; }
+.path__cv:hover { background: #fff; color: var(--blue); }
+.step {
+  flex: none; width: clamp(300px, 30vw, 460px); padding: 0 2.2vw;
+  border-left: 1px solid rgba(255,255,255,.28);
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.step__year {
+  font-weight: 800; line-height: .8; letter-spacing: -.05em;
+  font-size: clamp(4.5rem, 10vw, 10rem); font-variation-settings: "wdth" 62, "wght" 800;
+  color: transparent; -webkit-text-stroke: 1.5px rgba(255,255,255,.9);
+  transition: color .6s var(--ease-out), font-variation-settings .8s var(--ease-out);
+}
+.step__year i { font-style: normal; font-size: .5em; vertical-align: top; }
+.step__year--word { font-size: clamp(3.2rem, 6.4vw, 6.6rem); }
+.step:hover .step__year, .step.is-on .step__year { color: #fff; font-variation-settings: "wdth" 100, "wght" 800; }
+.step__tag { color: rgba(255,255,255,.65); display: block; margin-bottom: .9rem; }
+.step h3 { font-size: clamp(1.4rem, 2vw, 2rem); line-height: 1.02; letter-spacing: -.03em; font-weight: 600; margin-bottom: .9rem; }
+.step p { color: rgba(255,255,255,.78); max-width: 34ch; }
+.step--next { border-left-style: dashed; }
+.step--next .step__year { -webkit-text-stroke: 1.5px rgba(255,255,255,.55); }
+.step--next .step__tag::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #fff; margin-right: .5rem; animation: blink 1.2s steps(2) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.path__bar { position: absolute; left: var(--pad); right: var(--pad); bottom: 6vh; height: 1px; background: rgba(255,255,255,.25); }
+.path__bar span { position: absolute; inset: 0; background: #fff; transform: scaleX(0); transform-origin: left; }
+
+/* =========================================================
+   Laboratorio
+   ========================================================= */
+.lab { padding: clamp(6rem, 12vw, 10rem) var(--pad) clamp(4rem, 8vw, 7rem); }
+.lab__head { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 1rem 2rem; margin-bottom: clamp(2rem, 4vw, 3.5rem); }
+.lab__head .label { grid-column: 1 / -1; margin-bottom: 0; }
+.lab__title { font-size: clamp(2.6rem, 6.4vw, 6.8rem); line-height: .9; letter-spacing: -.05em; font-weight: 700; }
+.lab__title em { color: var(--blue); }
+.lab__intro { color: var(--muted); max-width: 30ch; }
+.lab__grid { display: grid; grid-template-columns: 1.25fr 1fr; grid-template-rows: repeat(2, minmax(260px, 34vh)); gap: 1rem; }
+.exp { position: relative; margin: 0; border-radius: 18px; overflow: hidden; background: #111113; color: var(--paper); isolation: isolate; touch-action: pan-y; }
+.exp--kuzushi { grid-row: span 2; }
+.exp canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.exp figcaption {
+  position: absolute; left: 1.1rem; right: 1.1rem; bottom: 1rem; z-index: 2; pointer-events: none;
+  display: grid; grid-template-columns: auto 1fr; column-gap: .8rem; align-items: baseline;
+}
+.exp figcaption b { font-size: clamp(1.4rem, 2.2vw, 2.2rem); letter-spacing: -.03em; font-weight: 700; }
+.exp figcaption .mono:first-child { color: var(--blue-soft); }
+.exp figcaption .mono:last-child { grid-column: 1 / -1; color: rgba(236,233,226,.55); margin-top: .3rem; }
+.exp--type { background: var(--paper); color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
+.exp--type figcaption .mono:last-child { color: var(--muted); }
+.exp--type figcaption .mono:first-child { color: var(--blue); }
+.exp__type {
+  position: absolute; inset: 0 1rem 4.2rem; display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: clamp(3.4rem, 8vw, 8rem); line-height: .9; letter-spacing: -.04em; white-space: nowrap; overflow: hidden;
+  outline: none; caret-color: var(--blue);
+}
+.exp__type span { display: inline-block; transition: color .3s; }
+.exp--tide { background: #06081a; }
+
+/* =========================================================
+   Cortina entre secciones
+   ========================================================= */
+.curtain {
+  position: fixed; inset: 0; z-index: 250; pointer-events: none;
+  background: var(--blue); color: #fff; display: grid; place-items: center;
+  clip-path: inset(100% 0 0 0);
+}
+.curtain__label { font-weight: 800; font-size: clamp(3rem, 12vw, 12rem); letter-spacing: -.05em; font-variation-settings: "wdth" 125, "wght" 800; }
+
+/* =========================================================
+   Contacto: email copiable y datos
+   ========================================================= */
+.contact__meta { display: flex; justify-content: space-between; align-items: flex-end; gap: 2rem; margin-top: clamp(3rem, 6vw, 5rem); padding-top: 1.6rem; border-top: 1px solid var(--line); }
+.copy { font: inherit; color: inherit; background: none; border: 0; padding: 0; text-align: left; display: flex; flex-direction: column; gap: .5rem; }
+.copy__mail { font-size: clamp(1.5rem, 3.6vw, 3.4rem); font-weight: 600; letter-spacing: -.035em; line-height: 1; background: linear-gradient(var(--blue), var(--blue)) 0 100% / 0 2px no-repeat; transition: background-size .6s var(--ease); padding-bottom: .2rem; }
+.copy:hover .copy__mail { background-size: 100% 2px; }
+.copy__state { color: var(--blue); }
+.contact__facts { display: grid; gap: .5rem; text-align: right; }
+.contact__facts span { color: var(--muted); margin-right: .8rem; }
+
+@media (max-width: 900px) {
+  .path__pin { height: auto; display: block; padding: 5rem 0 3rem; }
+  .path__track { flex-direction: column; height: auto; gap: 2.4rem; }
+  .path__head { width: auto; padding: 0; gap: 1.6rem; }
+  .step { width: auto; padding: 1.4rem 0 0; border-left: 0; border-top: 1px solid rgba(255,255,255,.28); gap: 1.2rem; }
+  .step__year { color: #fff; font-size: 4.4rem; }
+  .path__bar { display: none; }
+  .lab__head { grid-template-columns: 1fr; }
+  .lab__grid { grid-template-columns: 1fr; grid-template-rows: none; grid-auto-rows: 62vw; }
+  .exp--kuzushi { grid-row: auto; grid-auto-rows: auto; height: 100vw; }
+  .contact__meta { flex-direction: column; align-items: flex-start; }
+  .contact__facts { text-align: left; }
+}

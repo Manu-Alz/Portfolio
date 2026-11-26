@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=8">
+  <link rel="stylesheet" href="css/styles.css?v=9">
   <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
@@ -23,6 +23,7 @@
   <!-- Grano y cursor -->
   <div class="grain" aria-hidden="true"></div>
   <div class="progress" aria-hidden="true"></div>
+  <div class="curtain" aria-hidden="true"><span class="curtain__label"></span></div>
   <div class="cursor-ring" aria-hidden="true"></div>
   <div class="cursor-dot" aria-hidden="true"></div>
   <div class="cursor" aria-hidden="true"><span class="cursor__label"></span></div>
@@ -44,7 +45,8 @@
     <div class="nav__mid mono"><span class="dot"></span> Uruguay — <span data-clock>--:--</span></div>
     <nav class="nav__links">
       <a href="#trabajo" class="link" data-cursor>Trabajo</a>
-      <a href="#hago" class="link" data-cursor>Servicios</a>
+      <a href="#trayectoria" class="link" data-cursor>Trayectoria</a>
+      <a href="#lab" class="link" data-cursor>Lab</a>
       <a href="#atleta" class="link" data-cursor>Atleta</a>
       <a href="#contacto" class="link link--pill" data-cursor>Hablemos</a>
     </nav>
@@ -56,7 +58,7 @@
     <section class="hero" id="inicio">
       <div class="hero__top">
         <div class="hero__left">
-          <p class="hero__kicker mono"><span class="reveal-line"><span>(Portfolio — 2026)</span></span></p>
+          <p class="hero__kicker mono"><span class="reveal-line"><span>(Manuel Alzugaray — Portfolio 2026)</span></span></p>
           <a href="#atleta" class="badge" data-cursor="Atleta ↓" aria-label="Ir a la sección de atleta">
             <svg class="badge__ring" viewBox="0 0 200 200" aria-hidden="true">
               <defs><path id="circ" d="M100,100 m-82,0 a82,82 0 1,1 164,0 a82,82 0 1,1 -164,0"/></defs>
@@ -106,8 +108,8 @@
         Construyo marcas y productos con la misma disciplina con la que entreno: todos los días, sin atajos, hasta que <em>funcionan</em>.
       </p>
       <div class="manifesto__foot">
-        <p>Soy Manu, de Uruguay, de una familia de atletas de alto rendimiento. Hago judo, surfeo, fui coach de musculación y preparación física, y guardavida privado. En paralelo diseño y programo webs, armo marcas desde cero, creé contenido durante un año y edito video seguido.</p>
-        <p>Todo lo que ves acá lo hice yo: idea, diseño, código, textos y lanzamiento.</p>
+        <p>Soy Manuel Alzugaray —Manu—, de Punta del Este. Crecí en una familia de atletas de alto rendimiento. Entreno judo, surfeo, soy entrenador de musculación desde 2024 y trabajo de guardavidas en verano. Diseño y programo webs desde 2023, armo marcas desde cero, creé contenido durante un año y edito video seguido.</p>
+        <p>Tengo dislexia: pienso en imágenes y en espacio, y se nota en cómo diseño. Bilingüe español–inglés (C2). Todo lo que ves acá lo hice yo: idea, diseño, código, textos y lanzamiento.</p>
       </div>
     </section>
 
@@ -280,6 +282,100 @@
       </div>
     </section>
 
+    <!-- ============ TRAYECTORIA (scroll horizontal) ============ -->
+    <section class="path" id="trayectoria" aria-label="Trayectoria">
+      <div class="path__pin">
+        <div class="path__track">
+          <header class="path__head">
+            <p class="label mono">(04) — Trayectoria</p>
+            <h2 class="path__title">De la pileta<br>al <em>tatami</em>.<br>Del código<br>a la marca.</h2>
+            <a href="cv.html" target="_blank" class="path__cv mono" data-cursor="Ver CV ↗">CV completo ↗</a>
+          </header>
+
+          <article class="step">
+            <span class="step__year">2023</span>
+            <div class="step__body">
+              <span class="step__tag mono">Autónomo · hoy</span>
+              <h3>Programación y desarrollo web</h3>
+              <p>Aprendí solo y empecé a hacer sitios para clientes y proyectos propios, definiendo con cada uno qué necesitaba de verdad.</p>
+            </div>
+          </article>
+          <article class="step">
+            <span class="step__year">2024</span>
+            <div class="step__body">
+              <span class="step__tag mono">International College · Punta del Este</span>
+              <h3>Bachillerato Internacional bilingüe</h3>
+              <p>Egresé del IB en noviembre. Español nativo, inglés C2: trabajo y escribo en los dos idiomas.</p>
+            </div>
+          </article>
+          <article class="step">
+            <span class="step__year">2024<i>→</i></span>
+            <div class="step__body">
+              <span class="step__tag mono">Autónomo · hoy</span>
+              <h3>Entrenador de musculación</h3>
+              <p>Planes de entrenamiento a medida con seguimiento del progreso. La clientela llegó sola: por recomendación y por redes.</p>
+            </div>
+          </article>
+          <article class="step">
+            <span class="step__year step__year--word">Veranos</span>
+            <div class="step__body">
+              <span class="step__tag mono">Punta del Este</span>
+              <h3>Guardavidas</h3>
+              <p>Responsable de la seguridad de la piscina durante la temporada y de la atención diaria a residentes y visitantes.</p>
+            </div>
+          </article>
+          <article class="step">
+            <span class="step__year">2025</span>
+            <div class="step__body">
+              <span class="step__tag mono">UTEC · Maldonado</span>
+              <h3>Tecnicatura en Informática</h3>
+              <p>Base técnica formal para lo que ya hacía por mi cuenta. Cursada sin finalizar: me llevé lo que necesitaba y seguí construyendo.</p>
+            </div>
+          </article>
+          <article class="step">
+            <span class="step__year">2026</span>
+            <div class="step__body">
+              <span class="step__tag mono">Marca propia</span>
+              <h3>Eventos PDE y más proyectos en vivo</h3>
+              <p>Lancé la agenda de Punta del Este en tres idiomas y sumé apps y sitios para el judo. En paralelo, curso de Administración.</p>
+            </div>
+          </article>
+          <article class="step step--next">
+            <span class="step__year">2027</span>
+            <div class="step__body">
+              <span class="step__tag mono">Próximo · Montevideo</span>
+              <h3>Comunicación en la UdelaR y judo competitivo</h3>
+              <p>Me mudo para estudiar y entrenar judo con más frecuencia, con el objetivo de entrar al circuito competitivo.</p>
+            </div>
+          </article>
+        </div>
+        <div class="path__bar" aria-hidden="true"><span></span></div>
+      </div>
+    </section>
+
+    <!-- ============ LABORATORIO ============ -->
+    <section class="lab" id="lab">
+      <header class="lab__head">
+        <p class="label mono">(05) — Laboratorio</p>
+        <h2 class="lab__title">Cosas que hago<br>porque <em>se puede</em>.</h2>
+        <p class="lab__intro">Experimentos visuales: código que se toca. Pasá el mouse o el dedo.</p>
+      </header>
+      <div class="lab__grid">
+        <figure class="exp exp--kuzushi" data-exp="kuzushi" data-cursor="Empujá">
+          <canvas></canvas>
+          <figcaption><span class="mono">Exp. 01</span><b>Kuzushi</b><span class="mono">Romper el equilibrio. Empujá los puntos.</span></figcaption>
+        </figure>
+        <figure class="exp exp--type" data-exp="type">
+          <div class="exp__type" contenteditable="true" spellcheck="false" aria-label="Escribí algo">Movete</div>
+          <figcaption><span class="mono">Exp. 02</span><b>Tipo elástico</b><span class="mono">Tocá y escribí lo que quieras.</span></figcaption>
+        </figure>
+        <figure class="exp exp--tide" data-exp="tide" data-cursor="Remá">
+          <canvas></canvas>
+          <figcaption><span class="mono">Exp. 03</span><b>Marea</b><span class="mono">Partículas que siguen la corriente.</span></figcaption>
+        </figure>
+      </div>
+    </section>
+
     <!-- ============ ATLETA ============ -->
     <section class="athlete" id="atleta" data-theme="dark">
       <div class="expand">
@@ -298,7 +394,7 @@
             <span class="reveal-line"><span>El cuerpo es</span></span>
             <span class="reveal-line"><span>mi <em>primer</em> proyecto.</span></span>
           </h2>
-          <p class="expand__label mono">(04) — Fuera de la pantalla</p>
+          <p class="expand__label mono">(06) — Fuera de la pantalla</p>
         </div>
       </div>
 
@@ -306,7 +402,7 @@
         <article class="disc">
           <span class="disc__num mono">A</span>
           <h3>Judo</h3>
-          <p>Entreno para competir en −73 kg. El tatami me enseñó a caer, levantarme y leer al otro antes de que se mueva.</p>
+          <p>Entreno en Maldonado para competir en −73 kg; en 2027 me mudo a Montevideo para entrar al circuito. El tatami me enseñó a caer, levantarme y leer al otro.</p>
         </article>
         <article class="disc">
           <span class="disc__num mono">B</span>
@@ -316,12 +412,12 @@
         <article class="disc">
           <span class="disc__num mono">C</span>
           <h3>Coach</h3>
-          <p>Fui coach de musculación y preparación física: planificar, corregir la técnica y medir el progreso de otros, no solo el mío.</p>
+          <p>Entrenador de musculación desde 2024: planes a medida, técnica y seguimiento. Mis clientes llegaron por recomendación y redes.</p>
         </article>
         <article class="disc">
           <span class="disc__num mono">D</span>
           <h3>Guardavida</h3>
-          <p>Fui guardavida privado: responsabilidad real, atención constante y reaccionar rápido cuando importa.</p>
+          <p>Guardavidas en verano en Punta del Este: responsabilidad real, atención constante y reaccionar rápido cuando importa.</p>
         </article>
         <article class="disc">
           <span class="disc__num mono">E</span>
@@ -342,13 +438,24 @@
 
     <!-- ============ CONTACTO ============ -->
     <section class="contact" id="contacto">
-      <p class="label mono">(05) — Contacto</p>
+      <p class="label mono">(07) — Contacto</p>
       <h2 class="contact__title kinetic"><span class="k">H</span><span class="k">a</span><span class="k">b</span><span class="k">l</span><span class="k">e</span><span class="k">m</span><span class="k">o</span><span class="k">s</span></h2>
       <div class="contact__row">
         <p class="contact__text">¿Tenés una marca, una web o un video en mente? <em>Contame.</em> Respondo rápido.</p>
         <a class="magnet" id="contact-btn" href="https://github.com/Manu-Alz" target="_blank" rel="noopener" data-cursor>
           <span class="magnet__inner">Escribime</span>
         </a>
+      </div>
+      <div class="contact__meta">
+        <button class="copy" type="button" data-copy data-cursor="Copiar">
+          <span class="copy__mail">manualznz@gmail.com</span>
+          <span class="copy__state mono">Copiar ⧉</span>
+        </button>
+        <ul class="contact__facts mono">
+          <li><span>Base</span>Punta del Este → Montevideo 2027</li>
+          <li><span>Idiomas</span>Español nativo · Inglés C2</li>
+          <li><span>CV</span><a href="cv.html" target="_blank" class="link" data-cursor="Ver CV ↗">Versión web / PDF ↗</a></li>
+        </ul>
       </div>
     </section>
 
@@ -358,11 +465,12 @@
     <div class="footer__links mono">
       <a href="https://github.com/Manu-Alz" target="_blank" rel="noopener" class="link" data-cursor>GitHub ↗</a>
       <a href="https://eventospde.com/" target="_blank" rel="noopener" class="link" data-cursor>Eventos PDE ↗</a>
+      <a href="cv.html" target="_blank" class="link" data-cursor>CV ↗</a>
       <a href="#inicio" class="link" data-cursor>Volver arriba ↑</a>
     </div>
     <div class="footer__mark" aria-hidden="true"><span>Manu<sup>®</sup></span></div>
     <div class="footer__bottom mono">
-      <span>© 2026 Manu — Hecho a mano en Uruguay</span>
+      <span>© 2026 Manuel Alzugaray — Hecho a mano en Uruguay</span>
       <span>Hora local <span data-clock>--:--</span></span>
     </div>
   </footer>
@@ -370,6 +478,6 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-  <script src="js/main.js?v=8"></script>
+  <script src="js/main.js?v=9"></script>
 </body>
 </html>
