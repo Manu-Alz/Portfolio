@@ -315,22 +315,24 @@ const CONTACTO = {
   gsap.from(".stat__d, .stat__l", { opacity: 0, y: 16, duration: 1, stagger: 0.05, ease: "expo.out", scrollTrigger: { trigger: ".stats", start: "top 85%" } });
 
   /* ---------- Atleta: la foto se expande ---------- */
-  // negro + logo → el círculo azul del logo se abre y se vuelve la foto
-  const expandEl = $(".expand");
-  const radius = () => parseFloat(getComputedStyle(expandEl).getPropertyValue("--r")) || 78;
-  const full = () => Math.hypot(innerWidth, innerHeight) / 2 + 20;
+  // negro + logo → la foto entra en tiras que se arman (a tamaño real, sin zoom) → anotación y título
   const exp = gsap.timeline({
-    scrollTrigger: { trigger: ".expand", start: "top top", end: "bottom bottom", scrub: 0.6, invalidateOnRefresh: true },
+    scrollTrigger: { trigger: ".expand", start: "top top", end: "bottom bottom", scrub: 0.6 },
   });
+  const slices = $$(".shot__slice");
   exp
     .to(".emblem__hint", { opacity: 0, duration: 0.08 }, 0.02)
-    .to(".emblem__ring", { scale: 2.6, opacity: 0, ease: "power2.in", duration: 0.32 }, 0.06)
-    .to(".emblem__core", { scale: 0.4, opacity: 0, ease: "power2.in", duration: 0.2 }, 0.1)
-    .fromTo(".expand__img", { clipPath: () => `circle(${radius()}px at 50% 50%)` },
-      { clipPath: () => `circle(${full()}px at 50% 50%)`, ease: "power2.inOut", duration: 0.5 }, 0.12)
-    .to(".expand__fill", { opacity: 0, ease: "none", duration: 0.28 }, 0.18)
-    .fromTo(".expand__img img", { scale: 1.45 }, { scale: 1, ease: "none", duration: 0.75 }, 0.12)
-    .to(".expand__title .reveal-line > span", { yPercent: 0, stagger: 0.06, duration: 0.18, ease: "power2.out" }, 0.62)
+    .to(".emblem__ring", { scale: 2.6, opacity: 0, ease: "power2.in", duration: 0.3 }, 0.05)
+    .to(".emblem__core", { scale: 0.4, opacity: 0, ease: "power2.in", duration: 0.18 }, 0.08)
+    .fromTo(slices, { yPercent: (i) => (i % 2 ? 105 : -105) },
+      { yPercent: 0, ease: "power3.out", duration: 0.32, stagger: 0.035 }, 0.16)
+    .fromTo(".shot__frame", { scale: 0.86, filter: "grayscale(1) brightness(.6)" },
+      { scale: 1, filter: "grayscale(0) brightness(1)", ease: "power2.out", duration: 0.4 }, 0.18)
+    .fromTo(".shot__crop", { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: 0.12, stagger: 0.02 }, 0.42)
+    .fromTo(".shot__mark", { scale: 0, rotate: -120, opacity: 0 }, { scale: 1, rotate: 0, opacity: 1, ease: "back.out(2)", duration: 0.12 }, 0.52)
+    .fromTo(".shot__tag", { opacity: 0, x: -12 }, { opacity: 1, x: 0, duration: 0.1 }, 0.58)
+    .fromTo(".shot__cap", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.1 }, 0.56)
+    .to(".expand__title .reveal-line > span", { yPercent: 0, stagger: 0.06, duration: 0.16, ease: "power2.out" }, 0.62)
     .to({}, { duration: 0.15 });
   gsap.set(".expand__title .reveal-line > span", { y: 0, yPercent: 110 });
 
