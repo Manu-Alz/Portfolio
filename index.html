@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=36">
+  <link rel="stylesheet" href="css/styles.css?v=37">
   <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
@@ -153,9 +153,11 @@
               <span class="card__year mono">2026 — en vivo</span>
             </div>
             <div class="card__body">
-              <div class="card__media"><img src="assets/work/eventos.jpg" alt="Captura de eventospde.com" loading="lazy"></div>
+              <div class="card__media"><img src="assets/work/eventos.jpg" alt="Captura de eventospde.com" loading="lazy">
+                <span class="reel" role="button" tabindex="0" data-reel="assets/work/eventos-reel.mp4" data-cursor="Ver reel ▶" aria-label="Ver el reel de Eventos PDE"><video muted loop playsinline preload="none" data-src="assets/work/eventos-reel.mp4"></video><span class="reel__label mono"><i>▶</i> Reel · 0:13</span></span></div>
               <div class="card__info">
                 <p>Marca y plataforma para descubrir qué hacer en Punta del Este. Concebí el producto, diseñé la identidad y desarrollé el sitio: agenda, mapa y planificador de viaje en tres idiomas, con páginas indexables que se generan automáticamente.</p>
+                <ul class="card__results"><li><b>+70</b><span class="mono">eventos en agenda</span></li><li><b>3</b><span class="mono">idiomas: ES · EN · PT</span></li><li><b>↗</b><span class="mono">tráfico orgánico en crecimiento</span></li></ul>
                 <dl class="card__facts mono"><div><dt>Rol</dt><dd>Fundador · marca, diseño y desarrollo</dd></div><div><dt>Desafío</dt><dd>Reunir toda la oferta de la ciudad en un solo lugar, para turistas de tres idiomas</dd></div></dl>
                 <ul class="tags mono"><li>Marca</li><li>Producto</li><li>Web</li><li>SEO</li><li>3 idiomas</li></ul>
                 <span class="card__cta mono">eventospde.com ↗</span>
@@ -193,8 +195,9 @@
             <div class="card__body">
               <div class="card__media"><img src="assets/work/judo-uruguay.jpg" alt="Captura de la app Judo Uruguay" loading="lazy"></div>
               <div class="card__info">
-                <p>Aplicación instalable para un grupo de entrenamiento: las 100 técnicas del Kodokan con video, progreso por cinturón, registro de asistencia, estado del dojo en vivo y vocabulario japonés con audio.</p>
-                <dl class="card__facts mono"><div><dt>Rol</dt><dd>Producto, diseño y desarrollo</dd></div><div><dt>Desafío</dt><dd>Que un grupo entero estudie y siga su progreso desde el celular, también en el tatami</dd></div></dl>
+                <p>Aplicación instalable hecha a medida para un dojo, que la adoptó como su sistema de progresión: las 100 técnicas del Kodokan con video, avance por cinturón, registro de asistencia, estado del dojo en vivo y vocabulario japonés con audio.</p>
+                <ul class="card__results"><li><b>1</b><span class="mono">dojo la usa como sistema oficial</span></li><li><b>100</b><span class="mono">técnicas con video</span></li><li><b>PWA</b><span class="mono">se instala como app</span></li></ul>
+                <dl class="card__facts mono"><div><dt>Rol</dt><dd>Producto, diseño y desarrollo</dd></div><div><dt>Desafío</dt><dd>Que todo un dojo estudie y siga su progreso desde el celular, también en el tatami</dd></div></dl>
                 <ul class="tags mono"><li>Producto</li><li>PWA</li><li>Cuentas</li><li>UX móvil</li></ul>
                 <span class="card__cta mono">Abrir app ↗</span>
               </div>
@@ -484,10 +487,16 @@
     </div>
   </footer>
 
+  <!-- Reel en grande -->
+  <div class="reel-modal" role="dialog" aria-modal="true" aria-label="Reel de Eventos PDE" aria-hidden="true">
+    <button class="reel-modal__close mono" type="button" data-cursor>Cerrar ✕</button>
+    <video controls playsinline preload="none"></video>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-  <script src="js/i18n.js?v=36"></script>
-  <script src="js/main.js?v=36"></script>
+  <script src="js/i18n.js?v=37"></script>
+  <script src="js/main.js?v=37"></script>
 </body>
 </html>

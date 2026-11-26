@@ -67,6 +67,40 @@ const T = window.T || ((es) => es);
   }));
   matchMedia("(min-width: 901px)").addEventListener("change", (m) => m.matches && setMenu(false));
 
+  /* ---------- Reel: vista previa muda en la tarjeta + reproductor en grande ---------- */
+  const modal = $(".reel-modal"), mv = modal && $("video", modal);
+  if (modal) {
+    const openReel = (r, e) => {
+      e.preventDefault(); e.stopPropagation(); // la tarjeta es un link: el reel no debe abrir el sitio
+      mv.src = r.dataset.reel; mv.currentTime = 0; mv.muted = false;
+      modal.classList.add("is-open"); modal.setAttribute("aria-hidden", "false");
+      mv.play().catch(() => {});
+      window.__lenis && window.__lenis.stop();
+      $(".reel-modal__close").focus();
+    };
+    const closeReel = () => {
+      if (!modal.classList.contains("is-open")) return;
+      modal.classList.remove("is-open"); modal.setAttribute("aria-hidden", "true");
+      mv.pause();
+      window.__lenis && window.__lenis.start();
+    };
+    $$(".reel").forEach((r) => {
+      const v = $("video", r);
+      // la vista previa carga y se reproduce solo cuando está cerca de la pantalla
+      new IntersectionObserver(([en]) => {
+        if (en.isIntersecting) {
+          if (!v.getAttribute("src")) v.src = v.dataset.src + (reduce ? "#t=1" : "");
+          if (!reduce) v.play().catch(() => {});
+        } else v.pause();
+      }, { rootMargin: "200px" }).observe(r);
+      r.addEventListener("click", (e) => openReel(r, e));
+      r.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") openReel(r, e); });
+    });
+    $(".reel-modal__close").addEventListener("click", closeReel);
+    modal.addEventListener("click", (e) => { if (e.target === modal) closeReel(); });
+    addEventListener("keydown", (e) => { if (e.key === "Escape") closeReel(); });
+  }
+
   /* ---------- Laboratorio (funciona con o sin GSAP) ---------- */
   initLab();
 
