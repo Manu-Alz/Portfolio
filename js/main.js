@@ -679,7 +679,8 @@ function initLab() {
     }
 
     if (type === "poster") {
-      // pósters suizos: 4 sistemas de composición con parámetros al azar, todo en HTML nítido
+      // pósters suizos: 4 sistemas de composición con parámetros al azar, todo en HTML nítido.
+      // La zona de abajo (≈90px) queda libre para el pie del experimento: nada importante va ahí.
       const box = fig.querySelector(".poster");
       const words = ["Ritmo", "Forma", "Pulso", "Mover", "Marca", "Flujo", "Ippon", "Señal", "Tensión", "Cuerpo"];
       const pick = (a) => a[Math.floor(Math.random() * a.length)];
@@ -690,8 +691,18 @@ function initLab() {
         { bg: "#0E0E0E", fg: "#ECE9E2", ac: "#2742FF" },
         { bg: "#ECE9E2", fg: "#2742FF", ac: "#0E0E0E" },
       ];
-      let n = 40, last = -1, timer;
+      let n = 40, last = -1, timer, vertical = false;
+      // ajusta la palabra al ancho (o al alto si es vertical) sin regenerar el póster
+      const fit = () => {
+        const w = box.querySelector(".poster__word span");
+        if (!w || !box.clientWidth) return;
+        const H = box.clientHeight - 90;
+        w.style.fontSize = "100px";
+        const target = vertical ? H * 0.62 : box.clientWidth * 0.88;
+        w.style.fontSize = Math.max(12, Math.min(100 * (target / w.offsetWidth), H * (vertical ? 0.42 : 0.3))) + "px";
+      };
       const render = () => {
+        if (!box.clientWidth) return;
         n++;
         let tpl; do { tpl = Math.floor(Math.random() * 4); } while (tpl === last);
         last = tpl;
@@ -699,24 +710,25 @@ function initLab() {
         const wdth = Math.round(rnd(62, 125)), wght = Math.round(rnd(700, 900));
         let shapes = "";
         if (tpl === 0) {
-          const d = rnd(62, 82);
-          shapes = `<i class="pe" style="--d:0s;left:${rnd(30, 48)}%;top:${rnd(-8, 8)}%;width:${d}%;aspect-ratio:1;border-radius:50%;background:${c.ac}"></i>`;
+          const d = rnd(62, 80);
+          shapes = `<i class="pe" style="--d:0s;left:${rnd(32, 46)}%;top:${rnd(-10, 4)}%;width:${d}%;aspect-ratio:1;border-radius:50%;background:${c.ac}"></i>`;
         } else if (tpl === 1) {
           for (let i = 0; i < 6; i++) {
-            const h = rnd(18, 58);
-            shapes += `<i class="pe pe--up" style="--d:${i * 0.06}s;left:${6 + i * 15}%;bottom:0;width:12%;height:${h}%;background:${i === 2 || i === 4 ? c.ac : c.fg}"></i>`;
+            const h = rnd(14, 40);
+            shapes += `<i class="pe pe--up" style="--d:${i * 0.06}s;left:${6 + i * 15}%;bottom:96px;width:12%;height:${h}%;background:${i === 2 || i === 4 ? c.ac : c.fg}"></i>`;
           }
         } else if (tpl === 2) {
-          shapes = `<i class="pe" style="--d:.05s;right:-22%;top:${rnd(28, 44)}%;width:62%;aspect-ratio:1;border-radius:50%;border:${rnd(10, 22)}px solid ${c.ac}"></i>`;
+          shapes = `<i class="pe" style="--d:.05s;right:-24%;top:${rnd(22, 34)}%;width:62%;aspect-ratio:1;border-radius:50%;border:${Math.round(rnd(10, 20))}px solid ${c.ac}"></i>`;
         } else {
           let k = 0;
           for (let y = 0; y < 4; y++) for (let x = 0; x < 4; x++) {
             const on = Math.random() < 0.28;
-            shapes += `<i class="pe" style="--d:${(k++) * 0.02}s;left:${8 + x * 22}%;top:${30 + y * 13}%;width:7%;aspect-ratio:1;border-radius:${Math.random() < 0.5 ? "50%" : "0"};background:${on ? c.ac : "transparent"};border:1.5px solid ${on ? c.ac : c.fg}"></i>`;
+            shapes += `<i class="pe" style="--d:${(k++) * 0.02}s;left:${8 + x * 22}%;top:${32 + y * 9}%;width:6%;aspect-ratio:1;border-radius:${Math.random() < 0.5 ? "50%" : "0"};background:${on ? c.ac : "transparent"};border:1.5px solid ${on ? c.ac : c.fg}"></i>`;
           }
         }
-        const vertical = tpl === 2;
-        const wordPos = tpl === 0 ? "left:6%;bottom:22%" : tpl === 1 ? "left:6%;top:16%" : tpl === 2 ? "left:6%;bottom:22%" : "left:6%;top:14%";
+        vertical = tpl === 2;
+        const wordPos = tpl === 0 ? "left:6%;bottom:calc(96px + 4%)" : tpl === 1 ? "left:6%;top:15%" : tpl === 2 ? "left:6%;bottom:96px" : "left:6%;top:15%";
+        if (window.gsap) gsap.killTweensOf(box.querySelectorAll(".pe"));
         box.style.background = c.bg; box.style.color = c.fg;
         box.innerHTML = `
           <div class="poster__grid">${"<span></span>".repeat(6)}</div>
@@ -724,11 +736,7 @@ function initLab() {
           <div class="poster__word pe pe--up ${vertical ? "is-v" : ""}" style="--d:.15s;${wordPos}"><span style="font-variation-settings:'wdth' ${wdth},'wght' ${wght}">${word}</span></div>
           <div class="poster__meta pe" style="--d:.25s"><span>Manuel Alzugaray</span><span>Nº ${String(n).padStart(3, "0")}</span></div>
           <div class="poster__meta poster__meta--2 pe" style="--d:.3s"><span>Sistema ${["A", "B", "C", "D"][tpl]} · ${wdth}/${wght}</span><span>Punta del Este — 2026</span></div>`;
-        // la palabra ocupa exactamente el ancho (o el alto si es vertical)
-        const w = box.querySelector(".poster__word span");
-        w.style.fontSize = "100px";
-        const target = vertical ? box.clientHeight * 0.62 : box.clientWidth * 0.88;
-        w.style.fontSize = Math.min(100 * (target / w.offsetWidth), box.clientHeight * (vertical ? 0.5 : 0.3)) + "px";
+        fit();
         // cada elemento entra con un barrido (GSAP; sin GSAP quedan visibles)
         if (window.gsap) box.querySelectorAll(".pe").forEach((el) => {
           const up = el.classList.contains("pe--up");
@@ -737,10 +745,15 @@ function initLab() {
         });
       };
       const loop = () => { clearTimeout(timer); timer = setTimeout(() => { if (!ptr.on && ex.visible) render(); loop(); }, 6000); };
-      fig.addEventListener("click", () => { render(); loop(); });
-      ex.resize = render;
-      if (document.fonts) document.fonts.ready.then(render);
-      loop();
+      let lastClick = 0;
+      fig.addEventListener("click", () => {
+        if (performance.now() - lastClick < 350) return; // evita dobles clics que cortan la animación
+        lastClick = performance.now();
+        render(); loop();
+      });
+      // al cambiar de tamaño solo se reajusta; el primer póster se arma una vez cargadas las fuentes
+      ex.resize = () => (box.childElementCount ? fit() : render());
+      (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => { box.childElementCount ? fit() : render(); loop(); });
     }
 
     ex.resize();
