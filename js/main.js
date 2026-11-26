@@ -24,87 +24,6 @@ const T = window.T || ((es) => es);
   const tick = () => $$("[data-clock]").forEach((el) => (el.textContent = fmt.format(new Date())));
   tick(); setInterval(tick, 15000);
 
-  /* ---------- Ahora: reloj, latencia real y título que se tipea ---------- */
-  (() => {
-    const sec = $(".now");
-    if (!sec) return;
-    const p2 = (n) => String(n).padStart(2, "0");
-    const parts = new Intl.DateTimeFormat("en-GB", { weekday: "short", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false, timeZone: "America/Montevideo" });
-    const elT = $("[data-uy-time]", sec), elS = $("[data-uy-sec]", sec), msg = $("[data-day-msg]", sec);
-    // mensaje según la hora de Uruguay (lunes a viernes, 9 a 19)
-    const status = (wd, h) => {
-      if (wd === "Sat" || wd === "Sun" || (wd === "Fri" && h >= 19)) return T("Fin de semana · respondo el lunes", "Weekend · I reply on Monday");
-      if (h >= 9 && h < 19) return T("En horario · respondo hoy", "Office hours · I reply today");
-      if (h < 9) return T("Respondo desde las 9", "I reply from 9 am");
-      return T("Fuera de horario · respondo mañana", "Off hours · I reply tomorrow");
-    };
-    const clock = () => {
-      const o = {};
-      parts.formatToParts(new Date()).forEach((p) => (o[p.type] = p.value));
-      const h = +o.hour % 24;
-      if (elT) elT.textContent = `${p2(h)}:${o.minute}`;
-      if (elS) elS.textContent = `:${o.second}`;
-      if (msg) msg.textContent = status(o.weekday, h);
-    };
-    clock(); setInterval(clock, 1000);
-
-    // latencia real de cada sitio (sin cookies ni caché), solo mientras la sección está cerca
-    const rows = $$("[data-ping]", sec).map((li) => ({ li, url: li.dataset.ping, out: $("b", li) }));
-    const ping = async (r) => {
-      const a = performance.now();
-      try {
-        await fetch(r.url + "?ping=" + Date.now(), { mode: "no-cors", cache: "no-store", credentials: "omit" });
-        r.out.textContent = Math.round(performance.now() - a) + " ms";
-        r.li.classList.add("is-up"); r.li.classList.remove("is-down");
-      } catch (e) {
-        r.out.textContent = T("Sin señal", "No signal");
-        r.li.classList.add("is-down"); r.li.classList.remove("is-up");
-      }
-    };
-    let timer = 0;
-    new IntersectionObserver(([en]) => {
-      clearInterval(timer);
-      if (en.isIntersecting) { rows.forEach(ping); timer = setInterval(() => rows.forEach(ping), 4000); }
-    }, { rootMargin: "200px" }).observe(sec);
-
-    // el título se escribe letra por letra; cada letra ya ocupa su lugar, así no hay saltos
-    const title = $("[data-typer]", sec);
-    if (!title) return;
-    const chars = [];
-    const split = (node) => {
-      [...node.childNodes].forEach((n) => {
-        if (n.nodeType === 3) {
-          const frag = document.createDocumentFragment();
-          [...n.textContent].forEach((c) => {
-            if (/\s/.test(c)) { frag.appendChild(document.createTextNode(c)); return; }
-            const s = document.createElement("span");
-            s.className = "ch"; s.textContent = c; s.setAttribute("aria-hidden", "true");
-            frag.appendChild(s); chars.push(s);
-          });
-          n.replaceWith(frag);
-        } else split(n);
-      });
-    };
-    split(title);
-    const last = chars[chars.length - 1];
-    const caret = document.createElement("i");
-    caret.className = "now__caret"; caret.setAttribute("aria-hidden", "true");
-    if (reduce || !chars.length) { if (last) last.after(caret); return; }
-    title.classList.add("is-typing");
-    const io = new IntersectionObserver(([en]) => {
-      if (!en.isIntersecting) return;
-      io.disconnect();
-      let k = 0;
-      const step = () => {
-        chars[k].classList.add("on"); chars[k].after(caret);
-        k++;
-        if (k < chars.length) setTimeout(step, chars[k - 1].parentElement.tagName === "EM" ? 95 : 70 + Math.random() * 60);
-      };
-      setTimeout(step, 350);
-    }, { threshold: 0.5 });
-    io.observe(title);
-  })();
-
   /* ---------- Botón de contacto ---------- */
   const btn = $("#contact-btn");
   if (CONTACTO.email) { btn.href = "mailto:" + CONTACTO.email; btn.removeAttribute("target"); }
@@ -524,10 +443,6 @@ const T = window.T || ((es) => es);
       });
     });
   });
-  // Ahora: la barra y las columnas entran en orden
-  gsap.from(".now__bar > *", { opacity: 0, y: 10, duration: 0.9, stagger: 0.08, ease: "expo.out", scrollTrigger: { trigger: ".now", start: "top 85%" } });
-  gsap.from(".now__col", { opacity: 0, y: 30, duration: 1.2, stagger: 0.1, ease: "expo.out", scrollTrigger: { trigger: ".now__grid", start: "top 88%" } });
-  gsap.from(".now__cta", { opacity: 0, y: 30, duration: 1.2, ease: "expo.out", scrollTrigger: { trigger: ".now__cta", start: "top 92%" } });
 
   /* ---------- Atleta: la foto se expande ---------- */
   // negro + logo → la foto entra en tiras que se arman (a tamaño real, sin zoom) → anotación y título
