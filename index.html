@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=9">
+  <link rel="stylesheet" href="css/styles.css?v=11">
   <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
@@ -23,6 +23,7 @@
   <!-- Grano y cursor -->
   <div class="grain" aria-hidden="true"></div>
   <div class="progress" aria-hidden="true"></div>
+  <div class="sect mono" aria-hidden="true"><span class="sect__n">(00)</span><span class="sect__t">Inicio</span></div>
   <div class="curtain" aria-hidden="true"><span class="curtain__label"></span></div>
   <div class="cursor-ring" aria-hidden="true"></div>
   <div class="cursor-dot" aria-hidden="true"></div>
@@ -46,7 +47,7 @@
     <nav class="nav__links">
       <a href="#trabajo" class="link" data-cursor>Trabajo</a>
       <a href="#trayectoria" class="link" data-cursor>Trayectoria</a>
-      <a href="#lab" class="link" data-cursor>Lab</a>
+      <a href="#lab" class="link" data-cursor>Gráfica</a>
       <a href="#atleta" class="link" data-cursor>Atleta</a>
       <a href="#contacto" class="link link--pill" data-cursor>Hablemos</a>
     </nav>
@@ -80,10 +81,10 @@
 
       <div class="hero__bottom">
         <ul class="hero__tags mono">
-          <li>Judo · −73 kg</li>
-          <li>Surf</li>
-          <li>Coach</li>
-          <li>Ex guardavida</li>
+          <li>Marca</li>
+          <li>Web</li>
+          <li>Video</li>
+          <li>Punta del Este, UY</li>
         </ul>
         <a href="#trabajo" class="hero__scroll mono" data-cursor="Bajá">
           <span>Scroll</span><span class="hero__scroll-line"></span>
@@ -94,7 +95,7 @@
     <!-- ============ MARQUESINA ============ -->
     <div class="marquee" aria-hidden="true">
       <div class="marquee__track">
-        <span>Judo</span><i>✦</i><span class="serif">Surf</span><i>✦</i><span>Marcas</span><i>✦</i><span class="serif">Webs</span><i>✦</i><span>Edición de video</span><i>✦</i><span class="serif">Contenido</span><i>✦</i><span>Guardavida</span><i>✦</i><span class="serif">Coach</span><i>✦</i>
+        <span>Judo</span><i>✦</i><span class="serif">Surf</span><i>✦</i><span>Marcas</span><i>✦</i><span class="serif">Webs</span><i>✦</i><span>Edición de video</span><i>✦</i><span class="serif">Contenido</span><i>✦</i><span>Motion</span><i>✦</i><span class="serif">Dirección de arte</span><i>✦</i>
       </div>
     </div>
 
@@ -356,22 +357,34 @@
     <!-- ============ LABORATORIO ============ -->
     <section class="lab" id="lab">
       <header class="lab__head">
-        <p class="label mono">(05) — Laboratorio</p>
-        <h2 class="lab__title">Cosas que hago<br>porque <em>se puede</em>.</h2>
-        <p class="lab__intro">Experimentos visuales: código que se toca. Pasá el mouse o el dedo.</p>
+        <p class="label mono">(05) — Experimentación gráfica</p>
+        <h2 class="lab__title">Experimentación<br><em>gráfica.</em></h2>
+        <p class="lab__intro">Estudios de interacción, tipografía y sistemas generativos, escritos en código y renderizados en tiempo real. Sin plantillas ni librerías gráficas.</p>
       </header>
       <div class="lab__grid">
-        <figure class="exp exp--kuzushi" data-exp="kuzushi" data-cursor="Empujá">
+        <figure class="exp exp--sphere" data-exp="sphere" data-cursor="Girá">
           <canvas></canvas>
-          <figcaption><span class="mono">Exp. 01</span><b>Kuzushi</b><span class="mono">Romper el equilibrio. Empujá los puntos.</span></figcaption>
+          <figcaption><span class="mono">01</span><b>Esfera de datos</b><span class="mono">1.800 puntos en 3D · proyección en canvas · arrastrá para rotar</span></figcaption>
+        </figure>
+        <figure class="exp exp--poster" data-exp="poster" data-cursor="Generar">
+          <canvas></canvas>
+          <figcaption><span class="mono">02</span><b>Póster generativo</b><span class="mono">Grilla suiza · composición nueva en cada clic</span></figcaption>
+        </figure>
+        <figure class="exp exp--halftone" data-exp="halftone" data-cursor="Revelar">
+          <canvas></canvas>
+          <figcaption><span class="mono">03</span><b>Semitono</b><span class="mono">Foto convertida en trama · el cursor la revela</span></figcaption>
         </figure>
         <figure class="exp exp--type" data-exp="type">
-          <div class="exp__type" contenteditable="true" spellcheck="false" aria-label="Escribí algo">Movete</div>
-          <figcaption><span class="mono">Exp. 02</span><b>Tipo elástico</b><span class="mono">Tocá y escribí lo que quieras.</span></figcaption>
+          <div class="exp__type" contenteditable="true" spellcheck="false" aria-label="Escribí algo">Movimiento</div>
+          <figcaption><span class="mono">04</span><b>Tipografía variable</b><span class="mono">Ejes de ancho y peso según el cursor · editable</span></figcaption>
         </figure>
-        <figure class="exp exp--tide" data-exp="tide" data-cursor="Remá">
+        <figure class="exp exp--kuzushi" data-exp="kuzushi" data-cursor="Empujá">
           <canvas></canvas>
-          <figcaption><span class="mono">Exp. 03</span><b>Marea</b><span class="mono">Partículas que siguen la corriente.</span></figcaption>
+          <figcaption><span class="mono">05</span><b>Campo de fuerzas</b><span class="mono">Física de resortes sobre una grilla de puntos</span></figcaption>
+        </figure>
+        <figure class="exp exp--tide" data-exp="tide" data-cursor="Desviar">
+          <canvas></canvas>
+          <figcaption><span class="mono">06</span><b>Flujo</b><span class="mono">Partículas sobre un campo vectorial</span></figcaption>
         </figure>
       </div>
     </section>
@@ -398,47 +411,53 @@
         </div>
       </div>
 
-      <div class="disciplines">
-        <article class="disc">
-          <span class="disc__num mono">A</span>
-          <h3>Judo</h3>
-          <p>Entreno en Maldonado para competir en −73 kg; en 2027 me mudo a Montevideo para entrar al circuito. El tatami me enseñó a caer, levantarme y leer al otro.</p>
-        </article>
-        <article class="disc">
-          <span class="disc__num mono">B</span>
-          <h3>Surf</h3>
-          <p>El mar no negocia. Paciencia, lectura de olas y saber cuándo remar fuerte y cuándo esperar.</p>
-        </article>
-        <article class="disc">
-          <span class="disc__num mono">C</span>
-          <h3>Coach</h3>
-          <p>Entrenador de musculación desde 2024: planes a medida, técnica y seguimiento. Mis clientes llegaron por recomendación y redes.</p>
-        </article>
-        <article class="disc">
-          <span class="disc__num mono">D</span>
-          <h3>Guardavida</h3>
-          <p>Guardavidas en verano en Punta del Este: responsabilidad real, atención constante y reaccionar rápido cuando importa.</p>
-        </article>
-        <article class="disc">
-          <span class="disc__num mono">E</span>
-          <h3>Familia</h3>
-          <p>Toda mi familia es de atletas de alto rendimiento: salto con garrocha, 100 y 200 metros. En casa el deporte nunca fue un hobby.</p>
-        </article>
-        <article class="disc">
-          <span class="disc__num mono">F</span>
-          <h3>Moverse</h3>
-          <p>Gimnasio, días atléticos, acrobacias, flexibilidad. Todo lo que tenga que ver con moverse, me interesa.</p>
-        </article>
+      <div class="method">
+        <header class="method__head">
+          <p class="label mono">Método</p>
+          <h2 class="method__title">Trabajo como<br>se <em>entrena</em>.</h2>
+          <p class="method__intro">Años de planificar entrenamientos me dejaron un proceso: medir antes de actuar, avanzar por ciclos cortos y ajustar con datos. Lo aplico igual a una marca, una web o un video.</p>
+        </header>
+        <ol class="method__steps">
+          <li class="mstep">
+            <span class="mstep__n mono">01</span>
+            <h3>Diagnóstico</h3>
+            <p>Entender el punto de partida: objetivo, público, competencia y lo que ya existe. Sin esto, todo lo demás es adivinar.</p>
+            <span class="mstep__out mono">Entregable · brief y objetivos</span>
+          </li>
+          <li class="mstep">
+            <span class="mstep__n mono">02</span>
+            <h3>Plan</h3>
+            <p>Estructura, mensajes y dirección visual definidos antes de diseñar. Un camino claro con etapas y fechas.</p>
+            <span class="mstep__out mono">Entregable · mapa del sitio y referencias</span>
+          </li>
+          <li class="mstep">
+            <span class="mstep__n mono">03</span>
+            <h3>Ejecución</h3>
+            <p>Diseño y desarrollo en ciclos cortos, con versiones navegables desde la primera semana para decidir sobre algo real.</p>
+            <span class="mstep__out mono">Entregable · prototipo en vivo</span>
+          </li>
+          <li class="mstep">
+            <span class="mstep__n mono">04</span>
+            <h3>Seguimiento</h3>
+            <p>Lanzamiento, medición y ajustes. Que el cliente pueda actualizar solo, y que el proyecto siga rindiendo después.</p>
+            <span class="mstep__out mono">Entregable · lanzamiento y métricas</span>
+          </li>
+        </ol>
       </div>
 
-      <blockquote class="quote">
-        <p data-words>Lo que aprendo entrenando lo llevo al trabajo: <em>disciplina</em>, constancia y no soltar hasta que salga.</p>
-      </blockquote>
+      <div class="caps">
+        <p class="label mono">Capacidades</p>
+        <ul class="caps__list">
+          <li>Identidad de marca</li><li>Dirección de arte</li><li>Diseño web</li><li>Desarrollo front-end</li>
+          <li>Motion e interacción</li><li>Apps instalables (PWA)</li><li>SEO multilingüe</li><li>Edición de video</li>
+          <li>Contenido para redes</li><li>Copywriting ES / EN</li><li>Planificación de entrenamiento</li>
+        </ul>
+      </div>
     </section>
 
     <!-- ============ CONTACTO ============ -->
     <section class="contact" id="contacto">
-      <p class="label mono">(07) — Contacto</p>
+      <p class="label mono contact__label">(07) — Contacto <span class="avail"><i></i>Disponible para proyectos · 2026</span></p>
       <h2 class="contact__title kinetic"><span class="k">H</span><span class="k">a</span><span class="k">b</span><span class="k">l</span><span class="k">e</span><span class="k">m</span><span class="k">o</span><span class="k">s</span></h2>
       <div class="contact__row">
         <p class="contact__text">¿Tenés una marca, una web o un video en mente? <em>Contame.</em> Respondo rápido.</p>
@@ -448,10 +467,12 @@
       </div>
       <div class="contact__meta">
         <button class="copy" type="button" data-copy data-cursor="Copiar">
-          <span class="copy__mail">manualznz@gmail.com</span>
+          <span class="copy__mail">manualzugaray@icloud.com</span>
           <span class="copy__state mono">Copiar ⧉</span>
         </button>
         <ul class="contact__facts mono">
+          <li><span>Tel</span><a href="tel:+59894717738" class="link" data-cursor>094 717 738</a></li>
+          <li><span>WhatsApp</span><a href="https://wa.me/59894717738" target="_blank" rel="noopener" class="link" data-cursor="WhatsApp ↗">Escribir por WhatsApp ↗</a></li>
           <li><span>Base</span>Punta del Este → Montevideo 2027</li>
           <li><span>Idiomas</span>Español nativo · Inglés C2</li>
           <li><span>CV</span><a href="cv.html" target="_blank" class="link" data-cursor="Ver CV ↗">Versión web / PDF ↗</a></li>
@@ -478,6 +499,6 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-  <script src="js/main.js?v=9"></script>
+  <script src="js/main.js?v=11"></script>
 </body>
 </html>

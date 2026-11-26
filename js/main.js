@@ -5,7 +5,7 @@
 
 // ---- Datos de contacto: completá lo que quieras mostrar ----
 const CONTACTO = {
-  email: "manualznz@gmail.com",
+  email: "manualzugaray@icloud.com",
   respaldo: "https://github.com/Manu-Alz",    // si no hay email, el botón lleva acá
 };
 
@@ -264,7 +264,9 @@ const CONTACTO = {
   $$(".label").forEach((el) => gsap.from(el, { opacity: 0, x: -20, duration: 1, ease: "expo.out", scrollTrigger: { trigger: el, start: "top 90%" } }));
   gsap.from(".manifesto__foot p", { opacity: 0, y: 30, duration: 1.2, stagger: 0.15, ease: "expo.out", scrollTrigger: { trigger: ".manifesto__foot", start: "top 85%" } });
   gsap.from(".svc__row", { opacity: 0, y: 60, duration: 1.2, stagger: 0.1, ease: "expo.out", scrollTrigger: { trigger: ".svc", start: "top 80%" } });
-  gsap.from(".disc", { opacity: 0, y: 60, duration: 1.2, stagger: 0.1, ease: "expo.out", scrollTrigger: { trigger: ".disciplines", start: "top 85%" } });
+  gsap.from(".mstep", { opacity: 0, y: 60, duration: 1.2, stagger: 0.12, ease: "expo.out", scrollTrigger: { trigger: ".method__steps", start: "top 85%" } });
+  gsap.from(".caps__list li", { opacity: 0, yPercent: 60, duration: 1, stagger: 0.04, ease: "expo.out", scrollTrigger: { trigger: ".caps__list", start: "top 88%" } });
+  gsap.from(".method__head > *", { opacity: 0, y: 40, duration: 1.2, stagger: 0.1, ease: "expo.out", scrollTrigger: { trigger: ".method__head", start: "top 85%" } });
   gsap.from(".footer__mark span", { yPercent: 100, ease: "none", scrollTrigger: { trigger: ".footer__mark", start: "top bottom", end: "bottom bottom", scrub: true } });
   gsap.from(".contact__row > *", { opacity: 0, y: 40, duration: 1.2, stagger: 0.12, ease: "expo.out", scrollTrigger: { trigger: ".contact__row", start: "top 90%" } });
 
@@ -363,6 +365,25 @@ const CONTACTO = {
       }
     });
   }
+
+  /* ---------- Indicador de sección (abajo a la izquierda) ---------- */
+  const sects = [["inicio", "00", "Inicio"], ["sobre", "01", "Sobre mí"], ["trabajo", "02", "Trabajo"], ["hago", "03", "Servicios"],
+    ["trayectoria", "04", "Trayectoria"], ["lab", "05", "Experimentación gráfica"], ["atleta", "06", "Método"], ["contacto", "07", "Contacto"]];
+  const sN = $(".sect__n"), sT = $(".sect__t");
+  let curSect = "inicio";
+  const showSect = ([id, n, t]) => {
+    if (curSect === id) return;
+    curSect = id;
+    gsap.timeline()
+      .to([sN, sT], { yPercent: -110, duration: 0.3, ease: "power2.in" })
+      .add(() => { sN.textContent = `(${n})`; sT.textContent = t; })
+      .fromTo([sN, sT], { yPercent: 110 }, { yPercent: 0, duration: 0.45, ease: "expo.out", stagger: 0.04 });
+  };
+  sects.forEach((s, i) => {
+    const el = document.getElementById(s[0]);
+    if (!el) return;
+    ScrollTrigger.create({ trigger: el, start: "top 50%", end: "bottom 50%", onEnter: () => showSect(s), onEnterBack: () => showSect(s) });
+  });
 
   /* ---------- Trayectoria: scroll horizontal ---------- */
   if (innerWidth >= 900) {
@@ -508,6 +529,170 @@ function initLab() {
           L.s.style.color = f > 0.6 ? "var(--blue)" : "";
         });
       };
+    }
+
+    if (type === "sphere" || type === "poster" || type === "halftone") {
+      const cv = fig.querySelector("canvas"), ctx = cv.getContext("2d");
+      let W = 0, H = 0;
+      const base = () => {
+        const d = Math.min(devicePixelRatio || 1, 2);
+        W = fig.clientWidth; H = fig.clientHeight;
+        cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0);
+      };
+
+      if (type === "sphere") {
+        // esfera de Fibonacci que respira; se arrastra para girarla
+        const N = 1800, pts = [];
+        const ga = Math.PI * (3 - Math.sqrt(5));
+        for (let i = 0; i < N; i++) {
+          const y = 1 - (i / (N - 1)) * 2, r = Math.sqrt(1 - y * y), th = ga * i;
+          pts.push({ x: Math.cos(th) * r, y, z: Math.sin(th) * r, lat: Math.asin(y), lon: th });
+        }
+        let ax = -0.35, ay = 0, vx = 0, vy = 0.004, t = 0, down = false, lx = 0, ly = 0;
+        fig.addEventListener("pointerdown", (e) => { down = true; lx = e.clientX; ly = e.clientY; fig.setPointerCapture?.(e.pointerId); });
+        fig.addEventListener("pointerup", () => (down = false));
+        fig.addEventListener("pointercancel", () => (down = false));
+        fig.addEventListener("pointermove", (e) => {
+          if (!down) return;
+          vy = (e.clientX - lx) * 0.0009; vx = (e.clientY - ly) * 0.0009; lx = e.clientX; ly = e.clientY;
+        });
+        ex.resize = base;
+        ex.step = () => {
+          t += 0.012;
+          ay += vy; ax += vx;
+          if (!down) { vy += (0.004 - vy) * 0.02; vx *= 0.94; }
+          ctx.clearRect(0, 0, W, H);
+          const R = Math.min(W, H) * 0.36, cx = W / 2, cy = H / 2 - 10, fov = R * 2.6;
+          const sx = Math.sin(ax), cxr = Math.cos(ax), sy = Math.sin(ay), cyr = Math.cos(ay);
+          const hx = ptr.on ? (ptr.x - cx) / R : 9, hy = ptr.on ? (ptr.y - cy) / R : 9;
+          // anillo orbital
+          ctx.strokeStyle = "rgba(143,160,255,.25)"; ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.ellipse(cx, cy, R * 1.45, R * 0.32, -0.3, 0, Math.PI * 2); ctx.stroke();
+          for (const p of pts) {
+            const m = 1 + 0.07 * Math.sin(p.lat * 4 + t * 1.6) * Math.cos(p.lon * 3 - t);
+            let x = p.x * m, y = p.y * m, z = p.z * m;
+            let x1 = x * cyr + z * sy, z1 = -x * sy + z * cyr;
+            let y1 = y * cxr - z1 * sx, z2 = y * sx + z1 * cxr;
+            const s = fov / (fov + z2 * R);
+            const px = cx + x1 * R * s, py = cy + y1 * R * s;
+            const near = Math.max(0, 1 - Math.hypot(x1 * s - hx, y1 * s - hy) / 0.5);
+            const depth = (1 - z2) / 2; // 1 = adelante
+            ctx.fillStyle = near > 0.05 && z2 < 0 ? `rgba(255,255,255,${0.6 + near * 0.4})` : depth > 0.5 ? `rgba(236,233,226,${0.25 + depth * 0.6})` : `rgba(39,66,255,${0.35 + depth * 0.5})`;
+            const r = (0.6 + depth * 1.3) * s + near * 2.2;
+            ctx.fillRect(px - r / 2, py - r / 2, r, r);
+          }
+        };
+      }
+
+      if (type === "poster") {
+        // composición suiza nueva en cada clic (y sola cada 5 s)
+        const pal = [["#ECE9E2", "#0E0E0E", "#2742FF"], ["#2742FF", "#ECE9E2", "#0E0E0E"], ["#0E0E0E", "#ECE9E2", "#2742FF"], ["#ECE9E2", "#2742FF", "#0E0E0E"]];
+        const words = ["MOVER", "FORMA", "RITMO", "−73", "MARCA", "PULSO", "IPPON", "FLUJO", "2026"];
+        let comp = null, age = 0, idle = 0, n = 41;
+        const R = (a, b) => a + Math.random() * (b - a);
+        const pick = (a) => a[Math.floor(Math.random() * a.length)];
+        const make = () => {
+          n++;
+          const [bg, fg, ac] = pick(pal);
+          const els = [];
+          const cols = 6;
+          for (let i = 0; i < 5; i++) {
+            const kind = pick(["circle", "rect", "rect", "bar", "arc"]);
+            els.push({ kind, c: Math.random() < 0.4 ? ac : fg, x: Math.floor(R(0, cols)) / cols, y: R(0.08, 0.7), s: R(0.12, 0.5), r: pick([0, Math.PI / 2, Math.PI / 4]), d: i * 6 });
+          }
+          comp = { bg, fg, ac, els, word: pick(words), wx: pick([0.06, 0.08]), wy: R(0.4, 0.6), stretch: pick(["ultra-condensed", "condensed", "normal", "expanded"]), n };
+          age = 0;
+        };
+        fig.addEventListener("click", make);
+        ex.resize = () => { base(); if (!comp) make(); };
+        const ease = (k) => 1 - Math.pow(1 - Math.min(Math.max(k, 0), 1), 4);
+        ex.step = () => {
+          age++; idle++;
+          if (ptr.on) idle = 0;
+          if (idle > 300) { make(); idle = 0; }
+          const { bg, fg, els } = comp;
+          ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+          // grilla
+          ctx.strokeStyle = fg; ctx.globalAlpha = 0.12; ctx.lineWidth = 1;
+          for (let i = 1; i < 6; i++) { ctx.beginPath(); ctx.moveTo((W * i) / 6, 0); ctx.lineTo((W * i) / 6, H); ctx.stroke(); }
+          ctx.globalAlpha = 1;
+          const U = Math.min(W, H);
+          els.forEach((e) => {
+            const k = ease((age - e.d) / 40);
+            if (k <= 0) return;
+            ctx.save(); ctx.fillStyle = e.c; ctx.strokeStyle = e.c;
+            const x = e.x * W, y = e.y * H, s = e.s * U * k;
+            ctx.translate(x, y); ctx.rotate(e.r * k);
+            if (e.kind === "circle") { ctx.beginPath(); ctx.arc(s / 2, s / 2, s / 2, 0, Math.PI * 2); ctx.fill(); }
+            else if (e.kind === "rect") ctx.fillRect(0, 0, s, s * 0.62);
+            else if (e.kind === "bar") ctx.fillRect(0, 0, s * 1.6, Math.max(3, s * 0.06));
+            else { ctx.lineWidth = Math.max(3, s * 0.08); ctx.beginPath(); ctx.arc(s / 2, s / 2, s / 2, Math.PI, Math.PI * 2); ctx.stroke(); }
+            ctx.restore();
+          });
+          // palabra grande
+          const kw = ease((age - 18) / 50);
+          ctx.fillStyle = fg;
+          if ("fontStretch" in ctx) ctx.fontStretch = comp.stretch;
+          let fs = W * 0.3;
+          ctx.font = `800 ${fs}px Archivo, sans-serif`;
+          const tw = ctx.measureText(comp.word).width;
+          fs = Math.min(fs * ((W * 0.88) / tw), H * 0.32);
+          ctx.font = `800 ${fs}px Archivo, sans-serif`;
+          ctx.save(); ctx.beginPath(); ctx.rect(0, H * comp.wy - fs * 0.8, W, fs * 0.82); ctx.clip();
+          ctx.fillText(comp.word, W * comp.wx, H * comp.wy + fs * 0.8 * (1 - kw));
+          ctx.restore();
+          if ("fontStretch" in ctx) ctx.fontStretch = "normal";
+          // datos
+          ctx.font = `500 ${Math.max(9, W * 0.022)}px "JetBrains Mono", monospace`;
+          ctx.globalAlpha = ease((age - 30) / 30);
+          ctx.fillText("MANUEL ALZUGARAY", W * 0.06, H * 0.07);
+          ctx.fillText(`Nº ${String(comp.n).padStart(3, "0")}`, W * 0.72, H * 0.07);
+          ctx.fillText("PUNTA DEL ESTE — UY", W * 0.06, H * 0.9);
+          ctx.globalAlpha = 1;
+        };
+      }
+
+      if (type === "halftone") {
+        // trama de semitono sobre la foto; cerca del cursor los puntos crecen y se pintan de azul
+        const img = new Image();
+        let lum = null, cols = 0, rows = 0, cell = 9, t = 0, ready = false;
+        const sample = () => {
+          if (!img.complete || !img.naturalWidth || !W) return;
+          cell = W < 500 ? 7 : 9;
+          cols = Math.ceil(W / cell); rows = Math.ceil(H / cell);
+          const oc = document.createElement("canvas"); oc.width = cols; oc.height = rows;
+          const o = oc.getContext("2d");
+          const ir = img.naturalWidth / img.naturalHeight, br = cols / rows;
+          let sw = img.naturalWidth, sh = img.naturalHeight, sx = 0, sy = 0;
+          if (ir > br) { sw = sh * br; sx = (img.naturalWidth - sw) * 0.62; } else { sh = sw / br; sy = (img.naturalHeight - sh) * 0.25; }
+          o.drawImage(img, sx, sy, sw, sh, 0, 0, cols, rows);
+          try {
+            const d = o.getImageData(0, 0, cols, rows).data;
+            lum = new Float32Array(cols * rows);
+            for (let i = 0; i < cols * rows; i++) lum[i] = (d[i * 4] * 0.3 + d[i * 4 + 1] * 0.59 + d[i * 4 + 2] * 0.11) / 255;
+            ready = true;
+          } catch { ready = false; }
+        };
+        img.onload = sample;
+        img.src = "assets/dojo.jpg";
+        ex.resize = () => { base(); sample(); };
+        ex.step = () => {
+          t += 0.03;
+          ctx.fillStyle = "#ECE9E2"; ctx.fillRect(0, 0, W, H);
+          if (!ready) return;
+          const RR = Math.min(W, H) * 0.3;
+          for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) {
+            const x = i * cell + cell / 2, y = j * cell + cell / 2;
+            const dark = 1 - lum[j * cols + i];
+            const near = ptr.on ? Math.max(0, 1 - Math.hypot(x - ptr.x, y - ptr.y) / RR) : 0;
+            const wave = 0.06 * Math.sin(i * 0.25 + j * 0.18 - t);
+            const r = Math.max(0, (dark * 0.62 + wave + near * 0.25)) * cell * 0.62;
+            if (r < 0.35) continue;
+            ctx.fillStyle = near > 0.15 ? "#2742FF" : "#0E0E0E";
+            ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+          }
+        };
+      }
     }
 
     ex.resize();
