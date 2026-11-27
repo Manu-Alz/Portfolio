@@ -152,7 +152,8 @@ body.is-dark .grain { opacity: .14; filter: invert(1); }
   transform: scaleX(0); transform-origin: right; transition: transform .5s var(--ease);
 }
 .link:hover::after { transform: scaleX(1); transform-origin: left; }
-.link--pill { border: 1px solid currentColor; border-radius: 99px; padding: .4rem 1rem; }
+.link--pill { border: 1px solid currentColor; border-radius: 99px; padding: .4rem 1rem; display: inline-flex; align-items: center; justify-content: center; line-height: 1.2; }
+.link--pill .roll { vertical-align: middle; }
 .link--pill::after { display: none; }
 /* texto que rueda al pasar el mouse */
 .roll { display: inline-block; overflow: hidden; vertical-align: top; line-height: 1.2; height: 1.2em; }
@@ -569,7 +570,7 @@ html:not(.js) .vf { display: none; }
   .hero__top { flex-direction: column; gap: 1.2rem; }
   .hero__intro { text-align: left; }
   .hero__left { flex-direction: row; justify-content: space-between; align-items: flex-start; }
-  .badge { width: 96px; }
+  .badge { width: 96px; margin-right: 6px; }
   .hero__tags { gap: .8rem; flex-wrap: wrap; }
   .manifesto__foot { grid-template-columns: 1fr; }
   .card { position: relative; top: 0; margin-bottom: 1.2rem; }
@@ -593,7 +594,7 @@ html:not(.js) .vf { display: none; }
   .disciplines { grid-template-columns: 1fr; }
   .disc:nth-child(n) { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); }
   .disc:first-child { border-top: 0; }
-  .hero__scroll span:first-child { display: none; }
+  .hero__scroll { display: none; } /* en celular sobraba una raya suelta: las etiquetas ya cierran la portada */
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1064,3 +1065,18 @@ a, button { -webkit-tap-highlight-color: transparent; }
 /* clima y olas: solo con lugar de sobra en la barra */
 .nav__wx { white-space: nowrap; }
 @media (max-width: 1440px) { .nav__wx { display: none; } }
+
+/* ---------- Ajustes de celular (revisión completa) ---------- */
+@media (max-width: 900px) {
+  /* la etiqueta del cinturón tapaba texto: en celular alcanza con la barra de color */
+  .progress__tag { display: none; }
+  /* textos que quedaban por debajo de ~9 px */
+  .card__results span { font-size: .62rem; }
+  .reel__top { font-size: .6rem; }
+  /* links fáciles de tocar (mínimo ~36 px de alto) */
+  .contact__facts { gap: 0; }
+  .contact__facts li { padding: .15rem 0; }
+  .contact__facts a, .footer__links a { display: inline-block; padding: .65rem 0; }
+  .footer__links { gap: .2rem 1.6rem; }
+  .nav__logo { padding: .5rem 0; }
+}
