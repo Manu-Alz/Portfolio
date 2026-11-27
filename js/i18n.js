@@ -148,7 +148,7 @@
     ["#contact-btn .magnet__inner", 0, "Email me"],
     [".copy__state", 0, "Copy ⧉"],
     [".contact__facts", 0, '<li><span>Phone</span><a href="tel:+59894717738" class="link" data-cursor>+598 94 717 738</a></li><li><span>WhatsApp</span><a href="https://wa.me/59894717738" target="_blank" rel="noopener" class="link" data-cursor="WhatsApp ↗">Message on WhatsApp ↗</a></li><li><span>Based in</span>Punta del Este → Montevideo 2027</li><li><span>Languages</span>Spanish (native) · English C2</li><li><span>CV</span><a href="cv.html" target="_blank" class="link" data-cursor="View CV ↗">Web / PDF version ↗</a></li>'],
-    [".footer__links a", 3, "Back to top ↑"],
+    [".footer__links a", 1, "Back to top ↑"],
     [".footer__bottom span", 0, "© 2026 Manuel Alzugaray — Handmade in Uruguay"],
     [".footer__bottom > span", 1, 'Local time <span data-clock>--:--</span>'],
   ];
