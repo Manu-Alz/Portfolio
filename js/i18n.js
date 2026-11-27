@@ -81,10 +81,10 @@
     ["#sobre .label", 0, "(01) — About"],
     ["#sobre .manifesto__text", 0, null, (el) => {
       // se reemplazan solo los textos, los íconos animados quedan
-      const icons = [...el.querySelectorAll(".gi-icon, .pill")];
+      const scr = el.querySelector(".pill--screen"), gi = el.querySelector(".gi-icon"), wave = el.querySelector(".pill--wave");
       el.innerHTML = "";
-      el.append("I move ", icons[0], " on the mat, in the water ", icons[1], " and on screen ", icons[2], ". ");
-      el.insertAdjacentHTML("beforeend", "I design brands and digital products with an athlete’s method: clear goals, daily work and adjustments until they <em>perform</em>.");
+      el.append("I design and build brands and digital products ", scr, " for companies that need results. I work with the discipline of the mat ", gi, " and the patience of the ocean ", wave, ": ");
+      el.insertAdjacentHTML("beforeend", "measurable goals, progress every week and every detail refined until it <em>performs</em>.");
     }],
     [".manifesto__foot p", 0, "I’m Manuel Alzugaray, an independent designer and developer based in Punta del Este, Uruguay. Since 2023 I’ve been building brands, websites and apps end to end: strategy, identity, interface, code, content and launch. I also produce and edit video, after a year of continuous content creation."],
     [".manifesto__foot p", 1, "The other half of my life is sport. I train judo in the −73 kg category, coach strength training, and grew up in a family of high-performance athletes. That shapes how I work: clear goals, consistency and measured adjustments. I work in Spanish and English (C2)."],

@@ -367,6 +367,19 @@ const T = window.T || ((es) => es);
     ["#F4F2EC", T("Blanco", "White")], ["#F2C230", T("Amarillo", "Yellow")], ["#EE7A2A", T("Naranja", "Orange")],
     ["#2FA35A", T("Verde", "Green")], ["#2742FF", T("Azul", "Blue")], ["#7A4A26", T("Marrón", "Brown")], ["#0E0E0E", T("Negro", "Black")],
   ];
+  // barra de navegación: fondo sólido al bajar; se esconde al bajar y vuelve apenas subís
+  const navEl = $(".nav");
+  let lastY = 0;
+  ScrollTrigger.create({
+    start: 0, end: "max",
+    onUpdate: () => {
+      const y = scrollY;
+      navEl.classList.toggle("is-solid", y > 40);
+      if (Math.abs(y - lastY) < 6) return;
+      navEl.classList.toggle("is-hidden", y > lastY && y > 500 && !root.classList.contains("menu-open"));
+      lastY = y;
+    },
+  });
   const belt = $(".progress"), beltTag = $(".progress__tag");
   let beltI = -1;
   ScrollTrigger.create({

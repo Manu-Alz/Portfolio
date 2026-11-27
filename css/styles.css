@@ -127,7 +127,19 @@ body.is-dark .grain { opacity: .14; filter: invert(1); }
   display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
   padding: 1.1rem var(--pad);
   color: #fff; mix-blend-mode: difference;
+  transition: translate .5s var(--ease-out), color .3s;
 }
+/* al bajar: barra con fondo (deja de mezclarse con los títulos de abajo); se esconde al bajar y vuelve al subir */
+.nav::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: color-mix(in srgb, var(--bg) 84%, transparent); backdrop-filter: blur(14px) saturate(1.2); -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  border-bottom: 1px solid var(--line); opacity: 0; transition: opacity .35s;
+}
+.nav.is-solid { mix-blend-mode: normal; color: var(--fg); }
+.nav.is-solid::before { opacity: 1; }
+.nav.is-hidden { translate: 0 -110%; }
+.menu-open .nav { translate: none; mix-blend-mode: difference; color: #fff; }
+.menu-open .nav::before { opacity: 0; }
 .nav__logo { justify-self: start; font-weight: 800; font-size: 1.15rem; letter-spacing: -.02em; }
 .nav__logo sup { font-size: .55em; font-weight: 400; }
 .nav__mid { display: flex; align-items: center; gap: .5rem; }
