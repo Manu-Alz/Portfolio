@@ -104,11 +104,6 @@
     [".svc__desc p", 2, "Editing for social, brands and athletes: pacing, colour, sound and subtitles. Pieces designed to hold attention from the first second."],
     [".svc__desc p", 3, "Content strategy and production sustained over time: idea, script, shooting, editing and publishing. A year of publishing without breaks taught me which formats work and how an audience is built."],
     [".svc__desc p", 4, 'Strength, power and mobility programming tailored to each sport, with weekly follow-up and adjustments based on progress. Coaching clients since 2024, also delivering plans in digital format, like <a class="svc__link" href="https://manu-alz.github.io/Plan-73/" target="_blank" rel="noopener" data-cursor="See example ↗">Plan −73 ↗</a>.'],
-    // referencias
-    [".refs__k", 0, "(References)"],
-    [".refs__t", 0, "People who can <em>speak</em> to my work."],
-    [".ref__role", 0, "Recreation and sports areas coordinator"], [".ref__role", 1, "Personal reference"],
-    [".refs__foot", 0, 'Contact details and further references on request. <a class="link" href="mailto:manualzugaray@icloud.com?subject=References" data-cursor="Request ↗">Request references ↗</a>'],
     // trayectoria
     ["#trayectoria .label", 0, "(04) — Journey"],
     [".path__title", 0, "From the pool<br>to the <em>mat</em>.<br>From code<br>to brand."],
@@ -130,10 +125,9 @@
     // atleta y método
     [".shot__tag b", 0, "ID 073 · Manuel"],
     [".shot__cap", 0, "<span>Fig. 01 — Training</span><span>Maldonado, UY</span>"],
-    [".vf__state", 0, "Searching subject<b>…</b>"],
-    [".vf__fl", 0, "Scroll to focus"],
+    [".aim__title", 0, '<span class="lw">Off</span> <span class="lw">the</span><br><span class="lw">screen.</span>'], [".aim__hint", 0, "Scroll to lock on ↓"], ["[data-lock-state]", 0, "Searching"],
     [".expand__title", 0, '<span class="reveal-line"><span>The body is</span></span><span class="reveal-line"><span>my <em>first</em> project.</span></span>'],
-    [".expand__label", 0, "(05) — Off screen"],
+    [".expand__label", 0, "(05) — Athlete"],
     [".method__head .label", 0, "Method"],
     [".method__title", 0, "I work the way<br>I <em>train</em>."],
     [".method__intro", 0, "Years of planning training left me with a process: measure before acting, move in short cycles and adjust with data. I apply it the same way to a brand, a website or a video."],

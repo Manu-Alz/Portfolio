@@ -638,14 +638,10 @@ const T = window.T || ((es) => es);
   });
   const slices = $$(".shot__slice");
   exp
-    // visor: el scroll gira el anillo de enfoque; al enfocar, el visor se apaga y entra la foto
-    .fromTo(".vf__ptr", { left: "0%" }, { left: "100%", ease: "none", duration: 0.15 }, 0)
-    .fromTo(".vf__core", { filter: "blur(7px)" }, { filter: "blur(0px)", ease: "power1.out", duration: 0.07 }, 0)
-    .to(".vf__state", { opacity: 0, duration: 0.04 }, 0.06)
-    .to(".vf__box", { opacity: 0, duration: 0.08 }, 0.1)
-    .to(".vf__core", { scale: 0.4, opacity: 0, ease: "power2.in", duration: 0.12 }, 0.08)
-    .to(".vf__focus, .vf__rec, .vf__meta", { opacity: 0, duration: 0.05 }, 0.14)
-    .to(".vf__c", { opacity: 0, scale: 0.6, duration: 0.08, stagger: 0.01 }, 0.14)
+    // intro: el título se va; el recuadro (ya fijado sobre la foto) deja lugar a las marcas de corte
+    .to(".aim__hint", { opacity: 0, duration: 0.04 }, 0)
+    .to(".aim__title", { opacity: 0, yPercent: -12, ease: "power2.in", duration: 0.12 }, 0.03)
+    .to(".aim__box", { opacity: 0, duration: 0.06 }, 0.44)
     .fromTo(slices, { yPercent: (i) => (i % 2 ? 105 : -105) },
       { yPercent: 0, ease: "power3.out", duration: 0.32, stagger: 0.035 }, 0.16)
     .fromTo(".shot__frame", { scale: 0.86, filter: "grayscale(1) brightness(.6)" },
@@ -657,20 +653,42 @@ const T = window.T || ((es) => es);
     .to(".expand__title .reveal-line > span", { yPercent: 0, stagger: 0.06, duration: 0.16, ease: "power2.out" }, 0.62)
     .to({}, { duration: 0.15 });
   gsap.set(".expand__title .reveal-line > span", { y: 0, yPercent: 110 });
-  // timecode del visor (24 fps), solo corre cuando la sección está cerca
-  const tc = $("[data-tc]");
-  if (tc) {
-    let tcT = 0, tcA = 0;
-    const p2 = (n) => String(n).padStart(2, "0");
-    const run = () => {
-      const f = Math.floor((performance.now() - tcA) / (1000 / 24));
-      const s = Math.floor(f / 24);
-      tc.textContent = `00:${p2(Math.floor(s / 60) % 60)}:${p2(s % 60)}:${p2(f % 24)}`;
+  // recuadro de tracking: busca saltando de palabra en palabra; al empezar a bajar se fija sobre la foto
+  const lockBox = $(".aim__box"), sticky = $(".expand__sticky");
+  if (lockBox && sticky) {
+    const words = $$(".aim .lw"), state = $("[data-lock-state]"), confEl = $("[data-lock-conf]");
+    const PAD = 12;
+    const rel = (el, pad) => {
+      const s = sticky.getBoundingClientRect(), r = el.getBoundingClientRect();
+      return { x: r.left - s.left - pad, y: r.top - s.top - pad, width: r.width + pad * 2, height: r.height + pad * 2 };
     };
-    new IntersectionObserver(([en]) => {
-      clearInterval(tcT);
-      if (en.isIntersecting) { if (!tcA) tcA = performance.now(); tcT = setInterval(run, 42); }
-    }).observe($(".expand"));
+    let hunt = null, locked = false;
+    const buildHunt = () => {
+      if (hunt) hunt.kill();
+      hunt = gsap.timeline({ repeat: -1, paused: locked });
+      words.forEach((w) => {
+        hunt.add(() => {
+          gsap.to(lockBox, { ...rel(w, PAD), duration: 0.7, ease: "expo.inOut", overwrite: true });
+          if (confEl) confEl.textContent = (0.32 + Math.random() * 0.4).toFixed(2);
+        }).to({}, { duration: 1.25 });
+      });
+    };
+    gsap.set(lockBox, rel(words[0], PAD));
+    buildHunt();
+    const setLocked = (v) => {
+      if (v === locked) return;
+      locked = v;
+      lockBox.classList.toggle("is-locked", v);
+      if (state) state.textContent = v ? T("Objetivo fijado", "Target locked") : T("Buscando", "Searching");
+      if (v) {
+        hunt.pause();
+        if (confEl) confEl.textContent = "0.98";
+        gsap.to(lockBox, { ...rel($(".shot"), 0), duration: 0.8, ease: "expo.inOut", overwrite: true });
+      } else hunt.restart();
+    };
+    ScrollTrigger.create({ trigger: ".expand", start: "top top", end: "bottom bottom", onUpdate: (s) => setLocked(s.progress > 0.015), onLeaveBack: () => setLocked(false) });
+    // al cambiar el tamaño de la ventana, se recalculan las posiciones
+    ScrollTrigger.addEventListener("refresh", () => { buildHunt(); if (locked) gsap.set(lockBox, rel($(".shot"), 0)); else gsap.set(lockBox, rel(words[0], PAD)); });
   }
   // la confianza del "detector" varía como en un sistema real
   const conf = $("[data-conf]");
