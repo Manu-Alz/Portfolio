@@ -125,7 +125,6 @@
     // atleta y método
     [".shot__tag b", 0, "ID 073 · Manuel"],
     [".shot__cap", 0, "<span>Fig. 01 — Training</span><span>Maldonado, UY</span>"],
-    [".aim__title", 0, '<span class="lw">Off</span> <span class="lw">the</span><br><span class="lw">screen.</span>'], [".aim__hint", 0, "Scroll to lock on ↓"], ["[data-lock-state]", 0, "Searching"],
     [".expand__title", 0, '<span class="reveal-line"><span>The body is</span></span><span class="reveal-line"><span>my <em>first</em> project.</span></span>'],
     [".expand__label", 0, "(05) — Athlete"],
     [".method__head .label", 0, "Method"],

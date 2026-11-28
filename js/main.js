@@ -631,65 +631,24 @@ const T = window.T || ((es) => es);
     });
   });
 
-  /* ---------- Atleta: la foto se expande ---------- */
-  // negro + logo → la foto entra en tiras que se arman (a tamaño real, sin zoom) → anotación y título
+  /* ---------- Atleta: la foto se arma ---------- */
+  // sin intro: apenas la sección entra en pantalla, la foto llega en tiras (a tamaño real, sin zoom) → marcas, recuadro y título
   const exp = gsap.timeline({
-    scrollTrigger: { trigger: ".expand", start: "top top", end: "bottom bottom", scrub: 0.6 },
+    scrollTrigger: { trigger: ".expand", start: "top 65%", end: "bottom bottom", scrub: 0.6 },
   });
   const slices = $$(".shot__slice");
   exp
-    // intro: el título se va; el recuadro (ya fijado sobre la foto) deja lugar a las marcas de corte
-    .to(".aim__hint", { opacity: 0, duration: 0.04 }, 0)
-    .to(".aim__title", { opacity: 0, yPercent: -12, ease: "power2.in", duration: 0.12 }, 0.03)
-    .to(".aim__box", { opacity: 0, duration: 0.06 }, 0.44)
     .fromTo(slices, { yPercent: (i) => (i % 2 ? 105 : -105) },
-      { yPercent: 0, ease: "power3.out", duration: 0.32, stagger: 0.035 }, 0.16)
+      { yPercent: 0, ease: "power3.out", duration: 0.32, stagger: 0.035 }, 0)
     .fromTo(".shot__frame", { scale: 0.86, filter: "grayscale(1) brightness(.6)" },
-      { scale: 1, filter: "grayscale(0) brightness(1)", ease: "power2.out", duration: 0.4 }, 0.18)
-    .fromTo(".shot__crop", { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: 0.12, stagger: 0.02 }, 0.42)
-    .fromTo(".shot__mark", { scale: 2.2, opacity: 0 }, { scale: 1, opacity: 1, ease: "expo.out", duration: 0.12 }, 0.52)
-    .fromTo(".shot__tag", { opacity: 0, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, clipPath: "inset(0 0% 0 0)", duration: 0.1 }, 0.58)
-    .fromTo(".shot__cap", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.1 }, 0.56)
-    .to(".expand__title .reveal-line > span", { yPercent: 0, stagger: 0.06, duration: 0.16, ease: "power2.out" }, 0.62)
+      { scale: 1, filter: "grayscale(0) brightness(1)", ease: "power2.out", duration: 0.4 }, 0.02)
+    .fromTo(".shot__crop", { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: 0.12, stagger: 0.02 }, 0.26)
+    .fromTo(".shot__mark", { scale: 2.2, opacity: 0 }, { scale: 1, opacity: 1, ease: "expo.out", duration: 0.12 }, 0.36)
+    .fromTo(".shot__tag", { opacity: 0, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, clipPath: "inset(0 0% 0 0)", duration: 0.1 }, 0.42)
+    .fromTo(".shot__cap", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.1 }, 0.4)
+    .to(".expand__title .reveal-line > span", { yPercent: 0, stagger: 0.06, duration: 0.16, ease: "power2.out" }, 0.46)
     .to({}, { duration: 0.15 });
   gsap.set(".expand__title .reveal-line > span", { y: 0, yPercent: 110 });
-  // recuadro de tracking: busca saltando de palabra en palabra; al empezar a bajar se fija sobre la foto
-  const lockBox = $(".aim__box"), sticky = $(".expand__sticky");
-  if (lockBox && sticky) {
-    const words = $$(".aim .lw"), state = $("[data-lock-state]"), confEl = $("[data-lock-conf]");
-    const PAD = 12;
-    const rel = (el, pad) => {
-      const s = sticky.getBoundingClientRect(), r = el.getBoundingClientRect();
-      return { x: r.left - s.left - pad, y: r.top - s.top - pad, width: r.width + pad * 2, height: r.height + pad * 2 };
-    };
-    let hunt = null, locked = false;
-    const buildHunt = () => {
-      if (hunt) hunt.kill();
-      hunt = gsap.timeline({ repeat: -1, paused: locked });
-      words.forEach((w) => {
-        hunt.add(() => {
-          gsap.to(lockBox, { ...rel(w, PAD), duration: 0.7, ease: "expo.inOut", overwrite: true });
-          if (confEl) confEl.textContent = (0.32 + Math.random() * 0.4).toFixed(2);
-        }).to({}, { duration: 1.25 });
-      });
-    };
-    gsap.set(lockBox, rel(words[0], PAD));
-    buildHunt();
-    const setLocked = (v) => {
-      if (v === locked) return;
-      locked = v;
-      lockBox.classList.toggle("is-locked", v);
-      if (state) state.textContent = v ? T("Objetivo fijado", "Target locked") : T("Buscando", "Searching");
-      if (v) {
-        hunt.pause();
-        if (confEl) confEl.textContent = "0.98";
-        gsap.to(lockBox, { ...rel($(".shot"), 0), duration: 0.8, ease: "expo.inOut", overwrite: true });
-      } else hunt.restart();
-    };
-    ScrollTrigger.create({ trigger: ".expand", start: "top top", end: "bottom bottom", onUpdate: (s) => setLocked(s.progress > 0.015), onLeaveBack: () => setLocked(false) });
-    // al cambiar el tamaño de la ventana, se recalculan las posiciones
-    ScrollTrigger.addEventListener("refresh", () => { buildHunt(); if (locked) gsap.set(lockBox, rel($(".shot"), 0)); else gsap.set(lockBox, rel(words[0], PAD)); });
-  }
   // la confianza del "detector" varía como en un sistema real
   const conf = $("[data-conf]");
   if (conf) setInterval(() => (conf.textContent = (0.94 + Math.random() * 0.05).toFixed(2)), 700);

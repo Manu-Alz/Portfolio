@@ -404,7 +404,7 @@ a:hover .roll > span, .roll:hover > span { transform: translateY(-1.2em); }
 @keyframes caret { 50% { opacity: 0; } }
 /* ---------- Atleta ---------- */
 .athlete { padding-bottom: clamp(5rem, 10vw, 9rem); }
-.expand { height: 320vh; position: relative; --r: 78px; }
+.expand { height: 240vh; position: relative; --r: 78px; }
 .expand__sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; display: grid; place-items: center; background: #0B0B0C; }
 .waves { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .45; }
 /* foto en tamaño real (sin zoom), armada en tiras como una lámina editorial */
@@ -459,31 +459,6 @@ a:hover .roll > span, .roll:hover > span { transform: translateY(-1.2em); }
 .shot__cap { position: absolute; left: 0; right: 0; bottom: calc(100% + 1.1rem); display: flex; justify-content: space-between; gap: 1rem; color: rgba(236,233,226,.55); }
 html:not(.js) .expand { height: auto; }
 html:not(.js) .expand__sticky { min-height: 100vh; }
-html:not(.js) .aim { display: none; }
-
-/* intro de la foto: un título nítido y un recuadro de tracking que busca palabra por palabra; al bajar se fija donde aparece la foto */
-.aim { position: absolute; inset: 0; z-index: 3; pointer-events: none; display: grid; place-items: center; }
-.aim__title {
-  margin: 0; text-align: center; color: var(--paper);
-  font-size: clamp(3.2rem, 10vw, 11rem); font-weight: 800; line-height: .86; letter-spacing: -.05em;
-  font-variation-settings: "wdth" 100, "wght" 800;
-}
-.aim__title .lw { display: inline-block; }
-.aim__box { position: absolute; left: 0; top: 0; width: 0; height: 0; will-change: transform, width, height; }
-.aim__box > i { position: absolute; width: 18px; height: 18px; border: 0 solid var(--blue-soft); }
-.aim__box > i:nth-child(1) { left: 0; top: 0; border-top-width: 2px; border-left-width: 2px; }
-.aim__box > i:nth-child(2) { right: 0; top: 0; border-top-width: 2px; border-right-width: 2px; }
-.aim__box > i:nth-child(3) { left: 0; bottom: 0; border-bottom-width: 2px; border-left-width: 2px; }
-.aim__box > i:nth-child(4) { right: 0; bottom: 0; border-bottom-width: 2px; border-right-width: 2px; }
-.aim__tag {
-  position: absolute; left: 0; top: calc(100% + 8px); white-space: nowrap;
-  font-weight: 500; font-size: .66rem; letter-spacing: .08em; text-transform: uppercase;
-  padding: .2rem .45rem; background: var(--blue); color: #fff;
-}
-.aim__box.is-locked > i { border-color: #fff; }
-.aim__box.is-locked .aim__tag { background: #fff; color: var(--ink); }
-.aim__hint { position: absolute; left: 50%; bottom: clamp(1.5rem, 5vh, 3rem); transform: translateX(-50%); color: rgba(236,233,226,.55); font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; }
-@media (max-width: 900px) { .aim__tag { font-size: .58rem; } .aim__box > i { width: 12px; height: 12px; } }
 .expand__title {
   position: absolute; left: var(--pad); bottom: 9vh; z-index: 2; color: #fff;
   font-size: clamp(2.4rem, 5.6vw, 6rem); line-height: .92; letter-spacing: -.045em; font-weight: 700;
