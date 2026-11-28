@@ -104,6 +104,11 @@
     [".svc__desc p", 2, "Editing for social, brands and athletes: pacing, colour, sound and subtitles. Pieces designed to hold attention from the first second."],
     [".svc__desc p", 3, "Content strategy and production sustained over time: idea, script, shooting, editing and publishing. A year of publishing without breaks taught me which formats work and how an audience is built."],
     [".svc__desc p", 4, 'Strength, power and mobility programming tailored to each sport, with weekly follow-up and adjustments based on progress. Coaching clients since 2024, also delivering plans in digital format, like <a class="svc__link" href="https://manu-alz.github.io/Plan-73/" target="_blank" rel="noopener" data-cursor="See example ↗">Plan −73 ↗</a>.'],
+    // referencias
+    [".refs__k", 0, "(References)"],
+    [".refs__t", 0, "People who can <em>speak</em> to my work."],
+    [".ref__role", 0, "Recreation and sports areas coordinator"], [".ref__role", 1, "Personal reference"],
+    [".refs__foot", 0, 'Contact details and further references on request. <a class="link" href="mailto:manualzugaray@icloud.com?subject=References" data-cursor="Request ↗">Request references ↗</a>'],
     // trayectoria
     ["#trayectoria .label", 0, "(04) — Journey"],
     [".path__title", 0, "From the pool<br>to the <em>mat</em>.<br>From code<br>to brand."],

@@ -1080,3 +1080,41 @@ a, button { -webkit-tap-highlight-color: transparent; }
   .footer__links { gap: .2rem 1.6rem; }
   .nav__logo { padding: .5rem 0; }
 }
+
+/* ---------- Referencias (personales, del CV) ---------- */
+.refs { padding: clamp(5rem, 9vw, 8rem) var(--pad) clamp(5rem, 9vw, 8rem); }
+.refs__head { display: grid; grid-template-columns: 1fr 2fr; gap: 1rem 2rem; align-items: end; margin-bottom: clamp(2rem, 4vw, 3.5rem); }
+.refs__k { margin: 0; font-size: .7rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.refs__t { margin: 0; font-size: clamp(2rem, 4.2vw, 4rem); font-weight: 700; line-height: .95; letter-spacing: -.045em; max-width: 18ch; }
+.refs__t em { color: var(--blue); font-weight: 400; }
+.refs__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); border-top: 1px solid var(--fg); }
+.ref {
+  position: relative; display: grid; grid-template-columns: 3rem 1fr; grid-template-areas: "n name" ". role" ". where";
+  gap: .35rem 0; padding: 1.6rem 1.4rem 1.8rem 0; border-bottom: 1px solid var(--line);
+}
+.ref + .ref { border-left: 1px solid var(--line); padding-left: 1.4rem; }
+.ref__n { grid-area: n; color: var(--blue); font-size: .7rem; padding-top: .55rem; }
+.ref__name { grid-area: name; font-size: clamp(1.6rem, 2.6vw, 2.4rem); font-weight: 700; letter-spacing: -.035em; line-height: 1.05; }
+.ref__role { grid-area: role; font-size: 1.05rem; color: var(--fg); }
+.ref__where { grid-area: where; font-size: .68rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); margin-top: .2rem; }
+/* esquinas de encuadre al pasar el mouse, como el resto del sitio */
+.ref::after {
+  content: ""; position: absolute; inset: .6rem .2rem; pointer-events: none; opacity: 0; transition: opacity .3s, inset .5s var(--ease-out); --c: var(--blue);
+  background:
+    linear-gradient(var(--c), var(--c)) 0 0 / 12px 1.5px, linear-gradient(var(--c), var(--c)) 0 0 / 1.5px 12px,
+    linear-gradient(var(--c), var(--c)) 100% 0 / 12px 1.5px, linear-gradient(var(--c), var(--c)) 100% 0 / 1.5px 12px,
+    linear-gradient(var(--c), var(--c)) 0 100% / 12px 1.5px, linear-gradient(var(--c), var(--c)) 0 100% / 1.5px 12px,
+    linear-gradient(var(--c), var(--c)) 100% 100% / 12px 1.5px, linear-gradient(var(--c), var(--c)) 100% 100% / 1.5px 12px;
+  background-repeat: no-repeat;
+}
+.ref + .ref::after { inset: .6rem .2rem .6rem 1rem; }
+.ref:hover::after { opacity: 1; }
+.refs__foot { margin: 1.4rem 0 0; font-size: .72rem; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); display: flex; flex-wrap: wrap; gap: .4rem 1.2rem; }
+.refs__foot a { color: var(--fg); }
+@media (max-width: 900px) {
+  .refs__head { grid-template-columns: 1fr; }
+  .refs__list { grid-template-columns: 1fr; }
+  .ref + .ref { border-left: 0; padding-left: 0; }
+  .ref + .ref::after { inset: .6rem .2rem; }
+  .refs__foot a { display: inline-block; padding: .6rem 0; }
+}
